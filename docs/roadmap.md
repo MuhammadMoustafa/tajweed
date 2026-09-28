@@ -32,6 +32,7 @@ in brackets picks the agent.
 | T11 | #33 | [task] Step labels above the clip timeline (click to seek; current label only on phones); labels for makharij, qalqalah, madd clips (maintainer, 2026-09-28). | none | done |
 | T12 | #35 | [task] Reciter audio in clips: quran.com word-by-word audio by `surah:ayah:word`; isolated letters/syllables need recordings (maintainer asked for a qari per letter, 2026-09-28). | T11 | in-progress |
 | T13 | #36 | [task] Matn: each bayt on one line at every width; every line on the lesson's rule; Tuhfa then Jazariyya where both cover it (maintainer, 2026-09-28). | none | in-progress |
+| T14 | #38 | [task] Progress page (#/progress): quiz attempts, best/last scores, per-rule accuracy with review links; home cards colored by state (learned/started/next/not started) with text badges (maintainer, 2026-09-28). | none | in-progress |
 | L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | ready |
 | L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | done |
 | L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | done |
