@@ -26,7 +26,7 @@ export const naturalMadd: Lesson = {
       heading: { ar: 'شرطه', en: 'Its condition' },
       body: {
         ar: 'يكون المدّ طبيعيًا ما دام حرف المدّ ليس بعده همزة ولا سكون. فإن جاء بعده همزة صار مدًا فرعيًا (واجبًا أو جائزًا)، وإن جاء بعده سكون أصلي صار مدًا لازمًا، وإن كان السكون بسبب الوقف صار مدًا عارضًا للسكون — وكل ذلك في دروس لاحقة.',
-        en: 'A madd stays natural as long as nothing but the madd letter follows — no hamza and no sukun right after it. If a hamza follows, it becomes a longer, secondary madd (obligatory or permissible); if a permanent sukun follows, it becomes a necessary madd (lazim), and if the sukun only comes from stopping, it becomes a madd 'arid lis-sukun. These are covered in later lessons.',
+        en: 'A madd stays natural as long as nothing but the madd letter follows — no hamza and no sukun right after it. If a hamza follows, it becomes a longer, secondary madd (obligatory or permissible); if a permanent sukun follows, it becomes a necessary madd (lazim), and if the sukun only comes from stopping, it becomes a madd ʿarid lis-sukun. These are covered in later lessons.',
       },
     },
     {
@@ -44,7 +44,7 @@ export const naturalMadd: Lesson = {
       verseKey: '1:1',
       note: {
         ar: 'المدّ الطبيعي الملوَّن هنا ألف صغيرة (ـٰ) بعد فتحة: حركتان. أما الياء في آخر الآية فغير ملوّنة هنا، لأن الوقف عليها يجعلها مدًا عارضًا للسكون (درس لاحق).',
-        en: 'The colored natural madd here is a small alif (ـٰ) after a fatha: two counts. The ya at the end of the ayah is not colored here, because stopping on it makes it a madd 'arid lis-sukun (a later lesson).',
+        en: 'The colored natural madd here is a small alif (ـٰ) after a fatha: two counts. The ya at the end of the ayah is not colored here, because stopping on it makes it a madd ʿarid lis-sukun (a later lesson).',
       },
     },
     {
@@ -117,7 +117,7 @@ export const naturalMadd: Lesson = {
       correctIndex: 1,
       explanation: {
         ar: 'إذا جاء بعد حرف المدّ همزة أو سكون فهو مدّ فرعي (واجب أو جائز أو لازم أو عارض للسكون)، لا مدّ طبيعي.',
-        en: 'If a hamza or a sukun follows the madd letter, it becomes a secondary madd (obligatory, permissible, necessary, or 'arid lis-sukun), not a natural one.',
+        en: 'If a hamza or a sukun follows the madd letter, it becomes a secondary madd (obligatory, permissible, necessary, or ʿarid lis-sukun), not a natural one.',
       },
     },
   ],

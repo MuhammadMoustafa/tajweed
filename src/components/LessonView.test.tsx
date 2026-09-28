@@ -6,10 +6,10 @@ import { LessonView } from './LessonView'
 
 const lesson = LESSONS[0]
 
-const renderLesson = () => {
+const renderLesson = (shown = lesson) => {
   const { container } = render(
     <LocaleProvider>
-      <LessonView lesson={lesson} />
+      <LessonView lesson={shown} />
     </LocaleProvider>,
   )
   return { container, screen: within(container) }
@@ -46,9 +46,13 @@ describe('LessonView', () => {
     expect(JSON.parse(raw!)).toContain(lesson.id)
   })
 
-  it('hides prev/next navigation at both ends of the (currently single-lesson) list', () => {
-    const { container } = renderLesson()
-    // LESSONS has one lesson today, so this lesson is both the first and the last: no nav at all.
-    expect(container.querySelector('.lesson-nav')).toBeNull()
+  it('links only forward from the first lesson and only back from the last', () => {
+    const first = within(renderLesson(LESSONS[0]).container)
+    expect(first.queryByText(/Previous lesson/)).toBeNull()
+    expect(first.queryAllByText(/Next lesson/).length).toBe(LESSONS.length > 1 ? 1 : 0)
+
+    const last = within(renderLesson(LESSONS[LESSONS.length - 1]).container)
+    expect(last.queryByText(/Next lesson/)).toBeNull()
+    expect(last.queryAllByText(/Previous lesson/).length).toBe(LESSONS.length > 1 ? 1 : 0)
   })
 })
