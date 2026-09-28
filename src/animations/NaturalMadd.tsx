@@ -1,53 +1,87 @@
 import type { Bilingual } from '../i18n/bilingual'
-import { MaddBar, maddFilled, maddStepDuration } from './MaddBar'
+import { COUNT_MS, MADD_READY_MS, MADD_STOP_MS, MaddBar, maddBeatFilled } from './MaddBar'
 import type { Clip, ClipStep } from './player/clip'
 
 const COUNTS = 2
 
 /**
- * The three madd letters, each shown as a real syllable (a single consonant, not Quran text) so
- * the harakah that makes it a madd letter is visible: the harakah/consonant (`before`) in the
- * plain text color, then the madd letter itself (`letter`), which MaddBar highlights and anchors
- * its arrow and bar under.
+ * The syllable shown large throughout the clip (a single consonant + harakah, not Quran text) so
+ * the harakah that makes it a madd letter is visible: `before` (the harakah/consonant) in the
+ * plain text color, then `letter` itself, which MaddBar highlights and anchors its arrow, bar and
+ * start/end markers under.
  */
-const SYLLABLES: { before: string; letter: string; label: Bilingual; caption: Bilingual }[] = [
+const SYLLABLE = { before: 'بَ', letter: 'ا' }
+
+/**
+ * All three madd letters hold the same 2 counts (maintainer, #34), so بُو and بِي don't get their
+ * own steps — only named once, small, alongside بَا's label.
+ */
+const READY_LABEL: Bilingual = {
+  ar: 'ألف بعد فتحة: حركتان. وبُو، بِي بنفس المقدار، فلا داعي لتكرارهما.',
+  en: 'Alif after fatha: 2 counts. بُو and بِي take exactly the same time, so they don’t get their own steps.',
+}
+const LABEL: Bilingual = { ar: 'ألف بعد فتحة: حركتان', en: 'Alif after fatha: 2 counts' }
+
+// TODO(T12, #35): recitation audio per step goes here — each step below is a natural place to key
+// an audio cue off (get ready / count one / count two / stop).
+
+/** Step 1: static — the learner sees the letter and gets ready to pronounce it and count along. */
+const readyFrame = () => (
+  <MaddBar counts={COUNTS} filled={0} current markers before={SYLLABLE.before} letter={SYLLABLE.letter} label={READY_LABEL} />
+)
+
+/** Steps 2-3: the bar fills from `beat - 1` to `beat`, landing MaddBar's pulse on that count. */
+const beatFrame = (beat: number, progress: number) => (
+  <MaddBar
+    counts={COUNTS}
+    filled={maddBeatFilled(beat, progress)}
+    current
+    markers
+    before={SYLLABLE.before}
+    letter={SYLLABLE.letter}
+    label={LABEL}
+  />
+)
+
+/** Step 4: static — full bar, stopped, so the letter must not be stretched any further. */
+const stopFrame = () => (
+  <MaddBar counts={COUNTS} filled={COUNTS} current markers stopped before={SYLLABLE.before} letter={SYLLABLE.letter} label={LABEL} />
+)
+
+// TODO(T11, #33): once ClipStep gets `label`, give these four steps their on-timeline labels
+// ("Get ready" / "Count one" / "Count two" / "Stop"); left out for now so this card doesn't race T11.
+const STEPS: ClipStep[] = [
   {
-    before: 'بَ',
-    letter: 'ا',
-    label: { ar: 'ألف بعد فتحة', en: 'Alif after fatha' },
-    caption: { ar: 'ألف بعد فتحة: تُمدّ حركتين', en: 'Alif after fatha: 2 counts' },
+    duration: MADD_READY_MS,
+    caption: {
+      ar: 'قل معي: انطق بَا، وعُدّ معها. بُو، بِي بنفس المقدار تمامًا.',
+      en: 'Say it with me: pronounce بَا and count along. بُو and بِي take exactly the same time.',
+    },
+    render: readyFrame,
   },
   {
-    before: 'بُ',
-    letter: 'و',
-    label: { ar: 'واو ساكنة بعد ضمة', en: 'Waw sukun after damma' },
-    caption: { ar: 'واو ساكنة بعد ضمة: تُمدّ حركتين', en: 'Waw sukun after damma: 2 counts' },
+    duration: COUNT_MS,
+    caption: { ar: 'الحركة الأولى.', en: 'Count one.' },
+    render: (progress) => beatFrame(1, progress),
   },
   {
-    before: 'بِ',
-    letter: 'ي',
-    label: { ar: 'ياء ساكنة بعد كسرة', en: 'Ya sukun after kasra' },
-    caption: { ar: 'ياء ساكنة بعد كسرة: تُمدّ حركتين', en: 'Ya sukun after kasra: 2 counts' },
+    duration: COUNT_MS,
+    caption: { ar: 'الحركة الثانية — علامة النهاية.', en: 'Count two — the end marker.' },
+    render: (progress) => beatFrame(2, progress),
+  },
+  {
+    duration: MADD_STOP_MS,
+    caption: { ar: 'قف هنا؛ لا تُطِل الحرف أكثر من ذلك.', en: 'Stop here — don’t stretch the letter any further.' },
+    render: stopFrame,
   },
 ]
 
 /**
- * Frame for one syllable: a single, large MaddBar anchored under its madd letter, filling one
- * count at a time (see `maddFilled`) and holding at `counts` for the step's trailing pause before
- * the next syllable — the clip plays "so fast it didn't point at anything" no longer (L13b).
+ * Natural madd (al-madd al-tabi'i): one counting demonstration on بَا — pronounce it and count its
+ * 2 movements, marked at the first and the last, then stop (L13, L13b, L13c/#34). بُو and بِي hold
+ * the same 2 counts, so they're named once (small) rather than repeated as their own steps.
  */
-const frame = ({ before, letter, label }: (typeof SYLLABLES)[number], progress: number) => (
-  <MaddBar counts={COUNTS} filled={maddFilled(COUNTS, progress)} current before={before} letter={letter} label={label} />
-)
-
-/** Natural madd (al-madd al-tabi'i): the three madd letters, each stretched 2 counts (L13, L13b). */
 export const naturalMadd: Clip = {
-  title: { ar: 'المد الطبيعي: حروف المد الثلاثة', en: 'Natural madd: the three madd letters' },
-  steps: SYLLABLES.map(
-    (syllable): ClipStep => ({
-      duration: maddStepDuration(COUNTS),
-      caption: syllable.caption,
-      render: (progress) => frame(syllable, progress),
-    }),
-  ),
+  title: { ar: 'المد الطبيعي: عدّ الحركتين', en: 'Natural madd: counting the two movements' },
+  steps: STEPS,
 }

@@ -493,6 +493,12 @@ main {
   fill: var(--muted);
 }
 
+/* The start/end count markers (MaddBarProps.markers, #34) sit just above the bar's two ends. */
+.madd-bar-marker-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
 /* MouthDiagram: base colors per part; a lit region (data-lit) takes the highlight. */
 .mouth-diagram {
   inline-size: 100%;

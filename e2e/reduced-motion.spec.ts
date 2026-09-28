@@ -35,29 +35,49 @@ test.describe('qalqalah clip and reduced motion', () => {
 // the madd letter and its bar anchored underneath, filling one count at a time then holding at 2.
 test.describe('natural madd clip and reduced motion', () => {
   for (const lesson of withClip('natural-madd')) {
-    test(`${lesson.id} clip points an arrow at the madd letter and fills its bar while playing`, async ({ page }) => {
+    test(`${lesson.id} clip points an arrow at the madd letter, shows start/end markers, and fills its bar while playing`, async ({
+      page,
+    }) => {
       await page.goto(`/#/lesson/${lesson.id}`)
       const player = page.locator('.animation .player')
       await expect(player.locator('.madd-bar[data-current]')).toHaveCount(1)
       await expect(player.locator('.madd-bar-arrow')).toHaveCount(1)
+      await expect(player.locator('[data-marker="start"]')).toHaveCount(1)
+      await expect(player.locator('[data-marker="end"]')).toHaveAttribute('data-beat', '2')
       const fill = player.locator('.madd-bar-fill')
       await expect(fill).toHaveAttribute('width', '0')
       await player.getByRole('button', { name: 'Play', exact: true }).click()
       await expect(fill).not.toHaveAttribute('width', '0')
     })
 
-    test(`${lesson.id} clip steps through three syllables, each ending full at count 2, with reduced motion`, async ({
+    // Step 1 gets ready (empty bar), steps 2-3 count one/two (landing the pulse on beat 1, then
+    // beat 2 at the end marker), step 4 stops (full bar, no running pulse) — see #34.
+    test(`${lesson.id} clip steps through get-ready, count one, count two and stop, with reduced motion`, async ({
       page,
     }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.goto(`/#/lesson/${lesson.id}`)
       const player = page.locator('.animation .player')
-      for (let step = 0; step < 3; step += 1) {
-        await expect(player).toHaveAttribute('data-step', String(step))
-        await expect(player.locator('.madd-bar-fill')).toHaveAttribute('width', '200')
-        await expect(player.locator('.madd-bar-count')).toHaveText('2')
-        if (step < 2) await player.getByRole('button', { name: 'Next step' }).click()
-      }
+
+      await expect(player).toHaveAttribute('data-step', '0')
+      await expect(player.locator('.madd-bar-fill')).toHaveAttribute('width', '0')
+      await expect(player.locator('.madd-bar-pulse')).toHaveCount(0)
+
+      await player.getByRole('button', { name: 'Next step' }).click()
+      await expect(player).toHaveAttribute('data-step', '1')
+      await expect(player.locator('.madd-bar-pulse')).toHaveAttribute('data-beat', '1')
+
+      await player.getByRole('button', { name: 'Next step' }).click()
+      await expect(player).toHaveAttribute('data-step', '2')
+      await expect(player.locator('.madd-bar-fill')).toHaveAttribute('width', '200')
+      await expect(player.locator('.madd-bar-count')).toHaveText('2')
+      await expect(player.locator('.madd-bar-pulse')).toHaveAttribute('data-beat', '2')
+
+      await player.getByRole('button', { name: 'Next step' }).click()
+      await expect(player).toHaveAttribute('data-step', '3')
+      await expect(player.locator('.madd-bar-fill')).toHaveAttribute('width', '200')
+      await expect(player.locator('[data-stopped]')).toHaveCount(1)
+      await expect(player.locator('.madd-bar-pulse')).toHaveCount(0)
     })
   }
 })

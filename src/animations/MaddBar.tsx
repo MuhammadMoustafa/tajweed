@@ -32,25 +32,25 @@ const LETTER_Y = 44
  * matching how the other clips place letters, e.g. QalqalahBounce's fixed `letterX`). */
 const LETTER_HALF_WIDTH = 22
 
-/** One count lasts about a second at 1×; matched by every madd lesson (L13b-L16) for one shared pace. */
+/** One count lasts about a second at 1×; matched by every madd lesson (L13c-L16) for one shared pace. */
 export const COUNT_MS = 1000
-/** How long the filled bar holds at the end of a syllable/word before the clip moves on. */
-export const MADD_HOLD_MS = 600
-
-/** Total duration (ms, at 1×) of a step that counts up to `counts` and then holds. */
-// eslint-disable-next-line react/only-export-components
-export const maddStepDuration = (counts: MaddCount): number => counts * COUNT_MS + MADD_HOLD_MS
+/** How long the "get ready" step holds before the first count begins. */
+export const MADD_READY_MS = 700
+/** How long the "stop" step holds at the end, showing the letter must not be stretched further. */
+export const MADD_STOP_MS = 700
 
 /**
- * How many counts are filled at `progress` (0…1) through a `maddStepDuration(counts)` step: grows
- * one count per `COUNT_MS`, then stays at `counts` for the trailing hold. Shared by every madd
- * clip (L13b-L16) so they all count at the same pace and pause the same way at the end.
+ * How many counts are filled at `progress` (0…1) through the single-count (`COUNT_MS`) step for
+ * `beat` (1 = the first count, 2 = the second, …): grows from `beat - 1` to `beat`. A madd clip
+ * builds one `ClipStep` per count this way (see NaturalMadd.tsx) so every madd lesson (L13c-L16)
+ * counts at the same pace and MaddBar can land its metronome pulse and markers on the same beats.
  */
 // eslint-disable-next-line react/only-export-components
-export const maddFilled = (counts: MaddCount, progress: number): number => {
-  const elapsed = Math.min(1, Math.max(0, progress)) * maddStepDuration(counts)
-  return Math.min(counts, elapsed / COUNT_MS)
-}
+export const maddBeatFilled = (beat: number, progress: number): number => beat - 1 + Math.min(1, Math.max(0, progress))
+
+/** Fraction of a count over which the metronome-style landing pulse grows, ending exactly when
+ * that count completes (see MaddBar's `markers`). */
+const PULSE_SPAN = 0.5
 
 export interface MaddBarProps {
   /** How many counts (harakat) the bar stretches to. */
@@ -74,21 +74,43 @@ export interface MaddBarProps {
   label?: Bilingual
   /** Overrides the count's default color token (see DEFAULT_TOKEN). */
   token?: ColorToken
+  /**
+   * Show a numbered marker at the first count and one at the last (`counts`) — "the idea is to
+   * count the 2 movements", so only the start and end need a marker, never one per letter/count in
+   * between (maintainer, #34). Also draws a metronome-like pulse that lands on whichever count
+   * `filled` is completing. Every madd lesson (L13c-L16) passes this so 2/4/5/6-count bars all
+   * teach the same "start … end" cue.
+   */
+  markers?: boolean
+  /** Show that counting has stopped and the letter must not be stretched further: mutes the
+   * running pulse and caps the bar with a stop tick past the end marker. */
+  stopped?: boolean
 }
 
 /**
  * A bar filled up to `filled` of its `counts`, anchored under `letter` with an arrow pointing at
  * it, colored with the madd token matching `counts` (or an explicit `token`). It holds no timer: a
- * clip step (src/animations/player) drives `filled` from its progress, typically via `maddFilled`.
- * The letter, arrow and bar all share one fixed x (`ANCHOR_X`) so `before` can sit beside the
- * letter without moving the bar. Reused by every madd lesson (L13b-L16) so learners see the same
- * "how long, and which letter" cue at every length.
+ * clip step (src/animations/player) drives `filled` from its progress, typically via
+ * `maddBeatFilled`. The letter, arrow and bar all share one fixed x (`ANCHOR_X`) so `before` can
+ * sit beside the letter without moving the bar. Reused by every madd lesson (L13c-L16) so learners
+ * see the same "how long, and which letter" cue, with start/end markers, at every length.
  */
-export function MaddBar({ counts, filled = counts, current, before, letter, label, token }: MaddBarProps) {
+export function MaddBar({
+  counts,
+  filled = counts,
+  current,
+  before,
+  letter,
+  label,
+  token,
+  markers,
+  stopped,
+}: MaddBarProps) {
   const { t, n } = useLocale()
   const color = `var(--tj-${token ?? DEFAULT_TOKEN[counts]})`
   const shown = Math.min(counts, Math.max(0, filled))
   const begun = Math.ceil(shown)
+  const markerY = BAR_Y + BAR_HEIGHT / 2
 
   return (
     <svg
@@ -132,6 +154,62 @@ export function MaddBar({ counts, filled = counts, current, before, letter, labe
         rx={BAR_HEIGHT / 2}
         fill={color}
       />
+      {markers && (
+        <>
+          {/* The two ends of the count, per #34: a marker at the first movement and one at the
+              last — never one per count in between, since every madd letter holds the same pace. */}
+          <circle cx={BAR_X} cy={markerY} r={5} fill={color} data-marker="start" data-beat={1} />
+          <text x={BAR_X} y={BAR_Y - 8} textAnchor="middle" className="madd-bar-marker-label" fill={color}>
+            {n(1)}
+          </text>
+          <circle
+            cx={BAR_X + BAR_WIDTH}
+            cy={markerY}
+            r={5}
+            fill={color}
+            data-marker="end"
+            data-beat={counts}
+          />
+          <text x={BAR_X + BAR_WIDTH} y={BAR_Y - 8} textAnchor="middle" className="madd-bar-marker-label" fill={color}>
+            {n(counts)}
+          </text>
+          {!stopped &&
+            // A metronome-like pulse that grows into each count as it lands, one ring per beat
+            // (never more than one visible at once, since each spans the last half of its count).
+            Array.from({ length: counts }, (_, i) => i + 1).map((beat) => {
+              const local = shown - (beat - 1) // 0 at the count's start, 1 when it lands
+              if (local <= 1 - PULSE_SPAN || local > 1) return null
+              const grown = Math.min(1, (local - (1 - PULSE_SPAN)) / PULSE_SPAN)
+              const bx = BAR_X + (beat / counts) * BAR_WIDTH
+              return (
+                <circle
+                  key={beat}
+                  cx={bx}
+                  cy={markerY}
+                  r={5 + 9 * grown}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth={2}
+                  opacity={0.9 * grown}
+                  className="madd-bar-pulse"
+                  data-beat={beat}
+                />
+              )
+            })}
+          {stopped && (
+            <line
+              x1={BAR_X + BAR_WIDTH + 10}
+              y1={BAR_Y - 6}
+              x2={BAR_X + BAR_WIDTH + 10}
+              y2={BAR_Y + BAR_HEIGHT + 6}
+              stroke={color}
+              strokeWidth={3}
+              className="madd-bar-stop"
+              data-stopped="true"
+            />
+          )}
+        </>
+      )}
       {begun > 0 && (
         <text
           x={BAR_X + BAR_WIDTH + 14}

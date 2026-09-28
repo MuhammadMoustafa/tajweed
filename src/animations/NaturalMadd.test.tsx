@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { LocaleProvider } from '../i18n/LocaleProvider'
-import { maddFilled, maddStepDuration } from './MaddBar'
+import { COUNT_MS, MADD_READY_MS, MADD_STOP_MS, maddBeatFilled } from './MaddBar'
 import { naturalMadd } from './NaturalMadd'
 
 afterEach(() => localStorage.clear())
@@ -11,70 +11,86 @@ const renderStep = (index: number, progress: number, locale: 'ar' | 'en' = 'en')
   return render(<LocaleProvider>{naturalMadd.steps[index].render(progress)}</LocaleProvider>)
 }
 
-describe('maddFilled/maddStepDuration (src/animations/MaddBar.ts)', () => {
-  it('holds the bar full for a trailing pause after a step of counts*1s', () => {
-    expect(maddStepDuration(2)).toBe(2600) // 2 * 1000ms/count + 600ms hold
+describe('maddBeatFilled (src/animations/MaddBar.tsx)', () => {
+  it('grows from beat-1 to beat across a single count', () => {
+    expect(maddBeatFilled(1, 0)).toBe(0)
+    expect(maddBeatFilled(1, 0.5)).toBeCloseTo(0.5)
+    expect(maddBeatFilled(1, 1)).toBe(1)
+    expect(maddBeatFilled(2, 0)).toBe(1)
+    expect(maddBeatFilled(2, 0.5)).toBeCloseTo(1.5)
+    expect(maddBeatFilled(2, 1)).toBe(2)
   })
 
-  it('grows one count per second, then caps at counts through the hold', () => {
-    expect(maddFilled(2, 0)).toBe(0)
-    expect(maddFilled(2, 0.5)).toBeCloseTo(1.3) // 1300ms elapsed of a 2600ms step
-    expect(maddFilled(2, 1)).toBe(2)
-    // The beat where count 1 begins: 1000ms into the step.
-    expect(maddFilled(2, 1000 / maddStepDuration(2))).toBeCloseTo(1)
-    // Bar finishes counting at 2000ms, then holds full through the remaining 600ms.
-    expect(maddFilled(2, 2000 / maddStepDuration(2))).toBeCloseTo(2)
-    expect(maddFilled(2, 2300 / maddStepDuration(2))).toBe(2)
+  it('clamps progress to 0…1', () => {
+    expect(maddBeatFilled(1, -1)).toBe(0)
+    expect(maddBeatFilled(1, 2)).toBe(1)
   })
 })
 
+// natural-madd (MaddBar, src/animations/MaddBar.tsx): one counting demonstration on بَا — get
+// ready, count one, count two (the end marker), then stop (#34).
 describe('natural-madd clip (src/animations/NaturalMadd.tsx)', () => {
-  it('has one step per madd letter, each lasting a 2-count bar plus its hold', () => {
-    expect(naturalMadd.steps).toHaveLength(3)
-    for (const step of naturalMadd.steps) {
-      expect(step.duration).toBe(maddStepDuration(2))
-    }
+  it('has 4 steps: get ready, count one, count two, stop', () => {
+    expect(naturalMadd.steps).toHaveLength(4)
+    expect(naturalMadd.steps.map((step) => step.duration)).toEqual([MADD_READY_MS, COUNT_MS, COUNT_MS, MADD_STOP_MS])
   })
 
-  it('captions each step with both languages, naming the letter and its 2 counts', () => {
+  it('captions each step in both languages', () => {
     const captions = naturalMadd.steps.map((step) => step.caption)
-    expect(captions[0]).toMatchObject({ en: expect.stringContaining('Alif') })
-    expect(captions[1]).toMatchObject({ en: expect.stringContaining('Waw') })
-    expect(captions[2]).toMatchObject({ en: expect.stringContaining('Ya') })
     for (const caption of captions) {
       expect(caption?.ar.trim()).not.toBe('')
-      expect(caption?.en).toMatch(/2 counts/)
+      expect(caption?.en?.trim()).not.toBe('')
     }
+    expect(captions[0]).toMatchObject({ en: expect.stringContaining('بَا') })
+    expect(captions[1]).toMatchObject({ en: expect.stringMatching(/count one/i) })
+    expect(captions[2]).toMatchObject({ en: expect.stringMatching(/count two/i) })
+    expect(captions[3]).toMatchObject({ en: expect.stringMatching(/stop/i) })
   })
 
-  it.each([
-    [0, 'ا'],
-    [1, 'و'],
-    [2, 'ي'],
-  ])('step %i points its arrow and bar at the madd letter %s, before the harakah beside it', (index, letter) => {
-    const { container } = renderStep(index, 0)
-    const texts = [...container.querySelectorAll('text')].map((t) => t.textContent)
-    expect(texts).toContain(letter)
-    expect(container.querySelector('.madd-bar-arrow')).not.toBeNull()
-    expect(container.querySelector('[data-current]')).not.toBeNull()
-  })
-
-  it('starts a step with an empty bar and no count shown', () => {
+  it('step 1 (get ready) shows an empty bar with both start and end markers, no pulse yet', () => {
     const { container } = renderStep(0, 0)
     expect(container.querySelector('.madd-bar-fill')).toHaveAttribute('width', '0')
-    expect(container.querySelector('.madd-bar-count')).toBeNull()
+    expect(container.querySelector('[data-marker="start"]')).not.toBeNull()
+    expect(container.querySelector('[data-marker="end"]')).not.toBeNull()
+    expect(container.querySelector('[data-marker="end"]')).toHaveAttribute('data-beat', '2')
+    expect(container.querySelector('.madd-bar-pulse')).toBeNull()
+    expect(container.querySelector('[data-stopped]')).toBeNull()
   })
 
-  it('fills the bar and shows the running count partway through a step', () => {
-    const { container } = renderStep(0, 0.5) // 1300ms of 2600ms: 1 count begun, filling toward 2
-    const fill = container.querySelector('.madd-bar-fill')!
-    expect(Number(fill.getAttribute('width'))).toBeCloseTo(130) // 1.3/2 * 200
-    expect(container.querySelector('.madd-bar-count')).toHaveTextContent('2')
+  it('step 2 (count one) fills toward the first count and lands the pulse on beat 1 at its end', () => {
+    const mid = renderStep(1, 0.5)
+    expect(Number(mid.container.querySelector('.madd-bar-fill')!.getAttribute('width'))).toBeCloseTo(50) // 0.5/2 * 200
+    mid.unmount()
+
+    const { container } = renderStep(1, 1)
+    expect(Number(container.querySelector('.madd-bar-fill')!.getAttribute('width'))).toBeCloseTo(100) // 1/2 * 200
+    const pulse = container.querySelector('.madd-bar-pulse')
+    expect(pulse).not.toBeNull()
+    expect(pulse).toHaveAttribute('data-beat', '1')
   })
 
-  it('ends a step with the bar full at count 2, holding through the pause', () => {
-    const { container } = renderStep(0, 1)
+  it('step 3 (count two) ends with the bar full and the pulse landed on the end marker (beat 2)', () => {
+    const { container } = renderStep(2, 1)
     expect(container.querySelector('.madd-bar-fill')).toHaveAttribute('width', '200')
-    expect(container.querySelector('.madd-bar-count')).toHaveTextContent('2')
+    const pulse = container.querySelector('.madd-bar-pulse')
+    expect(pulse).not.toBeNull()
+    expect(pulse).toHaveAttribute('data-beat', '2')
+  })
+
+  it('step 4 (stop) shows the bar full, stopped, with no running pulse', () => {
+    const { container } = renderStep(3, 0)
+    expect(container.querySelector('.madd-bar-fill')).toHaveAttribute('width', '200')
+    expect(container.querySelector('[data-stopped]')).not.toBeNull()
+    expect(container.querySelector('.madd-bar-pulse')).toBeNull()
+  })
+
+  it('every step anchors the arrow and bar at the same letter (بَا)', () => {
+    for (let step = 0; step < 4; step += 1) {
+      const { container } = renderStep(step, 1)
+      const texts = [...container.querySelectorAll('text')].map((t) => t.textContent)
+      expect(texts).toContain('ا')
+      expect(container.querySelector('.madd-bar-arrow')).not.toBeNull()
+      expect(container.querySelector('[data-current]')).not.toBeNull()
+    }
   })
 })
