@@ -11,3 +11,4 @@ export type AnimationId =
   | 'madd-munfasil'
   | 'madd-lazim-bar'
   | 'madd-lazim-cause'
+  | 'madd-arid' | 'madd-leen' | 'madd-badal' | 'madd-iwad' | 'madd-silah'

@@ -9,6 +9,7 @@ import {
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { naturalMadd } from './NaturalMadd'
+import { maddArid, maddBadal, maddIwad, maddLeen, maddSilah } from './OtherMadd'
 import type { Clip } from './player/clip'
 import { qalqalahBounce } from './QalqalahBounce'
 
@@ -25,4 +26,5 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'madd-munfasil': maddMunfasil,
   'madd-lazim-bar': maddLazimBar,
   'madd-lazim-cause': maddLazimCause,
+  'madd-arid': maddArid, 'madd-leen': maddLeen, 'madd-badal': maddBadal, 'madd-iwad': maddIwad, 'madd-silah': maddSilah,
 }
