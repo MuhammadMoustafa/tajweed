@@ -3,8 +3,9 @@ import { getVerseMarkup } from '../data/quran'
 import { readFileSync } from 'node:fs'
 import { LOCALES, type Bilingual } from '../i18n/bilingual'
 import { ui } from '../i18n/ui'
+import { applyMarks } from '../tajweed/marks'
 import { parseTajweed } from '../tajweed/parse'
-import { TAJWEED_RULES } from '../tajweed/rules'
+import { CUSTOM_RULES, TAJWEED_RULES } from '../tajweed/rules'
 import { LESSONS } from '.'
 import type { QuizChoiceQuestion, QuizTapQuestion } from './types'
 
@@ -29,12 +30,15 @@ describe('lessons', () => {
       lesson.examples.forEach((e) => expectBothLanguages(e.note, `${id} example ${e.verseKey}`))
     })
 
-    it.each(lesson.examples.map((e) => e.verseKey))(
-      'example %s is in quran.json (run `npm run fetch-quran`) and shows a focus rule',
-      (key) => {
+    it.each(lesson.examples.map((e) => [e.verseKey, e] as const))(
+      'example %s is in quran.json (run `npm run fetch-quran`), has marks in range, and shows a focus rule',
+      (key, example) => {
         const markup = getVerseMarkup(key)
         expect(markup).toBeDefined()
-        const rules = parseTajweed(markup!).segments.map((s) => s.rule)
+        const parsed = parseTajweed(markup!)
+        // Throws loudly if a mark's word/letter is out of range for this verse.
+        const segments = example.marks?.length ? applyMarks(parsed.segments, example.marks) : parsed.segments
+        const rules = segments.map((s) => s.rule)
         expect(lesson.focusRules.some((r) => rules.includes(r))).toBe(true)
       },
     )
@@ -75,7 +79,8 @@ describe('ui strings', () => {
 
 describe('tajweed colors', () => {
   const css = readFileSync('src/styles.css', 'utf8')
-  it.each(Object.values(TAJWEED_RULES).map((r) => [r.id, r.color]))('%s uses a defined color --tj-%s', (_, color) => {
+  const rules = [...Object.values(TAJWEED_RULES), ...Object.values(CUSTOM_RULES)]
+  it.each(rules.map((r) => [r.id, r.color]))('%s uses a defined color --tj-%s', (_, color) => {
     // Once in the light block and once in the dark block.
     expect(css.split(`--tj-${color}:`).length - 1).toBe(2)
   })

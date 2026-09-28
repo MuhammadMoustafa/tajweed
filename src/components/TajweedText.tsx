@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
 import { useLocale } from '../i18n/LocaleProvider'
 import type { SegmentState } from '../lessons/quiz'
+import { applyMarks, type Mark } from '../tajweed/marks'
 import { parseTajweed } from '../tajweed/parse'
-import { TAJWEED_RULES, type TajweedRuleId } from '../tajweed/rules'
+import { ALL_RULES, type RuleId } from '../tajweed/rules'
 
 const STATE_COLOR_TOKEN: Record<SegmentState, string> = {
   selected: 'quiz-selected',
@@ -21,7 +22,12 @@ interface InteractiveProps {
 interface Props {
   markup: string
   /** Only these rules are colored; omit to color every rule. Ignored when `interactive` is set. */
-  highlight?: readonly TajweedRuleId[]
+  highlight?: readonly RuleId[]
+  /**
+   * Hand-placed highlights for rules the API markup doesn't tag; see src/tajweed/marks.ts.
+   * Ignored when `interactive` is set, so quiz indices always match `parseTajweed` segments.
+   */
+  marks?: readonly Mark[]
   /**
    * Quiz tap mode: every segment becomes tappable. Color shows selection/correct/wrong state only
    * — never the underlying rule, so the answer isn't given away before checking.
@@ -33,9 +39,14 @@ interface Props {
  * Renders Quran text with tajweed coloring. Rule spans change ONLY `color` — any font, size,
  * spacing or padding change inside a word breaks Arabic letter joining.
  */
-export function TajweedText({ markup, highlight, interactive }: Props) {
+export function TajweedText({ markup, highlight, marks, interactive }: Props) {
   const { t } = useLocale()
-  const { segments, ayahNumber } = useMemo(() => parseTajweed(markup), [markup])
+  const parsed = useMemo(() => parseTajweed(markup), [markup])
+  const segments = useMemo(
+    () => (!interactive && marks && marks.length > 0 ? applyMarks(parsed.segments, marks) : parsed.segments),
+    [parsed.segments, marks, interactive],
+  )
+  const { ayahNumber } = parsed
 
   return (
     <p className="quran" lang="ar" dir="rtl">
@@ -62,7 +73,7 @@ export function TajweedText({ markup, highlight, interactive }: Props) {
           )
         }
         if (!seg.rule || (highlight && !highlight.includes(seg.rule))) return seg.text
-        const rule = TAJWEED_RULES[seg.rule]
+        const rule = ALL_RULES[seg.rule]
         return (
           <span key={i} style={{ color: `var(--tj-${rule.color})` }} title={t(rule.name)}>
             {seg.text}

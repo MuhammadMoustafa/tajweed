@@ -3,12 +3,12 @@ import { getVerseMarkup, verseAudioUrl } from '../data/quran'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import type { LessonExample } from '../lessons/types'
-import type { TajweedRuleId } from '../tajweed/rules'
+import type { RuleId } from '../tajweed/rules'
 import { TajweedText } from './TajweedText'
 
 interface Props {
   example: LessonExample
-  highlight: readonly TajweedRuleId[]
+  highlight: readonly RuleId[]
 }
 
 export function AyahExample({ example, highlight }: Props) {
@@ -29,7 +29,7 @@ export function AyahExample({ example, highlight }: Props) {
 
   return (
     <figure className="card example">
-      <TajweedText markup={markup} highlight={highlight} />
+      <TajweedText markup={markup} highlight={highlight} marks={example.marks} />
       <figcaption>
         <button type="button" className="play" onClick={toggle} aria-pressed={playing}>
           {playing ? '⏸ ' + t(ui.pause) : '▶ ' + t(ui.listen)}

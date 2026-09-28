@@ -1,5 +1,6 @@
 import type { Bilingual } from '../i18n/bilingual'
-import type { TajweedRuleId } from '../tajweed/rules'
+import type { Mark } from '../tajweed/marks'
+import type { RuleId } from '../tajweed/rules'
 import type { AnimationId } from '../animations/ids'
 
 /** `surah:ayah`, e.g. `112:1`. Text is looked up in src/data/quran.json — never written inline. */
@@ -8,6 +9,8 @@ export type VerseKey = `${number}:${number}`
 export interface LessonExample {
   verseKey: VerseKey
   note: Bilingual
+  /** Hand-placed highlights for rules the API markup doesn't tag; see src/tajweed/marks.ts. */
+  marks?: Mark[]
 }
 
 export interface LessonSection {
@@ -48,7 +51,7 @@ export interface Lesson {
   sections: LessonSection[]
   animation?: AnimationId
   /** Rules colored in this lesson's examples; everything else renders uncolored. */
-  focusRules: TajweedRuleId[]
+  focusRules: RuleId[]
   examples: LessonExample[]
   /** Set true only after a qualified teacher has checked both languages. */
   reviewed: boolean
