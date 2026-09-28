@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test'
 import { LESSONS } from '../src/lessons'
 
-// Only lessons that have an animation; iterates LESSONS so a new animated lesson is covered
-// automatically.
-const lessonsWithAnimation = LESSONS.filter((l) => l.animation)
+// The echo circles are specific to the qalqalah animation; each new animation adds its own
+// reduced-motion check here.
+const lessonsWithAnimation = LESSONS.filter((l) => l.animation === 'qalqalah-bounce')
 
 test.describe('animation and reduced motion', () => {
   for (const lesson of lessonsWithAnimation) {

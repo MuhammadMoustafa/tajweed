@@ -6,7 +6,8 @@ test.describe('tajweed rule coloring', () => {
   for (const lesson of LESSONS) {
     test(`${lesson.id} examples render colored rule spans`, async ({ page }) => {
       await page.goto(`/#/lesson/${lesson.id}`)
-      const quranBlocks = page.locator('.quran')
+      // Scoped to example cards: quizzes and other sections may render Quran text too.
+      const quranBlocks = page.locator('.example .quran')
       await expect(quranBlocks).toHaveCount(lesson.examples.length)
 
       for (let i = 0; i < lesson.examples.length; i++) {
