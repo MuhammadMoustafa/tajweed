@@ -70,15 +70,17 @@ describe('Quiz', () => {
     expect(screen.getByText('Correct!')).toBeInTheDocument()
   })
 
-  it('disables checking until every question is answered', () => {
+  it('explains instead of checking while a question is unanswered', () => {
     const { container, screen } = renderQuiz()
-    expect(screen.getByRole('button', { name: 'Check answers' })).toBeDisabled()
-
     tapTheQalqalahLetter(container)
-    expect(screen.getByRole('button', { name: 'Check answers' })).toBeDisabled()
+    fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))
+    expect(screen.getByRole('status')).toHaveTextContent('Answer every question first.')
+    expect(screen.queryByText(/Your score/)).toBeNull()
 
     fireEvent.click(screen.getByRole('radio', { name: 'B' }))
-    expect(screen.getByRole('button', { name: 'Check answers' })).toBeEnabled()
+    fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))
+    expect(screen.queryByRole('status')).toBeNull()
+    expect(screen.getByText(/Your score/)).toBeInTheDocument()
   })
 
   it('scores a fully correct attempt', () => {
@@ -103,7 +105,7 @@ describe('Quiz', () => {
     expect(screen.getByText('Your score: 1 / 2')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
-    expect(screen.getByRole('button', { name: 'Check answers' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Check answers' })).toBeEnabled()
     expect(screen.queryByText('Your score: 1 / 2')).not.toBeInTheDocument()
   })
 })

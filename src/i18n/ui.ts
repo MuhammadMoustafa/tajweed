@@ -22,6 +22,7 @@ export const ui = {
   lessonNotFound: { ar: 'الدرس غير موجود.', en: 'Lesson not found.' },
   quizTitle: { ar: 'اختبر نفسك', en: 'Practice quiz' },
   checkAnswers: { ar: 'تحقق من الإجابات', en: 'Check answers' },
+  answerAllFirst: { ar: 'أجب عن كل الأسئلة أولًا.', en: 'Answer every question first.' },
   tryAgain: { ar: 'حاول مرة أخرى', en: 'Try again' },
   quizCorrect: { ar: 'إجابة صحيحة!', en: 'Correct!' },
   quizIncorrect: { ar: 'إجابة غير صحيحة.', en: 'Not quite.' },

@@ -21,6 +21,9 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
   const { t, n } = useLocale()
   const [answers, setAnswers] = useState<Answer[]>(() => questions.map(initialAnswer))
   const [checked, setChecked] = useState(false)
+  // Set when Check is pressed with questions still unanswered; the button stays enabled so the
+  // press always gives feedback instead of looking broken.
+  const [unanswered, setUnanswered] = useState(0)
 
   const results = useMemo(() => {
     if (!checked) return undefined
@@ -58,6 +61,13 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
   const reset = () => {
     setAnswers(questions.map(initialAnswer))
     setChecked(false)
+    setUnanswered(0)
+  }
+
+  const check = () => {
+    const left = answers.filter((answer) => !isAnswered(answer)).length
+    setUnanswered(left)
+    if (left === 0) setChecked(true)
   }
 
   return (
@@ -91,9 +101,16 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
       })}
       <div className="quiz-actions">
         {!checked ? (
-          <button type="button" onClick={() => setChecked(true)} disabled={!answers.every(isAnswered)}>
-            {t(ui.checkAnswers)}
-          </button>
+          <>
+            <button type="button" onClick={check}>
+              {t(ui.checkAnswers)}
+            </button>
+            {unanswered > 0 && (
+              <p className="quiz-feedback wrong" role="status">
+                {t(ui.answerAllFirst)}
+              </p>
+            )}
+          </>
         ) : (
           <>
             <p className="quiz-score">
