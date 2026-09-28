@@ -14,7 +14,7 @@ Lesson cards (L*) share one definition of done: a lesson file in
 src/lessons/ with `order` = the card's number, bilingual prose, a
 reduced-motion-safe animation as controllable clips on AnimationPlayer (T10), one per section where it helps (or reuse of an existing one), 2–4 examples
 from Juz 'Amma / Al-Fatiha by verse key (`npm run fetch-quran`), a quiz
-(T2), all matn lines on the rule, from both poems where they cover it (T8, T13), `reviewed: false`, and tests from lessons.test.ts passing. Difficulty
+(T2), all matn lines on the rule, with both poems in every lesson (a 'not covered' line when one doesn't treat it) (T8, T13), `reviewed: false`, and tests from lessons.test.ts passing. Difficulty
 in brackets picks the agent.
 
 | ID | Issue | Card | Blocked by | Status |
@@ -31,7 +31,7 @@ in brackets picks the agent.
 | T10 | #30 | [task-hard] AnimationPlayer: timeline clips with video-style controls (play/pause, seek, step, speed, replay; no autoplay), per-section clips via `LessonSection.animation`; existing animations migrate (maintainer, 2026-09-28: madd too fast and points at nothing; makharij needs a controllable clip per section). | none | done |
 | T11 | #33 | [task] Step labels above the clip timeline (click to seek; current label only on phones); labels for makharij, qalqalah, madd clips (maintainer, 2026-09-28). | none | done |
 | T12 | #35 | [task] Reciter audio in clips: quran.com word-by-word audio by `surah:ayah:word`; isolated letters/syllables need recordings (maintainer asked for a qari per letter, 2026-09-28). | T11 | in-progress |
-| T13 | #36 | [task] Matn: each bayt on one line at every width; every line on the lesson's rule; Tuhfa then Jazariyya where both cover it (maintainer, 2026-09-28). | none | in-progress |
+| T13 | #36 | [task] Matn: each bayt on one line at every width; every line on the lesson's rule; both poems in every lesson, clearly separated, with a 'not covered' line when a poem doesn't treat the rule (maintainer, 2026-09-28). | none | in-progress |
 | T14 | #38 | [task] Progress page (#/progress): quiz attempts, best/last scores, per-rule accuracy with review links; home cards colored by state (learned/started/next/not started) with text badges (maintainer, 2026-09-28). | none | in-progress |
 | L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | ready |
 | L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | done |
