@@ -68,17 +68,18 @@ export const maddArid: Clip = {
   ],
 }
 
-const LEEN: MaddPassBar = { before: 'بَ', letter: 'يْ', after: 'تْ', cause: 'after', token: 'madd-permissible' }
+// Waw rather than ya: the isolated ya in the Quran font is drawn without its dots, like alif maqsurah.
+const LEEN: MaddPassBar = { before: 'بَ', letter: 'وْ', after: 'تْ', cause: 'after', token: 'madd-permissible' }
 
 /** Madd al-leen: waw/ya sakinah after a fatha, stretched only when stopping; 2, 4 or 6. */
 export const maddLeen: Clip = {
   title: { ar: 'مد اللين عند الوقف: اختر ٢ أو ٤ أو ٦', en: 'Madd al-leen when stopping: choose 2, 4 or 6' },
   steps: [
     causeStep(
-      { ...LEEN, label: { ar: 'ياء ساكنة بعد فتحة، ثم وقف', en: 'Ya sakinah after fatha, then a stop' } },
+      { ...LEEN, label: { ar: 'واو ساكنة بعد فتحة، ثم وقف', en: 'Waw sakinah after fatha, then a stop' } },
       {
-        ar: 'الياء أو الواو الساكنة بعد فتحة حرفُ لين. لا يُمدّ في الوصل، فإذا وقفتَ وسكن الحرف بعده جاز مدّه.',
-        en: 'A ya or waw sakinah after a fatha is a leen letter. It is not stretched when you read on; when you stop and the letter after it becomes sakin, it may be.',
+        ar: 'الواو أو الياء الساكنة بعد فتحة حرفُ لين. لا يُمدّ في الوصل، فإذا وقفتَ وسكن الحرف بعده جاز مدّه.',
+        en: 'A waw or ya sakinah after a fatha is a leen letter. It is not stretched when you read on; when you stop and the letter after it becomes sakin, it may be.',
       },
       CAUSE_LABEL,
       6,
