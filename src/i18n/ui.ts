@@ -1,4 +1,4 @@
-import type { Bilingual } from './bilingual'
+import type { Bilingual, Locale } from './bilingual'
 
 /** Interface strings (not lesson content — that lives in src/lessons). */
 export const ui = {
@@ -27,4 +27,21 @@ export const ui = {
   quizIncorrect: { ar: 'إجابة غير صحيحة.', en: 'Not quite.' },
   yourScore: { ar: 'نتيجتك', en: 'Your score' },
   correctLetters: { ar: 'الحروف الصحيحة', en: 'Correct letters' },
+  previousLesson: { ar: 'الدرس السابق', en: 'Previous lesson' },
+  nextLesson: { ar: 'الدرس التالي', en: 'Next lesson' },
+  lessonNavigation: { ar: 'التنقل بين الدروس', en: 'Lesson navigation' },
+  markAsLearned: { ar: 'وضع علامة "تم التعلّم"', en: 'Mark as learned' },
+  markedAsLearned: { ar: 'تم التعلّم', en: 'Learned' },
+  /** Template for the lesson-list progress summary; `{learned}`/`{total}` are filled by formatLearnedCount. */
+  learnedCount: { ar: '{learned} من {total} تم تعلّمها', en: '{learned} of {total} learned' },
 } satisfies Record<string, Bilingual>
+
+/**
+ * "3 of 20 learned" / "٣ من ٢٠ تم تعلّمها" — digits via Intl.NumberFormat so Arabic renders
+ * Arabic-Indic numerals (the `ar` macro-locale defaults to Latin digits without the explicit
+ * numbering system).
+ */
+export function formatLearnedCount(locale: Locale, learned: number, total: number): string {
+  const numberFormat = new Intl.NumberFormat(locale, locale === 'ar' ? { numberingSystem: 'arab' } : undefined)
+  return ui.learnedCount[locale].replace('{learned}', numberFormat.format(learned)).replace('{total}', numberFormat.format(total))
+}
