@@ -198,6 +198,19 @@ main {
   gap: 0.75rem;
 }
 
+/* A unit on the home list (src/components/LessonList.tsx): its title, then its chapters' cards,
+   indented behind a rule on the inline-start side so they read as one group. */
+.lesson-unit-title {
+  margin: 0.5rem 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.lesson-unit-chapters {
+  margin: 0;
+  padding-inline-start: 0.75rem;
+  border-inline-start: 3px solid var(--border);
+}
+
 /* Each lesson card is a container (not itself a link) with two separate interactive children, so
    no link ends up nested inside another (src/components/LessonCard.tsx): the main part links to
    the lesson, the side panel links to (or repeats) its quiz. */

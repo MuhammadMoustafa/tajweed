@@ -3,6 +3,7 @@ import type { Mark } from '../tajweed/marks'
 import type { RuleId } from '../tajweed/rules'
 import type { AnimationId } from '../animations/ids'
 import type { MatnId } from '../mutoon/types'
+import type { UnitId } from './units'
 
 /** `surah:ayah`, e.g. `112:1`. Text is looked up in src/data/quran.json — never written inline. */
 export type VerseKey = `${number}:${number}`
@@ -56,8 +57,11 @@ export type QuizQuestion = QuizTapQuestion | QuizChoiceQuestion
 export interface Lesson {
   /** URL slug: #/lesson/<id> */
   id: string
-  /** Lesson number on docs/roadmap.md (the learning path in CLAUDE.md, split into single-rule lessons). */
+  /** Lesson number on docs/roadmap.md (the learning path in CLAUDE.md, split into single-rule lessons).
+   *  A unit's chapters take fractions of the unit's number (2, 2.1 … 2.5; see units.ts). */
   order: number
+  /** The unit this lesson is a chapter of; the home list nests it under the unit's heading. */
+  unit?: UnitId
   title: Bilingual
   summary: Bilingual
   sections: LessonSection[]

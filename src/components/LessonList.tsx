@@ -1,6 +1,8 @@
+import { useId } from 'react'
 import { useLocale } from '../i18n/LocaleProvider'
 import { formatLearnedCount, ui } from '../i18n/ui'
 import { LESSONS } from '../lessons'
+import { groupByUnit, UNITS } from '../lessons/units'
 import { useProgress } from '../progress'
 import { LessonCard } from './LessonCard'
 
@@ -31,6 +33,7 @@ function CardStateLegend() {
 export function LessonList() {
   const { locale, t } = useLocale()
   const { isLearned, cardState, count } = useProgress()
+  const idPrefix = useId()
   // The next lesson to take: the first, in order, not yet marked learned.
   const nextId = LESSONS.find((lesson) => !isLearned(lesson.id))?.id
 
@@ -40,11 +43,26 @@ export function LessonList() {
       <p className="progress-summary">{formatLearnedCount(locale, count, LESSONS.length)}</p>
       <CardStateLegend />
       <ol className="lesson-list">
-        {LESSONS.map((lesson) => (
-          <li key={lesson.id}>
-            <LessonCard lesson={lesson} state={cardState(lesson.id)} isNext={lesson.id === nextId} />
-          </li>
-        ))}
+        {groupByUnit(LESSONS).map((group) => {
+          const cards = group.lessons.map((lesson) => (
+            <li key={lesson.id}>
+              <LessonCard lesson={lesson} state={cardState(lesson.id)} isNext={lesson.id === nextId} />
+            </li>
+          ))
+          if (group.unit === undefined) return cards
+          // A unit: its heading, then its chapters as their own nested list of the same cards.
+          const headingId = `${idPrefix}unit-${group.unit}`
+          return (
+            <li key={headingId} className="lesson-unit" data-unit={group.unit}>
+              <section aria-labelledby={headingId}>
+                <h3 id={headingId} className="lesson-unit-title">
+                  {t(UNITS[group.unit].title)}
+                </h3>
+                <ol className="lesson-list lesson-unit-chapters">{cards}</ol>
+              </section>
+            </li>
+          )
+        })}
       </ol>
     </section>
   )

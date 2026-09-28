@@ -3,6 +3,7 @@ import type { Lesson } from './types'
 export const makharij: Lesson = {
   id: 'makharij',
   order: 2,
+  unit: 'makharij',
   title: { ar: 'مخارج الحروف', en: 'Makharij (where letters come from)' },
   summary: {
     ar: 'لكل حرف موضع يخرج منه، وهي خمسة مواضع: الجوف والحلق واللسان والشفتان والخيشوم.',

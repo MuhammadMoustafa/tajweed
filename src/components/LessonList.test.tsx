@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { formatNumber } from '../i18n/bilingual'
 import { LocaleProvider } from '../i18n/LocaleProvider'
 import { LESSONS } from '../lessons'
+import { UNITS } from '../lessons/units'
 import { recordQuizAttempt, setLessonLearned } from '../progress'
 import { LessonList } from './LessonList'
 
@@ -87,6 +88,31 @@ describe('LessonList', () => {
     if (second) {
       const secondCard = cardFor(container, second.id)
       expect(secondCard).toHaveClass('is-next')
+    }
+  })
+
+  it("nests a unit's lessons under the unit's heading, in both languages", () => {
+    for (const [unitId, unit] of Object.entries(UNITS)) {
+      const members = LESSONS.filter((l) => l.unit === unitId)
+      for (const locale of ['en', 'ar'] as const) {
+        localStorage.setItem('tajweed.locale', locale)
+        const { container, unmount } = render(
+          <LocaleProvider>
+            <LessonList />
+          </LocaleProvider>,
+        )
+        const group = container.querySelector(`.lesson-unit[data-unit="${unitId}"]`)!
+        expect(group.querySelector('h3')).toHaveTextContent(unit.title[locale])
+        expect(within(group as HTMLElement).getByRole('region', { name: unit.title[locale] })).toBeInTheDocument()
+        const links = [...group.querySelectorAll('.lesson-unit-chapters .lesson-card-main')]
+        expect(links.map((a) => a.getAttribute('href'))).toEqual(members.map((l) => `#/lesson/${l.id}`))
+        unmount()
+      }
+    }
+    // Lessons outside any unit stay at the top level of the list.
+    const { container } = renderList()
+    for (const lesson of LESSONS.filter((l) => !l.unit)) {
+      expect(cardFor(container, lesson.id)?.closest('.lesson-unit')).toBeNull()
     }
   })
 
