@@ -23,6 +23,12 @@ export const ui = {
   speed: { ar: 'السرعة', en: 'Speed' },
   /** Template filled by formatTemplate with `{step}`/`{total}`. */
   stepOf: { ar: 'الخطوة {step} من {total}', en: 'Step {step} of {total}' },
+  /** Pressed = the reciter's audio in clip steps (ClipStep.audio) is muted. */
+  muteReciter: { ar: 'كتم صوت القارئ', en: 'Mute the reciter' },
+  /** Followed by the reciter's name (WORD_RECITATION in src/data/quran.ts). */
+  recitedBy: { ar: 'بصوت', en: 'Recited by' },
+  /** Template filled by formatTemplate with `{surah}`/`{ayah}`/`{word}`: where a clip's word is. */
+  wordRef: { ar: 'سورة {surah}، الآية {ayah}، الكلمة {word}', en: 'surah {surah}, ayah {ayah}, word {word}' },
   notReviewed: {
     ar: 'هذا الدرس لم يُراجَع بعد من معلّم مُجاز.',
     en: 'This lesson has not yet been reviewed by a qualified teacher.',

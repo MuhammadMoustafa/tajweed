@@ -2,6 +2,7 @@ import { act, fireEvent, render, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { LocaleProvider } from '../../i18n/LocaleProvider'
 import { AnimationPlayer } from './AnimationPlayer'
+import { mediaFragmentUrl, type AudioDriver, type AudioSpan } from './audio'
 import type { Clip } from './clip'
 import type { PlayerClock } from './clock'
 
@@ -59,16 +60,34 @@ function manualClock() {
   }
 }
 
-const renderPlayer = (locale: 'ar' | 'en' = 'en', theClip: Clip = clip) => {
+const renderPlayer = (locale: 'ar' | 'en' = 'en', theClip: Clip = clip, audio: AudioDriver = fakeAudio().driver) => {
   localStorage.setItem('tajweed.locale', locale)
   const time = manualClock()
   const { container } = render(
     <LocaleProvider>
-      <AnimationPlayer clip={theClip} clock={time.clock} />
+      <AnimationPlayer clip={theClip} clock={time.clock} audio={audio} />
     </LocaleProvider>,
   )
   const screen = within(container)
   return { ...time, screen, player: screen.getByRole('group', { name: theClip.title[locale] }) }
+}
+
+/** An audio driver that plays nothing: the test ends each span by hand with `finish()`. */
+function fakeAudio() {
+  const plays: { span: AudioSpan; stopped: boolean; finish: () => void }[] = []
+  const driver = {
+    play(span: AudioSpan, onEnd: () => void) {
+      const run = { span, stopped: false, finish: () => act(() => onEnd()) }
+      plays.push(run)
+      return () => {
+        run.stopped = true
+      }
+    },
+    unlock: vi.fn(),
+  } satisfies AudioDriver
+  /** Spans started and not stopped by the player. */
+  const sounding = () => plays.filter((p) => !p.stopped)
+  return { driver, plays, sounding }
 }
 
 beforeEach(() => {
@@ -220,5 +239,163 @@ describe('AnimationPlayer', () => {
     expect(screen.getByTestId('frame')).toHaveTextContent('1:1')
     fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
     expect(screen.getByTestId('frame')).toHaveTextContent('2:1')
+  })
+})
+
+// A real clip word (src/animations/words.ts), so its span comes from the fetched data — the fake
+// driver never touches the network.
+const WORD = '1:1:3' as const
+const audioClip: Clip = {
+  title: { ar: 'مقطع بصوت', en: 'Clip with audio' },
+  steps: [1000, 1000, 1000].map((duration, i) => ({
+    duration,
+    caption: { ar: `تعليق ${i + 1}`, en: `Caption ${i + 1}` },
+    // Only the middle step has audio.
+    audio: i === 1 ? { word: WORD } : undefined,
+    render: (progress: number) => <span data-testid="frame">{`${i}:${progress}`}</span>,
+  })),
+}
+
+describe('AnimationPlayer step audio', () => {
+  const setup = (locale: 'ar' | 'en' = 'en') => {
+    const audio = fakeAudio()
+    return { ...audio, ...renderPlayer(locale, audioClip, audio.driver) }
+  }
+
+  it('plays nothing while paused, stepping or seeking onto a step with audio', () => {
+    const { screen, player, plays } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    expect(player).toHaveAttribute('data-step', '1')
+    fireEvent.change(screen.getByRole('slider', { name: 'Animation position' }), { target: { value: '1500' } })
+    expect(plays).toHaveLength(0)
+  })
+
+  it('exposes the step audio source and credits the reciter and the word on that step', () => {
+    const { screen, player } = setup()
+    expect(player).not.toHaveAttribute('data-audio-src')
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    expect(player.getAttribute('data-audio-src')).toMatch(/^https:\/\/.+\.mp3#t=\d+(\.\d+)?,\d+(\.\d+)?$/)
+    expect(player.querySelector('.player-audio-credit')).toHaveTextContent(
+      'Recited by Sheikh Mahmoud Khalil al-Husary · surah 1, ayah 1, word 3',
+    )
+  })
+
+  it('credits the reciter and the word in Arabic', () => {
+    const { screen, player } = setup('ar')
+    fireEvent.click(screen.getByRole('button', { name: 'الخطوة التالية' }))
+    expect(player.querySelector('.player-audio-credit')).toHaveTextContent(
+      'بصوت الشيخ محمود خليل الحصري · سورة ١، الآية ١، الكلمة ٣',
+    )
+    expect(screen.getByRole('button', { name: 'كتم صوت القارئ' })).toBeInTheDocument()
+  })
+
+  it('plays the word as its step starts and advances only once both the step and the word are done', () => {
+    const { screen, player, plays, advance } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    advance(900)
+    expect(plays).toHaveLength(0)
+    advance(100)
+    expect(player).toHaveAttribute('data-step', '1')
+    expect(plays).toHaveLength(1)
+    expect(mediaFragmentUrl(plays[0].span)).toBe(player.getAttribute('data-audio-src'))
+
+    // The step's time is up but the word is still sounding: hold on this step, at its end.
+    for (let i = 0; i < 30; i++) advance(100)
+    expect(player).toHaveAttribute('data-step', '1')
+    expect(player).toHaveAttribute('data-playing', 'true')
+    expect(Number(screen.getByTestId('frame').textContent!.split(':')[1])).toBeGreaterThan(0.99)
+
+    plays[0].finish()
+    advance(100)
+    expect(player).toHaveAttribute('data-step', '2')
+    expect(plays).toHaveLength(1)
+  })
+
+  it('does not wait once the word has finished before the step', () => {
+    const { screen, player, plays, advance } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    expect(plays).toHaveLength(1)
+    plays[0].finish()
+    advance(999)
+    expect(player).toHaveAttribute('data-step', '1')
+    advance(1)
+    expect(player).toHaveAttribute('data-step', '2')
+  })
+
+  it('stops the word on pause and plays it again on resume; leaving the step stops it', () => {
+    const { screen, plays, sounding } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Pause' }))
+    expect(plays).toHaveLength(1)
+    expect(sounding()).toHaveLength(0)
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    expect(plays).toHaveLength(2)
+    expect(sounding()).toHaveLength(1)
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    expect(sounding()).toHaveLength(0)
+  })
+
+  it('ignores a stale end from a word that was restarted', () => {
+    const { screen, player, plays, advance } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    // Back to the start of the same step (within the grace period): the word starts over.
+    fireEvent.click(screen.getByRole('button', { name: 'Previous step' }))
+    expect(player).toHaveAttribute('data-step', '0')
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    expect(plays).toHaveLength(2)
+    plays[0].finish()
+    for (let i = 0; i < 20; i++) advance(100)
+    expect(player).toHaveAttribute('data-step', '1')
+    plays[1].finish()
+    advance(100)
+    expect(player).toHaveAttribute('data-step', '2')
+  })
+
+  it('mutes: plays nothing and keeps the step duration; muting mid-word stops it and moves on', () => {
+    const { screen, player, plays, sounding, advance } = setup()
+    const mute = screen.getByRole('button', { name: 'Mute the reciter' })
+    expect(mute).toHaveAttribute('aria-pressed', 'false')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    advance(1000)
+    expect(plays).toHaveLength(1)
+    for (let i = 0; i < 15; i++) advance(100)
+    expect(player).toHaveAttribute('data-step', '1')
+    fireEvent.click(mute)
+    expect(mute).toHaveAttribute('aria-pressed', 'true')
+    expect(sounding()).toHaveLength(0)
+    advance(100)
+    expect(player).toHaveAttribute('data-step', '2')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Replay animation' }))
+    for (let i = 0; i < 10; i++) advance(100)
+    expect(player).toHaveAttribute('data-step', '1')
+    expect(plays).toHaveLength(1)
+    for (let i = 0; i < 10; i++) advance(100)
+    expect(player).toHaveAttribute('data-step', '2')
+  })
+
+  it('still plays the word with reduced motion', () => {
+    motion.reduce = true
+    const { screen, plays } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    expect(plays).toHaveLength(1)
+    expect(screen.getByTestId('frame')).toHaveTextContent('1:1')
+  })
+
+  it('unlocks the audio from a click on the player', () => {
+    const { screen, driver } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    expect(driver.unlock).toHaveBeenCalled()
+  })
+
+  it('has no mute toggle or credit when the clip has no audio', () => {
+    const { screen, player } = renderPlayer()
+    expect(screen.queryByRole('button', { name: 'Mute the reciter' })).toBeNull()
+    expect(player.querySelector('.player-audio-credit')).toBeNull()
   })
 })

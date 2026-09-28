@@ -611,6 +611,17 @@ main {
   gap: 0.25rem;
 }
 
+/* On a step with audio (ClipStep.audio): who recites it and where the word is. */
+.player-audio-credit {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* The reciter's mute toggle: pressed = muted. */
+.player-mute[aria-pressed='true'] {
+  color: var(--muted);
+}
+
 .player-speed button[aria-pressed='true'] {
   border-color: var(--accent);
   color: var(--accent);

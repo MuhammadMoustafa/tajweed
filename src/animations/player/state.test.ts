@@ -94,3 +94,31 @@ describe('playerReducer', () => {
     expect(run({ type: 'seek', time: 4000 }, { type: 'step', by: -1 }).time).toBe(3000)
   })
 })
+
+describe('playerReducer step audio', () => {
+  const withAudio: Clip = {
+    title: { ar: 'مقطع', en: 'Clip' },
+    steps: [step(1000), { ...step(1000), audio: { word: '1:1:3' } }],
+  }
+  const from = (...actions: PlayerAction[]): PlayerState => actions.reduce(playerReducer, initialPlayerState(withAudio))
+
+  it('starts a step’s audio only when that step starts playing', () => {
+    expect(from({ type: 'step', by: 1 }).audio).toBeUndefined()
+    expect(from({ type: 'play' }).audio).toBeUndefined()
+    expect(from({ type: 'play' }, { type: 'tick', elapsed: 1000 }).audio).toEqual({ step: 1, run: 1 })
+    expect(from({ type: 'step', by: 1 }, { type: 'play' }).audio).toEqual({ step: 1, run: 1 })
+  })
+
+  it('does not end a clip whose last step’s audio is still sounding, then ends once it has', () => {
+    const holding = from({ type: 'play' }, ...Array.from({ length: 30 }, () => ({ type: 'tick' as const, elapsed: 100 })))
+    expect(holding.playing).toBe(true)
+    expect(isEnded(holding)).toBe(false)
+    expect(currentStep(holding)).toBe(1)
+    const ended = [{ type: 'audioEnd', run: 1 } as const, { type: 'tick', elapsed: 100 } as const].reduce(
+      playerReducer,
+      holding,
+    )
+    expect(isEnded(ended)).toBe(true)
+    expect(ended.playing).toBe(false)
+  })
+})

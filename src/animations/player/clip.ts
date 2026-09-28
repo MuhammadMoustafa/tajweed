@@ -1,5 +1,15 @@
 import type { ReactNode } from 'react'
 import type { Bilingual } from '../../i18n/bilingual'
+import type { WordKey } from '../../lessons/types'
+
+/**
+ * A sound a step plays as it starts playing (see ClipStep.audio). For now only a Quran word, by
+ * `surah:ayah:word` key, recited by WORD_RECITATION (src/data/quran.ts) and cut from the ayah's
+ * audio by quran.com's per-word timings; the word must be listed in src/animations/words.ts so
+ * `npm run fetch-quran` fetches it. A union so other sources (e.g. a teacher's recording of an
+ * isolated letter) can be added as new members; player/audio.ts resolves each to a playable span.
+ */
+export type ClipAudio = { word: WordKey }
 
 /**
  * One step of a clip: a frame shown for `duration` ms (at 1× speed) with an optional caption.
@@ -24,6 +34,13 @@ export interface ClipStep {
    */
   label?: Bilingual
   render: (progress: number) => ReactNode
+  /**
+   * Played when the step starts playing (reached during playback, or play pressed on it) — never
+   * while paused or merely seeked to. The player then moves on only once both `duration` and the
+   * audio have finished, so keep `duration` about as long as the sound. The frame should show what
+   * is heard (e.g. the word's text from src/data/quran-words.json). Muted by the player's toggle.
+   */
+  audio?: ClipAudio
 }
 
 /**
