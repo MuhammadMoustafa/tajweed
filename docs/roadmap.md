@@ -48,9 +48,9 @@ in brackets picks the agent.
 | L13 | #19 | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | done |
 | L13b | #32 | [task] Natural-madd clip redone: real syllables بَا بُو بِي, arrow at the madd letter, bar growing ~1 s per count under it, captions. | T10 | done |
 | L13c | #34 | [task] Natural madd as one counting demo: say-it-with-me, marker at the first count and at the end of the second, one syllable (the three take the same time) (maintainer, 2026-09-28). | none | done |
-| L14 | #20 | [task] Madd muttasil and munfasil — the API marks both as `madda_obligatory` (4–5 counts in Hafs), reusing MaddBar. | L13c | ready |
-| L15 | #21 | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13c | ready |
-| L16 | #22 | [task] Other madd: ʿarid lis-sukun (`madda_permissible`), leen, badal, silah, reusing MaddBar. | L13c | ready |
+| L14 | #20 | [task] Madd muttasil and munfasil — the API marks both as `madda_obligatory` (4–5 counts in Hafs), reusing MaddBar. | L13c | in-progress |
+| L15 | #21 | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13c | in-progress |
+| L16 | #22 | [task] Other madd: ʿarid lis-sukun (`madda_permissible`), leen, badal, silah, reusing MaddBar. | L13c | in-progress |
 | L17 | #23 | [task] Hamzat al-wasl and silent letters (`ham_wasl`, `slnt`). | T2 | ready |
 | L18 | #24 | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | ready |
 | L19 | #25 | [task] Waqf and ibtida: the stop signs in the mushaf. | T2, T6 | ready |
