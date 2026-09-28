@@ -33,6 +33,18 @@
   --tj-quiz-correct: #1b8a3a;
   --tj-quiz-wrong: #c81e3a;
 
+  /* Anatomy (src/animations/mouth/MouthDiagram.tsx) — never the tajweed rule colors above. */
+  --anat-skin: #f6dcc8;
+  --anat-edge: #a87858;
+  --anat-nasal: #e3b7a0;
+  --anat-cavity: #8e4f58;
+  --anat-tongue: #e98a97;
+  --anat-lip: #d4677a;
+  --anat-teeth: #ffffff;
+  --anat-palate: #b8606e;
+  --anat-highlight: #ffc21a;
+  --anat-highlight-edge: #8a5a00;
+
   --font-quran: 'Amiri Quran', serif;
   --font-ui-ar: 'Noto Naskh Arabic', 'Noto Sans', serif;
   --font-ui-en: 'Noto Sans', 'Noto Naskh Arabic', system-ui, sans-serif;
@@ -67,6 +79,17 @@
     --tj-tafkheem: #6f8fe8;
     --tj-tarqeeq: #4fd9bd;
     --tj-waqf: #93a3bf;
+
+    --anat-skin: #5a463b;
+    --anat-edge: #c9a58c;
+    --anat-nasal: #7d5f50;
+    --anat-cavity: #2b1a1d;
+    --anat-tongue: #c9687a;
+    --anat-lip: #e0899a;
+    --anat-teeth: #ece8e1;
+    --anat-palate: #b35d6c;
+    --anat-highlight: #ffd24d;
+    --anat-highlight-edge: #fff1b8;
   }
 }
 
@@ -295,6 +318,125 @@ main {
 .madd-bar-label {
   font-size: 15px;
   fill: var(--muted);
+}
+
+/* MouthDiagram: base colors per part; a lit region (data-lit) takes the highlight. */
+.mouth-diagram {
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.mouth-diagram [data-region] {
+  stroke: var(--anat-edge);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  transition:
+    fill 0.3s,
+    stroke 0.3s;
+}
+
+.anat-skin {
+  fill: var(--anat-skin);
+  stroke: var(--anat-edge);
+  stroke-width: 2;
+}
+
+.anat-line {
+  fill: none;
+  stroke: var(--anat-edge);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.anat-eye {
+  fill: var(--anat-edge);
+}
+
+.anat-nasal {
+  fill: var(--anat-nasal);
+}
+
+.anat-cavity {
+  fill: var(--anat-cavity);
+}
+
+.mouth-diagram .anat-overlay {
+  fill: transparent;
+  stroke: none;
+}
+
+.anat-divider {
+  stroke: var(--anat-edge);
+  stroke-dasharray: 3 3;
+}
+
+.anat-tongue {
+  fill: var(--anat-tongue);
+}
+
+.mouth-diagram .anat-tongue-sides {
+  fill: none;
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+  stroke-linecap: round;
+}
+
+.mouth-diagram .anat-palate {
+  fill: none;
+  stroke: var(--anat-palate);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.anat-teeth {
+  fill: var(--anat-teeth);
+}
+
+.anat-lip {
+  fill: var(--anat-lip);
+}
+
+.mouth-diagram [data-lit='true'] {
+  fill: var(--anat-highlight);
+  stroke: var(--anat-highlight-edge);
+  stroke-width: 2.5;
+}
+
+.mouth-diagram .anat-tongue-sides[data-lit='true'],
+.mouth-diagram .anat-palate[data-lit='true'] {
+  fill: none;
+  stroke: var(--anat-highlight);
+  stroke-width: 7;
+  stroke-dasharray: none;
+}
+
+.anat-label text {
+  font-family: var(--font-ui-en);
+  font-size: 17px;
+  fill: var(--text);
+  stroke: var(--surface);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+
+:lang(ar) .anat-label text {
+  font-family: var(--font-ui-ar);
+}
+
+.anat-leader {
+  stroke: var(--muted);
+  stroke-width: 1.2;
+}
+
+.anat-leader-dot {
+  fill: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mouth-diagram [data-region] {
+    transition: none;
+  }
 }
 
 /* Quran text: font-size/line-height only on the block, never on the colored spans inside it. */

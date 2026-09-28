@@ -1,0 +1,65 @@
+import { render } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
+import { LocaleProvider } from '../../i18n/LocaleProvider'
+import { MouthDiagram, type MouthDiagramProps } from './MouthDiagram'
+
+const renderDiagram = (props: MouthDiagramProps, locale: 'ar' | 'en' = 'en') => {
+  localStorage.setItem('tajweed.locale', locale)
+  const { container } = render(
+    <LocaleProvider>
+      <MouthDiagram {...props} />
+    </LocaleProvider>,
+  )
+  return container
+}
+
+const litRegions = (container: HTMLElement) =>
+  [...container.querySelectorAll('[data-lit="true"]')].map((el) => el.getAttribute('data-region'))
+
+afterEach(() => localStorage.clear())
+
+describe('MouthDiagram', () => {
+  it('is an image named by its title and describing what is highlighted', () => {
+    const container = renderDiagram({ highlight: ['halq-middle'] })
+    const svg = container.querySelector('svg')!
+    expect(svg).toHaveAttribute('role', 'img')
+    const [titleId, descId] = svg.getAttribute('aria-labelledby')!.split(' ')
+    expect(container.querySelector(`[id="${titleId}"]`)).toHaveTextContent('Side view of the mouth, throat and nose')
+    expect(container.querySelector(`[id="${descId}"]`)).toHaveTextContent('Highlighted: Throat: middle')
+  })
+
+  it('lights only the requested regions', () => {
+    const container = renderDiagram({ highlight: ['tongue-back', 'khayshum'] })
+    expect(litRegions(container).sort()).toEqual(['khayshum', 'tongue-back'])
+  })
+
+  it('lights every part of a whole area', () => {
+    const container = renderDiagram({ highlight: ['halq', 'shafatan'] })
+    expect(litRegions(container).sort()).toEqual([
+      'halq-closest',
+      'halq-deepest',
+      'halq-middle',
+      'lip-lower',
+      'lip-upper',
+    ])
+  })
+
+  it('lights nothing by default', () => {
+    expect(litRegions(renderDiagram({}))).toEqual([])
+  })
+
+  it('labels the requested regions in the current language', () => {
+    const en = renderDiagram({ labels: ['jawf', 'halq', 'lisan', 'shafatan', 'khayshum'] })
+    expect([...en.querySelectorAll('[data-label] text')].map((el) => el.textContent)).toEqual([
+      'Jawf',
+      'Throat',
+      'Tongue',
+      'Lips',
+      'Nose',
+    ])
+
+    const ar = renderDiagram({ labels: ['halq-deepest'], highlight: ['halq-deepest'] }, 'ar')
+    expect(ar.querySelector('[data-label="halq-deepest"] text')).toHaveTextContent('أقصى الحلق')
+    expect(ar.querySelector('title')).toHaveTextContent('رسم جانبي للفم والحلق والأنف')
+  })
+})
