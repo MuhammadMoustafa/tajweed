@@ -32,13 +32,15 @@ describe('lessons', () => {
     })
 
     it.each(lesson.examples.map((e) => [e.verseKey, e] as const))(
-      'example %s is in quran.json (run `npm run fetch-quran`), has marks in range, and shows a focus rule',
+      'example %s is in quran.json (run `npm run fetch-quran`), has marks in range, and shows a focus rule if the lesson has any',
       (key, example) => {
         const markup = getVerseMarkup(key)
         expect(markup).toBeDefined()
         const parsed = parseTajweed(markup!)
         // Throws loudly if a mark's word/letter is out of range for this verse.
         const segments = example.marks?.length ? applyMarks(parsed.segments, example.marks) : parsed.segments
+        // A lesson without focus rules (e.g. makharij) shows its examples uncolored.
+        if (lesson.focusRules.length === 0) return
         const rules = segments.map((s) => s.rule)
         expect(lesson.focusRules.some((r) => rules.includes(r))).toBe(true)
       },

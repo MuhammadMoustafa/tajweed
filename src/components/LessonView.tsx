@@ -62,7 +62,7 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
       </div>
 
       <h3>{t(ui.examples)}</h3>
-      <RuleLegend rules={lesson.focusRules} />
+      {lesson.focusRules.length > 0 && <RuleLegend rules={lesson.focusRules} />}
       {lesson.examples.map((example) => (
         <AyahExample key={example.verseKey} example={example} highlight={lesson.focusRules} />
       ))}

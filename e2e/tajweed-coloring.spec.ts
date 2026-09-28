@@ -10,6 +10,13 @@ test.describe('tajweed rule coloring', () => {
       const quranBlocks = page.locator('.example .quran')
       await expect(quranBlocks).toHaveCount(lesson.examples.length)
 
+      // A lesson without focus rules (e.g. makharij) shows its examples uncolored and no legend.
+      if (lesson.focusRules.length === 0) {
+        await expect(page.locator('.example .quran span[title]')).toHaveCount(0)
+        await expect(page.locator('.legend')).toHaveCount(0)
+        return
+      }
+
       for (let i = 0; i < lesson.examples.length; i++) {
         const block = quranBlocks.nth(i)
         const ruleSpan = block.locator('span[title]').first()
