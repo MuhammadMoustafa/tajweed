@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { stepIndexAt, stepStarts, type Clip } from './clip'
+import { labelSpans, stepIndexAt, stepStarts, type Clip } from './clip'
 import {
   STEP_BACK_GRACE,
   currentStep,
@@ -22,6 +22,21 @@ describe('clip timing', () => {
     const starts = stepStarts(clip)
     expect(starts).toEqual([0, 1000, 3000])
     expect([0, 999, 1000, 2999, 3000, 4000].map((time) => stepIndexAt(starts, time))).toEqual([0, 0, 1, 1, 2, 2])
+  })
+
+  it('merges consecutive steps with the same label into one label span, skipping unlabeled steps', () => {
+    const a = { ar: 'أ', en: 'A' }
+    const b = { ar: 'ب', en: 'B' }
+    const labeled: Clip = {
+      title: clip.title,
+      steps: [a, a, undefined, a, b, b].map((label) => ({ ...step(1000), label })),
+    }
+    expect(labelSpans(labeled)).toEqual([
+      { label: a, first: 0, last: 1, start: 0, duration: 2000 },
+      { label: a, first: 3, last: 3, start: 3000, duration: 1000 },
+      { label: b, first: 4, last: 5, start: 4000, duration: 2000 },
+    ])
+    expect(labelSpans(clip)).toEqual([])
   })
 })
 

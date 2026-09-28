@@ -19,7 +19,8 @@ export interface ClipStep {
    * Short name for the section this step belongs to (e.g. "أقصى الحلق / Deepest throat"), shown by
    * AnimationPlayer above the seek bar over the step's segment; clicking it seeks there. A clip
    * whose steps have no labels gets no label row. Not every step needs one distinct from its
-   * neighbors' — repeat the same label across steps that share a section.
+   * neighbors' — repeat the same label across steps that share a section: consecutive steps with
+   * the same label show as one label over their combined segment (see `labelSpans`).
    */
   label?: Bilingual
   render: (progress: number) => ReactNode
@@ -47,6 +48,41 @@ export const stepStarts = (clip: Clip): number[] => {
     at += step.duration
   }
   return starts
+}
+
+/** One label over the timeline: a run of consecutive steps sharing the same `label`. */
+export interface LabelSpan {
+  label: Bilingual
+  /** Index of the run's first and last step. */
+  first: number
+  last: number
+  /** When the run starts and how long it lasts, in ms at 1× speed. */
+  start: number
+  duration: number
+}
+
+const sameLabel = (a: Bilingual | undefined, b: Bilingual | undefined): boolean =>
+  a !== undefined && b !== undefined && a.ar === b.ar && a.en === b.en
+
+/**
+ * The clip's timeline labels: consecutive steps with the same `label` (e.g. every count of one
+ * "4 counts" pass) share one span over their combined segment instead of repeating the label per
+ * step; unlabeled steps get none.
+ */
+export function labelSpans(clip: Clip): LabelSpan[] {
+  const starts = stepStarts(clip)
+  const spans: LabelSpan[] = []
+  clip.steps.forEach((step, i) => {
+    if (!step.label) return
+    const previous = spans[spans.length - 1]
+    if (previous && previous.last === i - 1 && sameLabel(previous.label, step.label)) {
+      previous.last = i
+      previous.duration += step.duration
+    } else {
+      spans.push({ label: step.label, first: i, last: i, start: starts[i], duration: step.duration })
+    }
+  })
+  return spans
 }
 
 /** Index of the step playing at `time`, given `stepStarts`; the clip's end belongs to the last step. */

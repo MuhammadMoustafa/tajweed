@@ -1,9 +1,9 @@
 import { useReducedMotion } from 'motion/react'
-import { useEffect, useReducer, type KeyboardEvent } from 'react'
+import { useEffect, useMemo, useReducer, type KeyboardEvent } from 'react'
 import { dirOf } from '../../i18n/bilingual'
 import { useLocale } from '../../i18n/LocaleProvider'
 import { formatTemplate, ui } from '../../i18n/ui'
-import type { Clip } from './clip'
+import { labelSpans, type Clip } from './clip'
 import { frameClock, type PlayerClock } from './clock'
 import { SPEEDS, currentStep, initialPlayerState, playerReducer, stepProgress } from './state'
 
@@ -48,7 +48,8 @@ export function AnimationPlayer({ clip, clock = frameClock }: AnimationPlayerPro
   const stepLabel = formatTemplate(locale, ui.stepOf, { step: index + 1, total: clip.steps.length })
   const isRtl = dirOf(locale) === 'rtl'
   const atStart = time === 0 && !playing
-  const hasLabels = clip.steps.some((s) => s.label)
+  const spans = useMemo(() => labelSpans(clip), [clip])
+  const hasLabels = spans.length > 0
 
   const onKeyDown = (event: KeyboardEvent) => {
     const onButton = event.target instanceof HTMLButtonElement
@@ -97,24 +98,25 @@ export function AnimationPlayer({ clip, clock = frameClock }: AnimationPlayerPro
 
       {hasLabels && (
         <div className="player-labels">
-          {clip.steps.map((clipStep, i) =>
-            clipStep.label ? (
+          {spans.map((span) => {
+            const current = index >= span.first && index <= span.last
+            return (
               <button
-                key={i}
+                key={span.first}
                 type="button"
                 className="player-label"
-                data-current={i === index || undefined}
-                aria-current={i === index ? 'step' : undefined}
+                data-current={current || undefined}
+                aria-current={current ? 'step' : undefined}
                 style={{
-                  insetInlineStart: `${(starts[i] / total) * 100}%`,
-                  inlineSize: `${(clipStep.duration / total) * 100}%`,
+                  insetInlineStart: `${(span.start / total) * 100}%`,
+                  inlineSize: `${(span.duration / total) * 100}%`,
                 }}
-                onClick={() => dispatch({ type: 'seek', time: starts[i] })}
+                onClick={() => dispatch({ type: 'seek', time: span.start })}
               >
-                {t(clipStep.label)}
+                {t(span.label)}
               </button>
-            ) : null,
-          )}
+            )
+          })}
         </div>
       )}
 

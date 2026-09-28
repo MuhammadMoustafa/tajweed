@@ -30,6 +30,17 @@ const unlabeledClip: Clip = {
   })),
 }
 
+/** Steps 1-3 share one label (e.g. every count of one madd pass), step 4 has its own. */
+const PASS = { ar: 'أربع حركات', en: '4 counts' }
+const sharedLabelClip: Clip = {
+  title: { ar: 'تسميات مشتركة', en: 'Shared labels' },
+  steps: [1000, 1000, 1000, 1000].map((duration, i) => ({
+    duration,
+    label: i < 3 ? PASS : { ar: 'قف', en: 'Stop' },
+    render: (progress: number) => <span data-testid="frame">{`${i}:${progress}`}</span>,
+  })),
+}
+
 /** A clock the test advances by hand; no real timers run. */
 function manualClock() {
   let onTick: ((elapsed: number) => void) | undefined
@@ -57,8 +68,7 @@ const renderPlayer = (locale: 'ar' | 'en' = 'en', theClip: Clip = clip) => {
     </LocaleProvider>,
   )
   const screen = within(container)
-  const groupName = theClip === clip ? (locale === 'ar' ? 'مقطع تجريبي' : 'Test clip') : locale === 'ar' ? 'بلا تسميات' : 'No labels'
-  return { ...time, screen, player: screen.getByRole('group', { name: groupName }) }
+  return { ...time, screen, player: screen.getByRole('group', { name: theClip.title[locale] }) }
 }
 
 beforeEach(() => {
@@ -174,6 +184,25 @@ describe('AnimationPlayer', () => {
   it('renders no label row when the clip has no step labels', () => {
     const { player } = renderPlayer('en', unlabeledClip)
     expect(player.querySelector('.player-labels')).toBeNull()
+  })
+
+  it('shows one label over consecutive steps that share it, current on any of them', () => {
+    const { screen, player } = renderPlayer('en', sharedLabelClip)
+    const pass = screen.getByRole('button', { name: '4 counts' })
+    const stop = screen.getByRole('button', { name: 'Stop' })
+    expect(pass.style.insetInlineStart).toBe('0%')
+    expect(pass.style.inlineSize).toBe('75%')
+    expect(stop.style.insetInlineStart).toBe('75%')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    expect(player).toHaveAttribute('data-step', '2')
+    expect(pass).toHaveAttribute('data-current')
+
+    fireEvent.click(stop)
+    expect(pass).not.toHaveAttribute('data-current')
+    fireEvent.click(pass)
+    expect(player).toHaveAttribute('data-step', '0')
   })
 
   it('in Arabic, shows the localized labels', () => {
