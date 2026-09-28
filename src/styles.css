@@ -272,6 +272,31 @@ main {
   font-size: 64px;
 }
 
+/* MaddBar (src/animations/MaddBar.tsx): one or more bars side by side, e.g. natural-madd's three
+   madd letters. Overrides .anim-svg's 100% width so bars sit next to each other instead of
+   stacking full-width. */
+.madd-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  inline-size: 100%;
+}
+
+.madd-row .madd-bar {
+  inline-size: 220px;
+}
+
+.madd-bar-count {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.madd-bar-label {
+  font-size: 15px;
+  fill: var(--muted);
+}
+
 /* Quran text: font-size/line-height only on the block, never on the colored spans inside it. */
 .quran {
   font-family: var(--font-quran);
