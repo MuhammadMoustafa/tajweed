@@ -445,6 +445,11 @@ main {
   inline-size: 220px;
 }
 
+/* In a clip, the bar the current step is about stands out; the others are dimmed. */
+.madd-row:has([data-current]) .madd-bar:not([data-current]) {
+  opacity: 0.45;
+}
+
 .madd-bar-count {
   font-size: 32px;
   font-weight: 600;
@@ -587,27 +592,6 @@ main {
   font-size: 1.9rem;
   line-height: 1.6;
   word-spacing: 0.3em;
-}
-
-.makharij-list {
-  display: grid;
-  gap: 0.25rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.makharij-list li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0 1rem;
-  border-block-end: 1px solid var(--border);
-}
-
-.makharij-list .makharij-letters {
-  font-size: 1.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

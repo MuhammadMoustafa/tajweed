@@ -1,72 +1,78 @@
 import { expect, test } from '@playwright/test'
 import { LESSONS } from '../src/lessons'
 
-// The echo circles are specific to the qalqalah animation; each new animation adds its own
-// reduced-motion check here.
-const lessonsWithAnimation = LESSONS.filter((l) => l.animation === 'qalqalah-bounce')
+// Per-clip frame checks: each clip tweens within a step by default and shows each step's end
+// state, untweened, with reduced motion, while the player's controls keep working.
+const withClip = (id: string) => LESSONS.filter((l) => l.animation === id)
 
-test.describe('animation and reduced motion', () => {
-  for (const lesson of lessonsWithAnimation) {
-    test(`${lesson.id} animation shows echo circles by default`, async ({ page }) => {
+test.describe('qalqalah clip and reduced motion', () => {
+  for (const lesson of withClip('qalqalah-bounce')) {
+    test(`${lesson.id} clip points at a letter and sends echo circles while playing`, async ({ page }) => {
       await page.goto(`/#/lesson/${lesson.id}`)
-      const svg = page.locator('.animation svg')
-      await expect(svg).toBeVisible()
-      await expect(svg.locator('circle').first()).toBeVisible()
+      const player = page.locator('.animation .player')
+      await expect(player.locator('.qalqalah-frame [data-current]')).toHaveCount(1)
+      await player.getByRole('button', { name: 'Play', exact: true }).click()
+      await expect(player.locator('.qalqalah-frame circle').first()).toBeVisible()
     })
 
-    test(`${lesson.id} animation omits echo circles with reduced motion`, async ({ page }) => {
+    test(`${lesson.id} clip steps without echo circles with reduced motion`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.goto(`/#/lesson/${lesson.id}`)
-      const svg = page.locator('.animation svg')
-      await expect(svg).toBeVisible()
-      await expect(svg.locator('circle')).toHaveCount(0)
+      const player = page.locator('.animation .player')
+      await player.getByRole('button', { name: 'Next step' }).click()
+      await expect(player).toHaveAttribute('data-step', '1')
+      await expect(player.locator('.qalqalah-frame [data-current]')).toHaveCount(1)
+      await player.getByRole('button', { name: 'Play', exact: true }).click()
+      await expect(player).toHaveAttribute('data-step', '2', { timeout: 5000 })
+      await expect(player.locator('.qalqalah-frame circle')).toHaveCount(0)
     })
   }
 })
 
-// natural-madd (MaddBar, src/animations/MaddBar.tsx): three bars, one per madd letter.
-const lessonsWithMaddBar = LESSONS.filter((l) => l.animation === 'natural-madd')
-
-test.describe('madd bar and reduced motion', () => {
-  for (const lesson of lessonsWithMaddBar) {
-    test(`${lesson.id} animation shows three madd bars`, async ({ page }) => {
+// natural-madd (MaddBar, src/animations/MaddBar.tsx): three bars, the current one filling.
+test.describe('natural madd clip and reduced motion', () => {
+  for (const lesson of withClip('natural-madd')) {
+    test(`${lesson.id} clip fills the current bar while playing`, async ({ page }) => {
       await page.goto(`/#/lesson/${lesson.id}`)
-      await expect(page.locator('.animation .madd-bar')).toHaveCount(3)
+      const player = page.locator('.animation .player')
+      await expect(player.locator('.madd-bar')).toHaveCount(3)
+      const fill = player.locator('.madd-bar[data-current] .madd-bar-fill')
+      await expect(fill).toHaveAttribute('width', '0')
+      await player.getByRole('button', { name: 'Play', exact: true }).click()
+      await expect(fill).not.toHaveAttribute('width', '0')
     })
 
-    test(`${lesson.id} animation shows each bar full and static with reduced motion`, async ({ page }) => {
+    test(`${lesson.id} clip shows each bar full, untweened, with reduced motion`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.goto(`/#/lesson/${lesson.id}`)
-      const fills = page.locator('.animation .madd-bar-fill')
-      await expect(fills).toHaveCount(3)
-      for (const fill of await fills.all()) {
-        // Motion serializes the animated SVG "width" attribute with a "px" suffix.
-        await expect(fill).toHaveAttribute('width', '200px')
-      }
+      const player = page.locator('.animation .player')
+      await expect(player.locator('.madd-bar[data-current] .madd-bar-fill')).toHaveAttribute('width', '200')
+      await player.getByRole('button', { name: 'Next step' }).click()
+      const fills = player.locator('.madd-bar-fill')
+      await expect(fills.nth(0)).toHaveAttribute('width', '200')
+      await expect(fills.nth(1)).toHaveAttribute('width', '200')
+      await expect(fills.nth(2)).toHaveAttribute('width', '0')
     })
   }
 })
 
-// The makharij tour lights one area at a time; with reduced motion it is one labeled diagram.
-test.describe('makharij tour and reduced motion', () => {
-  for (const lesson of LESSONS.filter((l) => l.animation === 'makharij-tour')) {
-    test(`${lesson.id} tour lights an area and names its letters by default`, async ({ page }) => {
-      await page.goto(`/#/lesson/${lesson.id}`)
-      const tour = page.locator('.animation .makharij-tour')
-      await expect(tour).toHaveAttribute('data-step', /\d+/)
-      await expect(tour.locator('[data-lit="true"]').first()).toBeAttached()
-      await expect(tour.locator('.makharij-caption .makharij-letters')).not.toBeEmpty()
-      await expect(tour.locator('.makharij-list')).toHaveCount(0)
-    })
-
-    test(`${lesson.id} tour is a static labeled diagram with reduced motion`, async ({ page }) => {
-      await page.emulateMedia({ reducedMotion: 'reduce' })
-      await page.goto(`/#/lesson/${lesson.id}`)
-      const tour = page.locator('.animation .makharij-tour')
-      await expect(tour.locator('.makharij-list li')).toHaveCount(5)
-      await expect(tour).not.toHaveAttribute('data-step')
-      await expect(tour.locator('[data-label]')).toHaveCount(5)
-      await expect(tour.locator('[data-lit="true"]')).toHaveCount(0)
-    })
+// The makharij tour lights one area per step and names its letters.
+test.describe('makharij clip and reduced motion', () => {
+  for (const lesson of withClip('makharij-tour')) {
+    for (const reduced of [false, true]) {
+      const suffix = reduced ? ' with reduced motion' : ''
+      test(`${lesson.id} clip lights an area per step${suffix}`, async ({ page }) => {
+        if (reduced) await page.emulateMedia({ reducedMotion: 'reduce' })
+        await page.goto(`/#/lesson/${lesson.id}`)
+        const player = page.locator('.animation .player')
+        const lit = player.locator('[data-lit="true"]')
+        await expect(lit.first()).toBeAttached()
+        await expect(player.locator('.makharij-caption .makharij-letters')).not.toBeEmpty()
+        const firstArea = await lit.first().getAttribute('data-region')
+        await player.getByRole('button', { name: 'Next step' }).click()
+        await expect(player).toHaveAttribute('data-step', '1')
+        await expect(lit.first()).not.toHaveAttribute('data-region', firstArea ?? '')
+      })
+    }
   }
 })

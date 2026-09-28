@@ -1,12 +1,12 @@
-import type { ComponentType } from 'react'
 import type { AnimationId } from './ids'
-import { MakharijTour } from './MakharijTour'
-import { NaturalMadd } from './NaturalMadd'
-import { QalqalahBounce } from './QalqalahBounce'
+import { makharijTour } from './MakharijTour'
+import { naturalMadd } from './NaturalMadd'
+import type { Clip } from './player/clip'
+import { qalqalahBounce } from './QalqalahBounce'
 
-/** Animations take no props; the lesson view remounts them (via `key`) to replay. */
-export const ANIMATIONS: Record<AnimationId, ComponentType> = {
-  'qalqalah-bounce': QalqalahBounce,
-  'makharij-tour': MakharijTour,
-  'natural-madd': NaturalMadd,
+/** Clips by id, played by AnimationPlayer (src/animations/player) for a lesson or one of its sections. */
+export const ANIMATIONS: Record<AnimationId, Clip> = {
+  'qalqalah-bounce': qalqalahBounce,
+  'makharij-tour': makharijTour,
+  'natural-madd': naturalMadd,
 }

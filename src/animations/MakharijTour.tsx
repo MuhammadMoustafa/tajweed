@@ -1,9 +1,8 @@
-import { motion, useReducedMotion } from 'motion/react'
-import { useEffect, useState } from 'react'
 import type { Bilingual } from '../i18n/bilingual'
-import { useLocale } from '../i18n/LocaleProvider'
+import { Localized } from '../i18n/LocaleProvider'
 import { MouthDiagram } from './mouth/MouthDiagram'
-import { MAKHRAJ_REGION_NAMES, type MakhrajRegion } from './mouth/regions'
+import type { MakhrajRegion } from './mouth/regions'
+import type { Clip, ClipStep } from './player/clip'
 
 // Single letters (not Quran text), in the order the lesson teaches them.
 const MADD = 'ا و ي'
@@ -98,62 +97,23 @@ const STEPS: Step[] = [
   },
 ]
 
-/** The five main areas, shown as a static list when motion is reduced. */
-const AREAS: [MakhrajRegion, string][] = [
-  ['jawf', MADD],
-  ['halq', `${HALQ_DEEPEST} ${HALQ_MIDDLE} ${HALQ_CLOSEST}`],
-  ['lisan', LISAN],
-  ['shafatan', `${FA} ${BOTH_LIPS}`],
-  ['khayshum', GHUNNAH],
-]
-
-/** Tours the five articulation areas on the mouth diagram, lighting each with its letters. */
-export function MakharijTour() {
-  const { t } = useLocale()
-  const reduce = useReducedMotion()
-  const [step, setStep] = useState(0)
-
-  useEffect(() => {
-    if (reduce) return
-    const timer = setTimeout(() => setStep((s) => (s + 1) % STEPS.length), STEPS[step].ms)
-    return () => clearTimeout(timer)
-  }, [reduce, step])
-
-  if (reduce) {
-    return (
-      <div className="makharij-tour">
-        <MouthDiagram labels={AREAS.map(([region]) => region)} />
-        <ul className="makharij-list">
-          {AREAS.map(([region, letters]) => (
-            <li key={region}>
-              <span>{t(MAKHRAJ_REGION_NAMES[region])}</span>
-              <span className="makharij-letters" lang="ar" dir="rtl">
-                {letters}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
-
-  const current = STEPS[step]
-  return (
-    <div className="makharij-tour" data-step={step}>
-      <MouthDiagram highlight={current.highlight} labels={current.highlight} />
-      <motion.div
-        key={step}
-        className="makharij-caption"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-      >
-        <strong>{t(current.title)}</strong>
-        <span className="makharij-letters" lang="ar" dir="rtl">
-          {current.letters}
-        </span>
-        <span>{t(current.note)}</span>
-      </motion.div>
+/** A step's frame: the lit area on the diagram, with its name and letters. */
+const frame = (step: Step) => (
+  <div className="makharij-tour">
+    <MouthDiagram highlight={step.highlight} labels={step.highlight} />
+    <div className="makharij-caption">
+      <strong>
+        <Localized text={step.title} />
+      </strong>
+      <span className="makharij-letters" lang="ar" dir="rtl">
+        {step.letters}
+      </span>
     </div>
-  )
+  </div>
+)
+
+/** Tours the five articulation areas on the mouth diagram, lighting each with its letters (L2). */
+export const makharijTour: Clip = {
+  title: { ar: 'جولة في مخارج الحروف', en: 'A tour of the articulation points' },
+  steps: STEPS.map((step): ClipStep => ({ duration: step.ms, caption: step.note, render: () => frame(step) })),
 }

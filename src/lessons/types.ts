@@ -17,6 +17,8 @@ export interface LessonExample {
 export interface LessonSection {
   heading?: Bilingual
   body: Bilingual
+  /** A clip played under this section, e.g. one makharij area per section. */
+  animation?: AnimationId
 }
 
 /**
@@ -53,6 +55,7 @@ export interface Lesson {
   title: Bilingual
   summary: Bilingual
   sections: LessonSection[]
+  /** The lesson's main clip, shown beside the text (first on phones); sections can add their own. */
   animation?: AnimationId
   /** Rules colored in this lesson's examples; everything else renders uncolored. */
   focusRules: RuleId[]

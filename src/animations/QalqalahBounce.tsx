@@ -1,63 +1,71 @@
-import { motion, useReducedMotion } from 'motion/react'
+import type { Bilingual } from '../i18n/bilingual'
+import type { Clip, ClipStep } from './player/clip'
 
-const LETTERS = ['ق', 'ط', 'ب', 'ج', 'د']
-const CYCLE = 1.6
+// Single letters (not Quran text), right to left in reading order.
+const LETTERS: { letter: string; caption: Bilingual }[] = [
+  { letter: 'ق', caption: { ar: 'القاف: يرتدّ صوتها إذا سكنت', en: 'Qaf: its sound bounces when it has a sukun' } },
+  { letter: 'ط', caption: { ar: 'الطاء: يرتدّ صوتها إذا سكنت', en: 'Ta (the heavy t): its sound bounces when it has a sukun' } },
+  { letter: 'ب', caption: { ar: 'الباء: يرتدّ صوتها إذا سكنت', en: 'Ba: its sound bounces when it has a sukun' } },
+  { letter: 'ج', caption: { ar: 'الجيم: يرتدّ صوتها إذا سكنت', en: 'Jeem: its sound bounces when it has a sukun' } },
+  { letter: 'د', caption: { ar: 'الدال: يرتدّ صوتها إذا سكنت', en: 'Dal: its sound bounces when it has a sukun' } },
+]
 
-/** Each qalqalah letter "bounces" in turn and sends out echo rings. */
-export function QalqalahBounce() {
-  const reduce = useReducedMotion()
+const STEP_MS = 2000
+const Y = 80
+/** Part of the step (0–1) the letter spends bouncing, and when each echo ring starts/how long it grows. */
+const BOUNCE = 0.35
+const RINGS = [0.1, 0.3]
+const RING_SPAN = 0.55
 
+const letterX = (i: number) => 420 - i * 85
+
+/** Frame for the `current` letter: it bounces and sends out echo rings; the others wait, dimmed. */
+function frame(current: number, progress: number) {
+  const bounce = progress < BOUNCE ? -16 * Math.sin((Math.PI * progress) / BOUNCE) : 0
+  const cx = letterX(current)
   return (
-    <svg viewBox="0 0 500 160" aria-hidden="true" className="anim-svg">
-      {LETTERS.map((letter, i) => {
-        // Right-to-left, in reading order.
-        const cx = 420 - i * 85
-        const delay = i * CYCLE * 0.5
+    <svg viewBox="0 0 500 160" aria-hidden="true" className="anim-svg qalqalah-frame">
+      {RINGS.map((start) => {
+        const grown = (progress - start) / RING_SPAN
+        if (grown <= 0 || grown >= 1) return null
         return (
-          <g key={letter}>
-            {!reduce &&
-              [0, 0.25].map((offset) => (
-                <motion.circle
-                  key={offset}
-                  cx={cx}
-                  cy={80}
-                  fill="none"
-                  stroke="var(--tj-qalqalah)"
-                  strokeWidth={3}
-                  // Keyframes start invisible: Motion shows the first keyframe during `delay`, so a
-                  // visible first frame would draw every ring at once until its turn.
-                  initial={{ r: 20, opacity: 0 }}
-                  animate={{ r: [20, 20, 55], opacity: [0, 0.9, 0] }}
-                  transition={{
-                    duration: 0.8,
-                    times: [0, 0.05, 1],
-                    delay: delay + offset,
-                    repeat: Infinity,
-                    repeatDelay: LETTERS.length * CYCLE * 0.5 - 0.8,
-                  }}
-                />
-              ))}
-            <motion.text
-              x={cx}
-              y={80}
-              textAnchor="middle"
-              dominantBaseline="central"
-              className="anim-letter"
-              fill="var(--tj-qalqalah)"
-              animate={reduce ? undefined : { y: [0, -14, 4, 0] }}
-              transition={{
-                duration: 0.5,
-                delay,
-                repeat: Infinity,
-                repeatDelay: LETTERS.length * CYCLE * 0.5 - 0.5,
-                ease: 'easeOut',
-              }}
-            >
-              {letter}
-            </motion.text>
-          </g>
+          <circle
+            key={start}
+            cx={cx}
+            cy={Y}
+            r={22 + 36 * grown}
+            fill="none"
+            stroke="var(--tj-qalqalah)"
+            strokeWidth={3}
+            opacity={0.9 * (1 - grown)}
+          />
         )
       })}
+      {LETTERS.map(({ letter }, i) => (
+        <text
+          key={letter}
+          x={letterX(i)}
+          y={Y + (i === current ? bounce : 0)}
+          textAnchor="middle"
+          dominantBaseline="central"
+          className="anim-letter"
+          fill="var(--tj-qalqalah)"
+          opacity={i === current ? 1 : 0.3}
+          data-current={i === current || undefined}
+        >
+          {letter}
+        </text>
+      ))}
+      {/* Points at the letter this step is about. */}
+      <path d={`M${cx - 9} 150 L${cx} 138 L${cx + 9} 150 Z`} fill="var(--tj-qalqalah)" />
     </svg>
   )
+}
+
+/** Each qalqalah letter in turn bounces and echoes (L10). */
+export const qalqalahBounce: Clip = {
+  title: { ar: 'حروف القلقلة الخمسة', en: 'The five qalqalah letters' },
+  steps: LETTERS.map(
+    ({ caption }, i): ClipStep => ({ duration: STEP_MS, caption, render: (progress) => frame(i, progress) }),
+  ),
 }

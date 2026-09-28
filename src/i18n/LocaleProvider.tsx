@@ -55,3 +55,11 @@ export function useLocale(): LocaleContextValue {
   if (!ctx) throw new Error('useLocale must be used inside <LocaleProvider>')
   return ctx
 }
+
+/**
+ * Renders a Bilingual string in the current language, for places that build elements without
+ * calling hooks themselves, e.g. a clip step's `render` (src/animations/player/clip.ts).
+ */
+export function Localized({ text }: { text: Bilingual }) {
+  return useLocale().t(text)
+}

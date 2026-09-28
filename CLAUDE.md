@@ -46,7 +46,7 @@ Data flows one way: **lesson data → verse markup → parsed segments → color
 - **src/tajweed/rules.ts** — rule ids are the API's class names verbatim (`qalaqah`, `ikhafa`, `madda_obligatory`, … — 17 in total, including the API's own spellings). Each maps to a color token; the colors themselves are `--tj-<token>` CSS variables in src/styles.css (light + dark). A test enforces every token is defined in both themes.
 - **src/tajweed/parse.ts** — the only place API markup is interpreted (never `dangerouslySetInnerHTML`). Tags nest in ~33 verses; innermost rule wins. `<span class=end>` becomes the ayah number. Verified to round-trip all 6,236 verses.
 - **src/components/TajweedText.tsx** renders segments; **AyahExample** adds per-ayah audio (EveryAyah, Alafasy — cached by the service worker on first play).
-- **src/animations/** — one component per animation, registered by id in index.ts. The id union lives in ids.ts so lesson data stays React-free (the Node fetch script imports lessons). Animations take no props; LessonView remounts them via `key` for replay.
+- **src/animations/** — one clip per animation, registered by id in index.ts. The id union lives in ids.ts so lesson data stays React-free (the Node fetch script imports lessons). A clip (player/clip.ts) is a list of steps, each a duration, a bilingual caption and `render(progress)` drawing an SVG frame (tweened by the step's 0–1 progress, or static); AnimationPlayer (player/) plays it with video-style controls and never autoplays. A lesson's `animation` plays beside its text; a section's `animation` plays under that section.
 - **src/i18n/** — `Bilingual = { ar, en }` is the type for every user-facing string; `useLocale().t()` picks one. LocaleProvider sets `<html lang dir>`. UI strings are in ui.ts; lesson strings stay in the lesson files.
 
 ## Content rules that span the codebase
@@ -59,7 +59,7 @@ Data flows one way: **lesson data → verse markup → parsed segments → color
 - Keep the Quran-script font (`--font-quran`, Amiri Quran) separate from the UI fonts (`--font-ui-ar` Noto Naskh Arabic, `--font-ui-en` Noto Sans).
 - Each lesson holds Arabic and English text side by side in the same file so the two languages cannot drift apart; tests fail if either language is empty. In English strings, avoid ending a sentence with an Arabic run (bidi moves the punctuation).
 - Rule explanations must be reviewed by a qualified teacher before release: `reviewed: false` on a lesson shows a notice until then.
-- Animations must respect `prefers-reduced-motion` (`useReducedMotion()` → static frame).
+- Animations must respect `prefers-reduced-motion`: AnimationPlayer then renders every step at progress 1 (its end state, untweened), so a step's end frame must read on its own.
 
 ## Learning path (lesson order)
 

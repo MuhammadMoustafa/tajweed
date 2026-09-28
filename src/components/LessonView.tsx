@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { ANIMATIONS } from '../animations'
+import { AnimationPlayer } from '../animations/player/AnimationPlayer'
 import { dirOf } from '../i18n/bilingual'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
@@ -13,8 +13,6 @@ import { RuleLegend } from './RuleLegend'
 
 export function LessonView({ lesson }: { lesson: Lesson }) {
   const { locale, t } = useLocale()
-  const [playKey, setPlayKey] = useState(0)
-  const Animation = lesson.animation ? ANIMATIONS[lesson.animation] : undefined
   const { isLearned, toggle } = useProgress()
   const learned = isLearned(lesson.id)
   const { prev, next } = adjacentLessons(lesson.id)
@@ -48,16 +46,18 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
             <section key={i}>
               {section.heading && <h3>{t(section.heading)}</h3>}
               <p>{t(section.body)}</p>
+              {section.animation && (
+                <figure className="card section-animation">
+                  <AnimationPlayer key={section.animation} clip={ANIMATIONS[section.animation]} />
+                </figure>
+              )}
             </section>
           ))}
         </div>
 
-        {Animation && (
+        {lesson.animation && (
           <figure className="card animation">
-            <Animation key={playKey} />
-            <button type="button" onClick={() => setPlayKey((k) => k + 1)}>
-              ↻ {t(ui.replay)}
-            </button>
+            <AnimationPlayer key={lesson.animation} clip={ANIMATIONS[lesson.animation]} />
           </figure>
         )}
       </div>
