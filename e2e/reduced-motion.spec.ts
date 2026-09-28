@@ -46,3 +46,27 @@ test.describe('madd bar and reduced motion', () => {
     })
   }
 })
+
+// The makharij tour lights one area at a time; with reduced motion it is one labeled diagram.
+test.describe('makharij tour and reduced motion', () => {
+  for (const lesson of LESSONS.filter((l) => l.animation === 'makharij-tour')) {
+    test(`${lesson.id} tour lights an area and names its letters by default`, async ({ page }) => {
+      await page.goto(`/#/lesson/${lesson.id}`)
+      const tour = page.locator('.animation .makharij-tour')
+      await expect(tour).toHaveAttribute('data-step', /\d+/)
+      await expect(tour.locator('[data-lit="true"]').first()).toBeAttached()
+      await expect(tour.locator('.makharij-caption .makharij-letters')).not.toBeEmpty()
+      await expect(tour.locator('.makharij-list')).toHaveCount(0)
+    })
+
+    test(`${lesson.id} tour is a static labeled diagram with reduced motion`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' })
+      await page.goto(`/#/lesson/${lesson.id}`)
+      const tour = page.locator('.animation .makharij-tour')
+      await expect(tour.locator('.makharij-list li')).toHaveCount(5)
+      await expect(tour).not.toHaveAttribute('data-step')
+      await expect(tour.locator('[data-label]')).toHaveCount(5)
+      await expect(tour.locator('[data-lit="true"]')).toHaveCount(0)
+    })
+  }
+})
