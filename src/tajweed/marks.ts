@@ -1,3 +1,4 @@
+import { splitGraphemes } from './graphemes'
 import type { TajweedSegment } from './parse'
 import type { CustomRuleId, RuleId } from './rules'
 
@@ -26,8 +27,6 @@ interface Range {
 interface Part extends Range {
   rule?: RuleId
 }
-
-const GRAPHEMES = new Intl.Segmenter('ar', { granularity: 'grapheme' })
 
 /** Word ranges (character offsets into `text`) split on literal spaces, skipping empty runs. */
 function wordRanges(text: string): Range[] {
@@ -89,7 +88,7 @@ export function applyMarks(segments: readonly TajweedSegment[], marks: readonly 
       let target: Range = word
       if (mark.letter !== undefined) {
         const wordText = fullText.slice(word.start, word.end)
-        const graphemes = [...GRAPHEMES.segment(wordText)]
+        const graphemes = splitGraphemes(wordText)
         const grapheme = graphemes[mark.letter - 1]
         if (!grapheme) {
           throw new Error(

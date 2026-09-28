@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { dirOf, type Bilingual, type Locale } from './bilingual'
+import { dirOf, formatNumber, type Bilingual, type Locale } from './bilingual'
 
 const STORAGE_KEY = 'tajweed.locale'
 
@@ -18,6 +18,8 @@ interface LocaleContextValue {
   setLocale: (locale: Locale) => void
   /** Pick the current language's string. */
   t: (text: Bilingual) => string
+  /** Format a whole number with the current locale's digits (Arabic-Indic for `ar`). */
+  n: (value: number) => string
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null)
@@ -40,7 +42,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo(
-    () => ({ locale, setLocale, t: (text: Bilingual) => text[locale] }),
+    () => ({ locale, setLocale, t: (text: Bilingual) => text[locale], n: (num: number) => formatNumber(locale, num) }),
     [locale, setLocale],
   )
 

@@ -4,6 +4,8 @@ import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import { isChoiceAnswerCorrect, isTapAnswerCorrect, scoreQuiz, tapCorrectIndices, type SegmentState } from '../lessons/quiz'
 import type { QuizChoiceQuestion, QuizQuestion, QuizTapQuestion } from '../lessons/types'
+import { segmentsToLetters } from '../tajweed/graphemes'
+import { applyMarks } from '../tajweed/marks'
 import { parseTajweed } from '../tajweed/parse'
 import { TajweedText } from './TajweedText'
 
@@ -16,7 +18,7 @@ const isAnswered = (answer: Answer): boolean => (answer.kind === 'tap' ? answer.
 
 /** Practice quiz shown after a lesson's examples: tap-the-letters and bilingual multiple choice. */
 export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
-  const { t } = useLocale()
+  const { t, n } = useLocale()
   const [answers, setAnswers] = useState<Answer[]>(() => questions.map(initialAnswer))
   const [checked, setChecked] = useState(false)
 
@@ -26,7 +28,7 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
       const answer = answers[i]
       if (question.kind === 'tap' && answer.kind === 'tap') {
         const markup = getVerseMarkup(question.verseKey)
-        return markup ? isTapAnswerCorrect(answer.selected, tapCorrectIndices(markup, question.rule)) : false
+        return markup ? isTapAnswerCorrect(answer.selected, tapCorrectIndices(markup, question.rule, question.marks)) : false
       }
       if (question.kind === 'choice' && answer.kind === 'choice') return isChoiceAnswerCorrect(question, answer.index)
       return false
@@ -95,7 +97,7 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
         ) : (
           <>
             <p className="quiz-score">
-              {t(ui.yourScore)}: {score!.correct} / {score!.total}
+              {t(ui.yourScore)}: {n(score!.correct)} / {n(score!.total)}
             </p>
             <button type="button" onClick={reset}>
               {t(ui.tryAgain)}
@@ -123,8 +125,11 @@ function TapQuestion({
   // A missing verse means `npm run fetch-quran` wasn't run after this question's verseKey was added.
   if (!markup) return null
 
-  const segments = parseTajweed(markup).segments
-  const correct = tapCorrectIndices(markup, question.rule)
+  const parsedSegments = parseTajweed(markup).segments
+  const ruledSegments = question.marks?.length ? applyMarks(parsedSegments, question.marks) : parsedSegments
+  const letters = segmentsToLetters(ruledSegments)
+  const correct = tapCorrectIndices(markup, question.rule, question.marks)
+  const correctLetters = letters.filter((l) => l.tapIndex !== undefined && correct.includes(l.tapIndex))
 
   const stateOf = (index: number): SegmentState | undefined => {
     if (!checked) return selected.has(index) ? 'selected' : undefined
@@ -134,10 +139,10 @@ function TapQuestion({
 
   return (
     <div>
-      <TajweedText markup={markup} interactive={{ selected, onToggle, stateOf }} />
+      <TajweedText markup={markup} marks={question.marks} interactive={{ selected, onToggle, stateOf }} />
       {checked && (
         <p className="quiz-summary">
-          {t(ui.correctLetters)}: {correct.map((i) => segments[i].text).join('، ')}
+          {t(ui.correctLetters)}: {correctLetters.map((l) => l.text).join('، ')}
         </p>
       )}
     </div>

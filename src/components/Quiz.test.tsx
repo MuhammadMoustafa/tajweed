@@ -1,7 +1,10 @@
 import { fireEvent, render, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { getVerseMarkup } from '../data/quran'
 import { LocaleProvider } from '../i18n/LocaleProvider'
 import type { QuizQuestion } from '../lessons/types'
+import { segmentsToLetters } from '../tajweed/graphemes'
+import { parseTajweed } from '../tajweed/parse'
 import { Quiz } from './Quiz'
 
 // 112:1 has exactly one qalaqah letter, 'د' (see src/data/quran.json / parse.test.ts).
@@ -42,6 +45,31 @@ const tapTheQalqalahLetter = (container: HTMLElement) => {
 }
 
 describe('Quiz', () => {
+  it('makes every letter its own tap target, not one span per rule run', () => {
+    const { container } = renderQuiz()
+    const tapSpans = container.querySelectorAll('.quiz-question .tap')
+    const letters = segmentsToLetters(parseTajweed(getVerseMarkup('112:1')!).segments)
+    const nonSpaceLetters = letters.filter((l) => !l.isSpace)
+
+    expect(tapSpans.length).toBe(nonSpaceLetters.length)
+    // 112:1 has only one qalqalah rule run ("د"), so a segment-per-run quiz would render far fewer
+    // than this many tap targets.
+    expect(tapSpans.length).toBeGreaterThan(3)
+  })
+
+  it('tapping a single letter selects only that letter', () => {
+    const { container, screen } = renderQuiz()
+    tapTheQalqalahLetter(container)
+
+    const pressed = [...container.querySelectorAll('.tap[aria-pressed="true"]')]
+    expect(pressed).toHaveLength(1)
+    expect(pressed[0].textContent).toBe('د')
+
+    fireEvent.click(screen.getByRole('radio', { name: 'B' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))
+    expect(screen.getByText('Correct!')).toBeInTheDocument()
+  })
+
   it('disables checking until every question is answered', () => {
     const { container, screen } = renderQuiz()
     expect(screen.getByRole('button', { name: 'Check answers' })).toBeDisabled()

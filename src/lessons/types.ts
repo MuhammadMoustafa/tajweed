@@ -1,6 +1,6 @@
 import type { Bilingual } from '../i18n/bilingual'
 import type { Mark } from '../tajweed/marks'
-import type { RuleId, TajweedRuleId } from '../tajweed/rules'
+import type { RuleId } from '../tajweed/rules'
 import type { AnimationId } from '../animations/ids'
 
 /** `surah:ayah`, e.g. `112:1`. Text is looked up in src/data/quran.json — never written inline. */
@@ -20,14 +20,17 @@ export interface LessonSection {
 
 /**
  * "Tap the letters that have `rule` in `verseKey`." The correct answers are never listed here —
- * they are derived from `parseTajweed(getVerseMarkup(verseKey))`, so the verse text itself stays
- * out of lesson data (see src/lessons/quiz.ts).
+ * they are derived from `parseTajweed(getVerseMarkup(verseKey))` (plus `marks`, when given), so
+ * the verse text itself stays out of lesson data (see src/lessons/quiz.ts).
  */
 export interface QuizTapQuestion {
   kind: 'tap'
   prompt: Bilingual
   verseKey: VerseKey
-  rule: TajweedRuleId
+  /** Any rule id — an API class or a custom one. A custom rule needs `marks` to place it. */
+  rule: RuleId
+  /** Hand-placed highlights needed to answer a custom-rule question; see src/tajweed/marks.ts. */
+  marks?: Mark[]
 }
 
 export interface QuizChoiceQuestion {

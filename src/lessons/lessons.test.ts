@@ -7,6 +7,7 @@ import { applyMarks } from '../tajweed/marks'
 import { parseTajweed } from '../tajweed/parse'
 import { CUSTOM_RULES, TAJWEED_RULES } from '../tajweed/rules'
 import { LESSONS } from '.'
+import { tapCorrectIndices } from './quiz'
 import type { QuizChoiceQuestion, QuizTapQuestion } from './types'
 
 const expectBothLanguages = (text: Bilingual, where: string) => {
@@ -54,12 +55,12 @@ describe('lessons', () => {
     })
 
     it.each((lesson.quiz ?? []).filter((q): q is QuizTapQuestion => q.kind === 'tap'))(
-      'tap question verse is in quran.json and contains its rule',
+      'tap question verse is in quran.json and yields at least one correct letter',
       (q) => {
         const markup = getVerseMarkup(q.verseKey)
         expect(markup).toBeDefined()
-        const rules = parseTajweed(markup!).segments.map((s) => s.rule)
-        expect(rules).toContain(q.rule)
+        // Covers custom-rule questions too: `marks` (if any) are applied before deriving letters.
+        expect(tapCorrectIndices(markup!, q.rule, q.marks).length).toBeGreaterThan(0)
       },
     )
 
