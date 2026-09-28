@@ -18,15 +18,15 @@ export const naturalMadd: Lesson = {
     {
       heading: { ar: 'حروف المدّ', en: 'The madd letters' },
       body: {
-        ar: 'حروف المدّ ثلاثة، وكل واحد منها لا يمدّ إلا مع الحركة التي تناسبه قبله: الألف الساكنة وقبلها فتحة (ـَا)، الواو الساكنة وقبلها ضمة (ـُو)، الياء الساكنة وقبلها كسرة (ـِي).',
-        en: 'There are three madd letters, and each one only stretches with the harakah that matches it right before: alif preceded by fatha (ـَا), waw sakinah preceded by damma (ـُو), and ya sakinah preceded by kasra (ـِي).',
+        ar: 'حروف المدّ ثلاثة، وكل واحد منها لا يمدّ إلا مع الحركة التي تناسبه قبله: الألف الساكنة وقبلها فتحة (ـَا)، الواو الساكنة وقبلها ضمة (ـُو)، الياء الساكنة وقبلها كسرة (ـِي). وفي المصحف تُكتب الألف أحيانًا ألفًا صغيرة فوق الحرف (ـٰ)، وحكمها حكم الألف.',
+        en: 'There are three madd letters, and each one only stretches with the harakah that matches it right before: alif preceded by fatha (ـَا), waw sakinah preceded by damma (ـُو), and ya sakinah preceded by kasra (ـِي). In the mushaf the alif is often written as a small alif above the letter (ـٰ); it is read just like a full alif.',
       },
     },
     {
       heading: { ar: 'شرطه', en: 'Its condition' },
       body: {
-        ar: 'يكون المدّ طبيعيًا ما دام حرف المدّ ليس بعده همزة ولا سكون. فإن جاء بعده همزة صار مدًا فرعيًا (واجبًا أو جائزًا)، وإن جاء بعده حرف ساكن صار مدًا لازمًا — وهذان يأتيان في دروس لاحقة.',
-        en: 'A madd stays natural as long as nothing but the madd letter follows — no hamza and no sukun right after it. If a hamza follows, it becomes a longer, secondary madd (obligatory or permissible); if a sukun follows, it becomes a necessary madd — both are covered in later lessons.',
+        ar: 'يكون المدّ طبيعيًا ما دام حرف المدّ ليس بعده همزة ولا سكون. فإن جاء بعده همزة صار مدًا فرعيًا (واجبًا أو جائزًا)، وإن جاء بعده سكون أصلي صار مدًا لازمًا، وإن كان السكون بسبب الوقف صار مدًا عارضًا للسكون — وكل ذلك في دروس لاحقة.',
+        en: 'A madd stays natural as long as nothing but the madd letter follows — no hamza and no sukun right after it. If a hamza follows, it becomes a longer, secondary madd (obligatory or permissible); if a permanent sukun follows, it becomes a necessary madd (lazim), and if the sukun only comes from stopping, it becomes a madd 'arid lis-sukun. These are covered in later lessons.',
       },
     },
     {
@@ -43,22 +43,22 @@ export const naturalMadd: Lesson = {
     {
       verseKey: '1:1',
       note: {
-        ar: 'لاحظ حرف المدّ الطبيعي في «الرَّحْمَـٰنِ» — ألف بعد فتحة.',
-        en: 'Notice the natural madd letter in "ar-Rahman" — alif after fatha.',
+        ar: 'المدّ الطبيعي الملوَّن هنا ألف صغيرة (ـٰ) بعد فتحة: حركتان. أما الياء في آخر الآية فغير ملوّنة هنا، لأن الوقف عليها يجعلها مدًا عارضًا للسكون (درس لاحق).',
+        en: 'The colored natural madd here is a small alif (ـٰ) after a fatha: two counts. The ya at the end of the ayah is not colored here, because stopping on it makes it a madd 'arid lis-sukun (a later lesson).',
       },
     },
     {
       verseKey: '1:2',
       note: {
-        ar: 'لاحظ حرف المدّ الطبيعي في «الْعَالَمِينَ» — ألف بعد فتحة.',
-        en: 'Notice the natural madd letter in "al-’alamin" — alif after fatha.',
+        ar: 'ألف صغيرة (ـٰ) بعد فتحة في الكلمة الأخيرة: مدّ طبيعي بمقدار حركتين.',
+        en: 'A small alif (ـٰ) after a fatha in the last word: a natural madd of two counts.',
       },
     },
     {
       verseKey: '97:1',
       note: {
-        ar: 'لاحظ حرف المدّ الطبيعي في «أَنزَلْنَـٰهُ» في أول سورة القدر.',
-        en: 'Notice the natural madd letter in "anzalnahu", at the start of surah al-Qadr.',
+        ar: 'المدّ الطبيعي في الكلمة الثانية. أما الكلمة الأولى فمدّها أطول لأن بعده همزة (درس لاحق).',
+        en: 'The natural madd is in the second word. The first word has a longer madd because a hamza follows it (a later lesson).',
       },
     },
   ],
@@ -116,8 +116,8 @@ export const naturalMadd: Lesson = {
       ],
       correctIndex: 1,
       explanation: {
-        ar: 'إذا جاء بعد حرف المدّ همزة أو سكون فهو مدّ فرعي (واجب أو جائز أو لازم)، لا مدّ طبيعي.',
-        en: 'If a hamza or a sukun follows the madd letter, it becomes a secondary madd (obligatory, permissible, or necessary), not a natural one.',
+        ar: 'إذا جاء بعد حرف المدّ همزة أو سكون فهو مدّ فرعي (واجب أو جائز أو لازم أو عارض للسكون)، لا مدّ طبيعي.',
+        en: 'If a hamza or a sukun follows the madd letter, it becomes a secondary madd (obligatory, permissible, necessary, or 'arid lis-sukun), not a natural one.',
       },
     },
   ],
