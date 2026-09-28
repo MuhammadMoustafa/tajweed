@@ -85,6 +85,15 @@ export interface MaddBarProps {
   /** Show that counting has stopped and the letter must not be stretched further: mutes the
    * running pulse and caps the bar with a stop tick past the end marker. */
   stopped?: boolean
+  /**
+   * Text right after the madd letter — the hamza (with its own harakah) that turns a natural madd
+   * into a secondary one, shown in the same plain text color as `before` so only the madd letter
+   * itself carries the rule's color (L14: muttasil/munfasil, reusing this bar at 4/5 counts).
+   */
+  after?: string
+  /** With `after` set: draws it with a visible gap from the letter, showing a new word starts
+   * there (munfasil) rather than continuing the same word (muttasil, the default, no gap). */
+  afterGap?: boolean
 }
 
 /**
@@ -105,6 +114,8 @@ export function MaddBar({
   token,
   markers,
   stopped,
+  after,
+  afterGap,
 }: MaddBarProps) {
   const { t, n } = useLocale()
   const color = `var(--tj-${token ?? DEFAULT_TOKEN[counts]})`
@@ -128,6 +139,18 @@ export function MaddBar({
         // Reads to the letter's right (its harakah is pronounced first, in Arabic's right-to-left order).
         <text x={ANCHOR_X + LETTER_HALF_WIDTH} y={LETTER_Y} textAnchor="start" className="anim-letter madd-bar-before">
           {before}
+        </text>
+      )}
+      {letter && after && (
+        // Reads to the letter's left (pronounced after it); `afterGap` pushes it further away to
+        // show a new word starts there (munfasil) instead of continuing the same word (muttasil).
+        <text
+          x={ANCHOR_X - LETTER_HALF_WIDTH - (afterGap ? 16 : 0)}
+          y={LETTER_Y}
+          textAnchor="end"
+          className="anim-letter madd-bar-after"
+        >
+          {after}
         </text>
       )}
       {letter && (

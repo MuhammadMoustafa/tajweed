@@ -6,6 +6,7 @@ import {
   makharijLisan,
   makharijShafatan,
 } from './MakharijClips'
+import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { naturalMadd } from './NaturalMadd'
 import type { Clip } from './player/clip'
 import { qalqalahBounce } from './QalqalahBounce'
@@ -19,4 +20,6 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'makharij-shafatan': makharijShafatan,
   'makharij-khayshum': makharijKhayshum,
   'natural-madd': naturalMadd,
+  'madd-muttasil': maddMuttasil,
+  'madd-munfasil': maddMunfasil,
 }

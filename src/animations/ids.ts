@@ -7,3 +7,5 @@ export type AnimationId =
   | 'makharij-shafatan'
   | 'makharij-khayshum'
   | 'natural-madd'
+  | 'madd-muttasil'
+  | 'madd-munfasil'

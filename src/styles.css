@@ -478,8 +478,10 @@ main {
   inline-size: min(100%, 320px);
 }
 
-/* The harakah/consonant before the madd letter: plain text, so only the letter itself is colored. */
-.madd-bar-before {
+/* The harakah/consonant before the madd letter, and the hamza after it (L14's muttasil/munfasil
+   "cause"): plain text, so only the letter itself is colored. */
+.madd-bar-before,
+.madd-bar-after {
   fill: var(--text);
 }
 

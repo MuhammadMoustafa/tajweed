@@ -128,3 +128,30 @@ test.describe('makharij clips and reduced motion', () => {
     }
   })
 })
+
+// madd-muttasil / madd-munfasil (src/animations/MaddObligatory.tsx, L14): the same MaddBar
+// counting demo as natural-madd, but 4 counts, colored madd-obligatory, and with the hamza that
+// causes the madd shown next to the letter — adjacent for muttasil, with a gap for munfasil.
+test.describe('madd-obligatory clips and reduced motion', () => {
+  for (const [id, expectAfterGap] of [
+    ['madd-muttasil', false],
+    ['madd-munfasil', true],
+  ] as const) {
+    for (const lesson of withSectionClip(id)) {
+      test(`${lesson.id} ${id} section player shows the hamza${expectAfterGap ? ', with a word gap,' : ''} and counts to 4`, async ({
+        page,
+      }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' })
+        await page.goto(`/#/lesson/${lesson.id}`)
+        const player = page.getByRole('group', { name: ANIMATIONS[id].title.en })
+        await expect(player.locator('[data-marker="end"]')).toHaveAttribute('data-beat', '4')
+        await expect(player.locator('.madd-bar-after')).not.toBeEmpty()
+
+        for (let i = 0; i < 4; i += 1) await player.getByRole('button', { name: 'Next step' }).click()
+        await expect(player).toHaveAttribute('data-step', '4')
+        await expect(player.locator('.madd-bar-fill')).toHaveAttribute('width', '200')
+        await expect(player.locator('.madd-bar-pulse')).toHaveAttribute('data-beat', '4')
+      })
+    }
+  }
+})
