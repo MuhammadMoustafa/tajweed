@@ -31,6 +31,9 @@ const LETTER_Y = 44
  * right next to the letter instead of overlapping or gapping it. Approximate (no DOM measurement,
  * matching how the other clips place letters, e.g. QalqalahBounce's fixed `letterX`). */
 const LETTER_HALF_WIDTH = 22
+/** Half the width of one consonant (with its harakah) at the same size: where `cause` centers its
+ * caret under a one-letter `before`/`after`. Approximate, like LETTER_HALF_WIDTH. */
+const CAUSE_HALF_WIDTH = 18
 
 /** One count lasts about a second at 1×; matched by every madd lesson (L13c-L16) for one shared pace. */
 export const COUNT_MS = 1000
@@ -52,6 +55,9 @@ export const maddBeatFilled = (beat: number, progress: number): number => beat -
  * that count completes (see MaddBar's `markers`). */
 const PULSE_SPAN = 0.5
 
+/** An upward-pointing triangle centered on `x`, between the letters and the bar. */
+const caretPath = (x: number) => `M${x - 9} 74 L${x} 58 L${x + 9} 74 Z`
+
 export interface MaddBarProps {
   /** How many counts (harakat) the bar stretches to. */
   counts: MaddCount
@@ -67,6 +73,12 @@ export interface MaddBarProps {
    * only the madd letter itself carries the rule's color. Omit for a bare letter with no context.
    */
   before?: string
+  /**
+   * Points a caret (in the plain text color, not the rule's) at `before` or `after`: the cause of
+   * this madd, e.g. a hamza before the madd letter (badal) or the sukun of stopping after it
+   * (ʿarid lis-sukun). The caret is centered for a single letter there.
+   */
+  cause?: 'before' | 'after'
   /** The madd letter (or word) the bar is anchored under, e.g. "ا"; shown above the bar with an
    * arrow pointing at it, colored with the rule's token. */
   letter?: string
@@ -109,6 +121,7 @@ export function MaddBar({
   filled = counts,
   current,
   before,
+  cause,
   letter,
   label,
   token,
@@ -153,9 +166,20 @@ export function MaddBar({
           {after}
         </text>
       )}
+      {letter && cause && (cause === 'before' ? before : after) && (
+        // An outlined caret under the cause letter, beside the madd letter's filled arrow.
+        <path
+          d={caretPath(ANCHOR_X + (cause === 'before' ? 1 : -1) * (LETTER_HALF_WIDTH + CAUSE_HALF_WIDTH + (afterGap ? 16 : 0)))}
+          fill="none"
+          strokeWidth={2}
+          strokeLinejoin="round"
+          className="madd-bar-cause"
+          data-cause={cause}
+        />
+      )}
       {letter && (
         // Points straight up at the madd letter, between it and the bar.
-        <path d={`M${ANCHOR_X - 9} 74 L${ANCHOR_X} 58 L${ANCHOR_X + 9} 74 Z`} fill={color} className="madd-bar-arrow" />
+        <path d={caretPath(ANCHOR_X)} fill={color} className="madd-bar-arrow" />
       )}
       <rect
         x={BAR_X}

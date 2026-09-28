@@ -624,17 +624,17 @@ main {
   inline-size: min(100%, 320px);
 }
 
-/* The harakah/consonant before the madd letter, and the hamza after it (L14's muttasil/munfasil
-   "cause"): plain text, so only the letter itself is colored. */
+/* The harakah/consonant before the madd letter, and the letter after it: plain text, so only the
+   madd letter itself is colored. */
 .madd-bar-before,
 .madd-bar-after {
   fill: var(--text);
 }
 
-/* The consonant right after the madd letter (its cause, e.g. a shaddah or sukun, L15): also plain
-   text, so only the madd letter itself is colored. */
-.madd-bar-after {
-  fill: var(--text);
+/* The caret under a madd's cause (MaddBarProps.cause): plain text color, outlined, so it never
+   reads as part of the rule's colored letter. */
+.madd-bar-cause {
+  stroke: var(--text);
 }
 
 .madd-bar-count {
