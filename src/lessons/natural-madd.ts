@@ -3,6 +3,7 @@ import type { Lesson } from './types'
 export const naturalMadd: Lesson = {
   id: 'natural-madd',
   order: 13,
+  unit: 'madd',
   title: { ar: 'المد الطبيعي', en: 'Natural madd (al-madd al-tabi’i)' },
   summary: {
     ar: 'إطالة الصوت حركتين على أحد حروف المد الثلاثة، من غير همزة أو سكون بعده.',

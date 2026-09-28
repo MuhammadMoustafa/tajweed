@@ -8,6 +8,7 @@ import type { Lesson } from './types'
 export const otherMadd: Lesson = {
   id: 'other-madd',
   order: 16,
+  unit: 'madd',
   title: {
     ar: 'مدود أخرى: العارض للسكون واللين والبدل والعوض والصلة',
     en: 'Other madd: ʿarid lis-sukun, leen, badal, ʿiwad and silah',

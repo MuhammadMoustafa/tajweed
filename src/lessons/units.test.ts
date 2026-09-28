@@ -43,8 +43,11 @@ describe.each(Object.entries(UNITS))('unit %s', (id, unit) => {
     expect(unit.title.en.trim()).not.toBe('')
   })
 
-  it("has lessons, all numbered from the unit's number up to the next whole one", () => {
-    expect(lessons.length).toBeGreaterThan(0)
-    for (const lesson of lessons) expect(Math.floor(lesson.order), lesson.id).toBe(unit.order)
+  // A unit may be declared before its lessons land (e.g. noon-sakinah while L4–L7 are written).
+  it("starts at the unit's number, and its lessons are consecutive in the learning path", () => {
+    if (lessons.length === 0) return
+    expect(Math.min(...lessons.map((l) => l.order))).toBe(unit.order)
+    const positions = lessons.map((l) => LESSONS.indexOf(l))
+    expect(positions).toEqual(positions.map((_, i) => positions[0] + i))
   })
 })

@@ -94,6 +94,7 @@ describe('LessonList', () => {
   it("nests a unit's lessons under the unit's heading, in both languages", () => {
     for (const [unitId, unit] of Object.entries(UNITS)) {
       const members = LESSONS.filter((l) => l.unit === unitId)
+      if (members.length === 0) continue // declared before its lessons land
       for (const locale of ['en', 'ar'] as const) {
         localStorage.setItem('tajweed.locale', locale)
         const { container, unmount } = render(

@@ -3,6 +3,7 @@ import type { Lesson } from './types'
 export const muttasilMunfasil: Lesson = {
   id: 'muttasil-munfasil',
   order: 14,
+  unit: 'madd',
   title: { ar: 'المد الواجب المتصل والمد الجائز المنفصل', en: 'Madd wajib muttasil and madd jaiz munfasil' },
   summary: {
     ar: 'إذا جاءت همزة بعد حرف المدّ صار المدّ فرعيًا: واجبًا متصلًا إن كانا في كلمة واحدة، وجائزًا منفصلًا إن فُصِلا بكلمتين.',

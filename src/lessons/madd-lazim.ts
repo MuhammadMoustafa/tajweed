@@ -3,6 +3,7 @@ import type { Lesson } from './types'
 export const maddLazim: Lesson = {
   id: 'madd-lazim',
   order: 15,
+  unit: 'madd',
   title: { ar: 'المدّ اللازم', en: 'Necessary madd (al-madd al-lazim)' },
   summary: {
     ar: 'مدّ حرفه سكون أصلي ثابت بعده، فيُمدّ دائمًا ست حركات.',
