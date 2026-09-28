@@ -22,3 +22,11 @@ const DATE_FORMATS: Record<Locale, Intl.DateTimeFormat> = {
 
 /** Formats an ISO date string (e.g. a recorded quiz attempt's `date`) in the locale's own format. */
 export const formatDate = (locale: Locale, iso: string): string => DATE_FORMATS[locale].format(new Date(iso))
+
+const LIST_SEPARATORS: Bilingual = { ar: '، ', en: ', ' }
+
+/** `parts` as one list in each language, e.g. "Ṭa, Dal, Ta" / "الطاء، الدال، التاء". */
+export const joinBilingual = (parts: readonly Bilingual[]): Bilingual => ({
+  ar: parts.map((p) => p.ar).join(LIST_SEPARATORS.ar),
+  en: parts.map((p) => p.en).join(LIST_SEPARATORS.en),
+})

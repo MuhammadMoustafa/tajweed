@@ -91,11 +91,13 @@ test.describe('natural madd clip and reduced motion', () => {
   }
 })
 
-// Each makharij area (src/animations/MakharijClips.tsx) gets its own section player the learner
-// controls, so they can replay just the area being taught; expected regions per step mirror the
+// Makharij clips (src/animations/MakharijClips.tsx): one step per makhraj, lighting its point;
+// within a step each letter shows on its own in turn, and the end frame (all a reduced-motion
+// learner sees) shows the makhraj's letters all together. Expected regions per step mirror the
 // unit test in src/animations/MakharijClips.test.tsx.
-const MAKHARIJ_AREAS = [
-  { id: 'makharij-jawf', firstRegions: ['jawf'], secondRegions: ['jawf'] },
+const MAKHARIJ_CLIPS = [
+  { id: 'makharij-areas', firstRegions: ['jawf'], secondRegions: ['halq-closest', 'halq-deepest', 'halq-middle'] },
+  { id: 'makharij-jawf', firstRegions: ['jawf'] },
   { id: 'makharij-halq', firstRegions: ['halq-deepest'], secondRegions: ['halq-middle'] },
   { id: 'makharij-lisan', firstRegions: ['palate', 'tongue-back'], secondRegions: ['palate', 'tongue-back'] },
   { id: 'makharij-shafatan', firstRegions: ['lip-lower', 'teeth-upper'], secondRegions: ['lip-lower', 'lip-upper'] },
@@ -103,25 +105,32 @@ const MAKHARIJ_AREAS = [
 ] as const
 
 test.describe('makharij clips and reduced motion', () => {
-  for (const area of MAKHARIJ_AREAS) {
-    for (const lesson of withSectionClip(area.id)) {
+  for (const clip of MAKHARIJ_CLIPS) {
+    for (const lesson of [...withClip(clip.id), ...withSectionClip(clip.id)]) {
       for (const reduced of [false, true]) {
         const suffix = reduced ? ' with reduced motion' : ''
-        test(`${lesson.id} ${area.id} section player lights its own region(s)${suffix}`, async ({ page }) => {
+        test(`${lesson.id} ${clip.id} player lights its own region(s)${suffix}`, async ({ page }) => {
           if (reduced) await page.emulateMedia({ reducedMotion: 'reduce' })
           await page.goto(`/#/lesson/${lesson.id}`)
-          const player = page.getByRole('group', { name: ANIMATIONS[area.id].title.en })
+          const player = page.getByRole('group', { name: ANIMATIONS[clip.id].title.en })
           const litRegions = () =>
             player
               .locator('[data-lit="true"]')
               .evaluateAll((els) => els.map((el) => el.getAttribute('data-region')).sort())
-          await expect(player.locator('.makharij-caption .makharij-letters')).not.toBeEmpty()
-          await expect.poll(litRegions).toEqual([...area.firstRegions].sort())
+          const letters = player.locator('.makharij-caption .makharij-letter')
+          await expect(letters.first()).not.toBeEmpty()
+          await expect.poll(litRegions).toEqual([...clip.firstRegions].sort())
+          // A chapter clip starts on its first letter alone; reduced motion shows them all at once.
+          if (clip.id !== 'makharij-areas') {
+            const current = player.locator('.makharij-letter[data-current]')
+            await expect(current).toHaveCount(reduced ? await letters.count() : 1)
+            await expect(player.locator('.makharij-letter-name')).not.toBeEmpty()
+          }
 
-          if ('secondRegions' in area) {
+          if ('secondRegions' in clip) {
             await player.getByRole('button', { name: 'Next step' }).click()
             await expect(player).toHaveAttribute('data-step', '1')
-            await expect.poll(litRegions).toEqual([...area.secondRegions].sort())
+            await expect.poll(litRegions).toEqual([...clip.secondRegions].sort())
           }
         })
       }
@@ -131,7 +140,7 @@ test.describe('makharij clips and reduced motion', () => {
   test('the makharij lesson gives each of the five areas its own player, all at once', async ({ page }) => {
     for (const lesson of withSectionClip('makharij-jawf')) {
       await page.goto(`/#/lesson/${lesson.id}`)
-      await expect(page.locator('.section-animation .player')).toHaveCount(MAKHARIJ_AREAS.length)
+      await expect(page.locator('.section-animation .player')).toHaveCount(5)
       // No lesson-level clip alongside the per-section ones (see makharij.test.ts).
       await expect(page.locator('.lesson-body > .card.animation')).toHaveCount(0)
     }

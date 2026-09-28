@@ -3,7 +3,8 @@ import type { Bilingual } from '../../i18n/bilingual'
 /**
  * Parts of the speech organs a lesson can point at. The five main areas of the makharij are
  * `jawf`, `halq`, `lisan`, `shafatan` and `khayshum`; `halq`, `lisan`, `shafatan` and `teeth` also
- * light up all of their parts.
+ * light up all of their parts. `gums` is the ridge behind the upper front teeth (ن ل ر), and
+ * `molars-upper` the back teeth the side of the tongue presses on for ض.
  */
 export type MakhrajRegion =
   | 'jawf'
@@ -17,9 +18,11 @@ export type MakhrajRegion =
   | 'tongue-sides'
   | 'tongue-tip'
   | 'palate'
+  | 'gums'
   | 'teeth'
   | 'teeth-upper'
   | 'teeth-lower'
+  | 'molars-upper'
   | 'shafatan'
   | 'lip-upper'
   | 'lip-lower'
@@ -38,9 +41,11 @@ export const MAKHRAJ_REGION_NAMES: Record<MakhrajRegion, Bilingual> = {
   'tongue-sides': { ar: 'حافتا اللسان', en: 'Sides of tongue' },
   'tongue-tip': { ar: 'طرف اللسان', en: 'Tip of tongue' },
   palate: { ar: 'الحنك', en: 'Palate' },
+  gums: { ar: 'اللثة', en: 'Gum ridge' },
   teeth: { ar: 'الأسنان', en: 'Teeth' },
   'teeth-upper': { ar: 'الأسنان العليا', en: 'Upper teeth' },
   'teeth-lower': { ar: 'الأسنان السفلى', en: 'Lower teeth' },
+  'molars-upper': { ar: 'الأضراس العليا', en: 'Upper molars' },
   shafatan: { ar: 'الشفتان', en: 'Lips' },
   'lip-upper': { ar: 'الشفة العليا', en: 'Upper lip' },
   'lip-lower': { ar: 'الشفة السفلى', en: 'Lower lip' },

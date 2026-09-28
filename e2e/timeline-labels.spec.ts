@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { ANIMATIONS } from '../src/animations'
 import { LESSONS } from '../src/lessons'
 
 // T11: labels above the seek bar (ClipStep.label / AnimationPlayer's .player-labels), placed over
@@ -37,23 +38,29 @@ test.describe('qalqalah timeline labels', () => {
 })
 
 test.describe('makharij timeline labels', () => {
-  // Section order on the makharij lesson (src/lessons/makharij.ts): jawf, halq, lisan, shafatan,
-  // khayshum; al-halq (index 1) has one label per step, distinct in both languages.
+  // One label per makhraj (src/animations/mouth/makharij.ts); al-halq's three are distinct in both
+  // languages. The clip plays wherever a lesson places it (lesson-level or under a section).
+  const halq = ANIMATIONS['makharij-halq']
+  const lesson = LESSONS.find(
+    (l) => l.animation === 'makharij-halq' || l.sections.some((s) => s.animation === 'makharij-halq'),
+  )!
+
   test('al-halq step labels render in both languages; clicking one seeks', async ({ page }) => {
-    await page.goto('/#/lesson/makharij')
-    const player = page.locator('.section-animation .player').nth(1)
+    await page.goto(`/#/lesson/${lesson.id}`)
+    const player = page.getByRole('group', { name: halq.title.en })
     await player.scrollIntoViewIfNeeded()
 
-    const deepestEn = player.getByRole('button', { name: 'Al-halq: the deepest part of the throat' })
-    const middleEn = player.getByRole('button', { name: 'Al-halq: the middle of the throat' })
+    const deepestEn = player.getByRole('button', { name: 'Deepest part of the throat' })
+    const middleEn = player.getByRole('button', { name: 'Middle of the throat' })
     await expect(deepestEn).toHaveAttribute('data-current')
     await middleEn.click()
     await expect(player).toHaveAttribute('data-step', '1')
     await expect(middleEn).toHaveAttribute('data-current')
 
     await page.locator('.lang-toggle').click()
-    const middleAr = player.getByRole('button', { name: 'وسط الحلق' })
+    const playerAr = page.getByRole('group', { name: halq.title.ar })
+    const middleAr = playerAr.getByRole('button', { name: 'وسط الحلق' })
     await expect(middleAr).toHaveAttribute('data-current')
-    await expect(player.getByRole('button', { name: 'أقصى الحلق' })).not.toHaveAttribute('data-current')
+    await expect(playerAr.getByRole('button', { name: 'أقصى الحلق' })).not.toHaveAttribute('data-current')
   })
 })

@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import type { Bilingual } from '../../i18n/bilingual'
+import { joinBilingual, type Bilingual } from '../../i18n/bilingual'
 import { useLocale } from '../../i18n/LocaleProvider'
 import { MAKHRAJ_REGION_NAMES, type MakhrajRegion } from './regions'
 
@@ -11,6 +11,7 @@ const PARENT: Partial<Record<MakhrajRegion, MakhrajRegion>> = {
   'halq-closest': 'halq',
   'teeth-upper': 'teeth',
   'teeth-lower': 'teeth',
+  'molars-upper': 'teeth',
   'lip-upper': 'shafatan',
   'lip-lower': 'shafatan',
 }
@@ -20,7 +21,6 @@ const TITLE: Bilingual = {
   en: 'Side view of the mouth, throat and nose',
 }
 const HIGHLIGHTED: Bilingual = { ar: 'المواضع المضيئة: ', en: 'Highlighted: ' }
-const LIST_SEPARATOR: Bilingual = { ar: '، ', en: ', ' }
 
 /*
  * Geometry, in the head's own coordinates (the face looks left, the throat is on the right; the
@@ -59,6 +59,10 @@ const TONGUE_PARTS: [MakhrajRegion, number, number][] = [
 ]
 const TONGUE_SIDES = 'M82 182 C102 174 130 172 152 178'
 const PALATE = 'M64 152 C90 144 120 141 142 144 C160 147 172 154 178 168'
+/** The gum ridge just behind the upper front teeth, where the palate starts. */
+const GUMS = 'M60 148 C63 141 74 139 83 144 C77 148 70 150 64 155 Z'
+/** Upper molars, along the side of the palate (drawn dashed: they sit beside the cut, not on it). */
+const MOLARS_UPPER = 'M88 149 h9 v6 q-4.5 3 -9 0 Z M100 148 h9 v6 q-4.5 3 -9 0 Z M112 147 h9 v6 q-4.5 3 -9 0 Z'
 const TEETH_UPPER = 'M54 147 L66 148 L65 165 Q60 169 55 165 Z'
 const TEETH_LOWER = 'M55 190 L65 189 L65 172 Q60 168 55 172 Z'
 const LIP_UPPER = 'M50 145 C33 149 30 164 41 168 L57 166 L57 148 Z'
@@ -66,6 +70,7 @@ const LIP_LOWER = 'M41 170 C30 175 33 192 50 195 L57 192 L57 171 Z'
 
 /** Label text position (y) and the point it points at, per region; left labels end at x=22. */
 const LABELS: Record<MakhrajRegion, { side: 'left' | 'right'; y: number; to: [number, number] }> = {
+  gums: { side: 'left', y: 84, to: [70, 145] },
   khayshum: { side: 'left', y: 104, to: [62, 132] },
   teeth: { side: 'left', y: 128, to: [59, 156] },
   'teeth-upper': { side: 'left', y: 128, to: [59, 156] },
@@ -80,6 +85,7 @@ const LABELS: Record<MakhrajRegion, { side: 'left' | 'right'; y: number; to: [nu
   palate: { side: 'right', y: 116, to: [128, 144] },
   'tongue-back': { side: 'right', y: 136, to: [168, 176] },
   'tongue-middle': { side: 'right', y: 156, to: [120, 164] },
+  'molars-upper': { side: 'right', y: 176, to: [110, 154] },
   'halq-closest': { side: 'right', y: 194, to: [201, 192] },
   halq: { side: 'right', y: 236, to: [214, 236] },
   'halq-middle': { side: 'right', y: 236, to: [201, 236] },
@@ -123,7 +129,7 @@ export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', cla
       <title id={`${id}-title`}>{t(TITLE)}</title>
       <desc id={`${id}-desc`}>
         {highlight.length > 0 &&
-          t(HIGHLIGHTED) + highlight.map((r) => t(MAKHRAJ_REGION_NAMES[r])).join(t(LIST_SEPARATOR))}
+          t(HIGHLIGHTED) + t(joinBilingual(highlight.map((r) => MAKHRAJ_REGION_NAMES[r])))}
       </desc>
       <defs>
         <clipPath id={`${id}-throat`}>
@@ -176,6 +182,8 @@ export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', cla
         <path d={TONGUE_SIDES} className="anat-tongue-sides" {...state('tongue-sides')} />
 
         <path d={PALATE} className="anat-palate" {...state('palate')} />
+        <path d={MOLARS_UPPER} className="anat-teeth anat-molars" {...state('molars-upper')} />
+        <path d={GUMS} className="anat-gums" {...state('gums')} />
         <path d={TEETH_UPPER} className="anat-teeth" {...state('teeth-upper')} />
         <path d={TEETH_LOWER} className="anat-teeth" {...state('teeth-lower')} />
         <path d={LIP_UPPER} className="anat-lip" {...state('lip-upper')} />

@@ -1,5 +1,6 @@
 import type { AnimationId } from './ids'
 import {
+  makharijAreas,
   makharijHalq,
   makharijJawf,
   makharijKhayshum,
@@ -16,6 +17,7 @@ import { qalqalahBounce } from './QalqalahBounce'
 /** Clips by id, played by AnimationPlayer (src/animations/player) for a lesson or one of its sections. */
 export const ANIMATIONS: Record<AnimationId, Clip> = {
   'qalqalah-bounce': qalqalahBounce,
+  'makharij-areas': makharijAreas,
   'makharij-jawf': makharijJawf,
   'makharij-halq': makharijHalq,
   'makharij-lisan': makharijLisan,

@@ -44,6 +44,21 @@ describe('MouthDiagram', () => {
     ])
   })
 
+  it('has the gum ridge (ن ل ر) and the upper molars (ض) as their own regions, each labelled', () => {
+    const container = renderDiagram({ highlight: ['gums', 'molars-upper'], labels: ['gums', 'molars-upper'] })
+    expect(litRegions(container).sort()).toEqual(['gums', 'molars-upper'])
+    expect([...container.querySelectorAll('[data-label] text')].map((el) => el.textContent)).toEqual([
+      'Gum ridge',
+      'Upper molars',
+    ])
+    // The molars are teeth: lighting all the teeth lights them too.
+    expect(litRegions(renderDiagram({ highlight: ['teeth'] })).sort()).toEqual([
+      'molars-upper',
+      'teeth-lower',
+      'teeth-upper',
+    ])
+  })
+
   it('lights nothing by default', () => {
     expect(litRegions(renderDiagram({}))).toEqual([])
   })

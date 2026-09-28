@@ -835,6 +835,18 @@ main {
   fill: var(--anat-teeth);
 }
 
+.mouth-diagram .anat-molars {
+  stroke-dasharray: 2 2;
+}
+
+.mouth-diagram .anat-molars[data-lit='true'] {
+  stroke-dasharray: none;
+}
+
+.anat-gums {
+  fill: var(--anat-lip);
+}
+
 .anat-lip {
   fill: var(--anat-lip);
 }
@@ -886,19 +898,40 @@ main {
 .makharij-caption {
   display: grid;
   gap: 0.25rem;
-  min-block-size: 8.5rem;
+  min-block-size: 10rem;
   text-align: center;
 }
 
+/* Each letter is its own word here (never part of a joined word), so the current one may grow. */
 .makharij-letters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.7em;
   font-family: var(--font-quran);
   font-size: 1.9rem;
   line-height: 1.6;
-  word-spacing: 0.3em;
+}
+
+.makharij-letter {
+  color: var(--muted);
+  transition:
+    color 0.3s,
+    transform 0.3s;
+}
+
+.makharij-letter[data-current] {
+  color: var(--accent);
+  transform: scale(1.2);
+}
+
+.makharij-letter-name {
+  font-weight: 600;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mouth-diagram [data-region] {
+  .mouth-diagram [data-region],
+  .makharij-letter {
     transition: none;
   }
 }
