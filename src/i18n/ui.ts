@@ -29,6 +29,23 @@ export const ui = {
   quizIncorrect: { ar: 'إجابة غير صحيحة.', en: 'Not quite.' },
   yourScore: { ar: 'نتيجتك', en: 'Your score' },
   correctLetters: { ar: 'الحروف الصحيحة', en: 'Correct letters' },
+  testYourself: { ar: 'اختبر نفسك', en: 'Test yourself' },
+  backToLesson: { ar: 'العودة إلى الدرس', en: 'Back to the lesson' },
+  quizScope: {
+    ar: 'أسئلة عن أحكام هذا الدرس وما قبله، من أمثلة الدرس ومن آيات في القرآن كله.',
+    en: 'Questions on the rules taught up to this lesson, from its examples and from ayat across the whole Quran.',
+  },
+  difficulty: { ar: 'المستوى', en: 'Difficulty' },
+  difficultyEasy: { ar: 'سهل', en: 'Easy' },
+  difficultyMedium: { ar: 'متوسط', en: 'Medium' },
+  difficultyHard: { ar: 'صعب', en: 'Hard' },
+  newQuestions: { ar: 'أسئلة جديدة', en: 'New questions' },
+  loadingQuiz: { ar: 'جارٍ تحميل الأسئلة…', en: 'Loading questions…' },
+  /** Template for a generated tap question; `{rule}` is filled by withRuleName. */
+  quizTapPrompt: { ar: 'اضغط على كل حرف عليه هذا الحكم: {rule}', en: 'Tap every letter with this rule: {rule}' },
+  highlightedLetter: { ar: 'الحرف المميَّز', en: 'Highlighted letter' },
+  wordNumber: { ar: 'الكلمة', en: 'word' },
+  quizRulePrompt: { ar: 'ما الحكم على الحرف المميَّز؟', en: 'Which rule applies to the highlighted letter?' },
   previousLesson: { ar: 'الدرس السابق', en: 'Previous lesson' },
   nextLesson: { ar: 'الدرس التالي', en: 'Next lesson' },
   lessonNavigation: { ar: 'التنقل بين الدروس', en: 'Lesson navigation' },
@@ -47,6 +64,12 @@ export const ui = {
   matnTuhfaTitle: { ar: 'تحفة الأطفال', en: 'Tuhfat al-Atfal' },
   matnJazariyyaTitle: { ar: 'المقدمة الجزرية', en: 'Al-Muqaddimah al-Jazariyyah' },
 } satisfies Record<string, Bilingual>
+
+/** Fills a `{rule}` template (e.g. `ui.quizTapPrompt`) with a rule's name, in both languages. */
+export const withRuleName = (template: Bilingual, name: Bilingual): Bilingual => ({
+  ar: template.ar.replace('{rule}', name.ar),
+  en: template.en.replace('{rule}', name.en),
+})
 
 /**
  * "3 of 20 learned" / "٣ من ٢٠ تم تعلّمها" — digits via Intl.NumberFormat so Arabic renders

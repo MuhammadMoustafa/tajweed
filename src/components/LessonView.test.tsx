@@ -2,6 +2,7 @@ import { fireEvent, render, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { LocaleProvider } from '../i18n/LocaleProvider'
 import { LESSONS } from '../lessons'
+import { hasQuiz } from '../lessons/quiz'
 import { LessonView } from './LessonView'
 
 const lesson = LESSONS[0]
@@ -54,5 +55,15 @@ describe('LessonView', () => {
     const last = within(renderLesson(LESSONS[LESSONS.length - 1]).container)
     expect(last.queryByText(/Next lesson/)).toBeNull()
     expect(last.queryAllByText(/Previous lesson/).length).toBe(LESSONS.length > 1 ? 1 : 0)
+  })
+
+  it('links every lesson with a quiz to its quiz page instead of showing the quiz inline', () => {
+    for (const shown of LESSONS) {
+      const { container, screen } = renderLesson(shown)
+      expect(container.querySelector('.quiz')).toBeNull()
+      const link = screen.queryByRole('link', { name: /Test yourself/ })
+      if (hasQuiz(shown)) expect(link).toHaveAttribute('href', `#/lesson/${shown.id}/quiz`)
+      else expect(link).toBeNull()
+    }
   })
 })

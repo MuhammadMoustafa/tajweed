@@ -6,9 +6,9 @@ import { ui } from '../i18n/ui'
 import { adjacentLessons } from '../lessons'
 import type { Lesson } from '../lessons/types'
 import { useProgress } from '../progress'
+import { hasQuiz } from '../lessons/quiz'
 import { AyahExample } from './AyahExample'
 import { MatnPanel } from './MatnPanel'
-import { Quiz } from './Quiz'
 import { RuleLegend } from './RuleLegend'
 
 export function LessonView({ lesson }: { lesson: Lesson }) {
@@ -70,7 +70,11 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
 
       {lesson.mutoon && <MatnPanel refs={lesson.mutoon} />}
 
-      {lesson.quiz && lesson.quiz.length > 0 && <Quiz questions={lesson.quiz} />}
+      {hasQuiz(lesson) && (
+        <a href={`#/lesson/${lesson.id}/quiz`} className="card test-yourself">
+          {t(ui.testYourself)} {nextArrow}
+        </a>
+      )}
 
       {(prev || next) && (
         <nav className="lesson-nav" aria-label={t(ui.lessonNavigation)}>

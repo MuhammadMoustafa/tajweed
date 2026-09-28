@@ -2,7 +2,13 @@ import { segmentsToLetters } from '../tajweed/graphemes'
 import { applyMarks, type Mark } from '../tajweed/marks'
 import { parseTajweed } from '../tajweed/parse'
 import type { RuleId } from '../tajweed/rules'
-import type { QuizChoiceQuestion } from './types'
+import type { Lesson, QuizChoiceQuestion } from './types'
+
+/**
+ * Whether a lesson has a quiz page (#/lesson/<id>/quiz): authored questions, or focus rules to
+ * draw questions for (src/quiz/draw.ts).
+ */
+export const hasQuiz = (lesson: Lesson): boolean => (lesson.quiz?.length ?? 0) > 0 || lesson.focusRules.length > 0
 
 /** Visual state of a tappable letter; drives color only (see TajweedText). */
 export type SegmentState = 'selected' | 'correct' | 'wrong'

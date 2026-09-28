@@ -1,23 +1,27 @@
 import { useMemo, useRef, useState } from 'react'
-import { getVerseMarkup } from '../data/quran'
+import type { Bilingual } from '../i18n/bilingual'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import { isChoiceAnswerCorrect, isTapAnswerCorrect, scoreQuiz, tapCorrectIndices, type SegmentState } from '../lessons/quiz'
-import type { QuizChoiceQuestion, QuizQuestion, QuizTapQuestion } from '../lessons/types'
+import type { DrawnQuestion, DrawnRuleQuestion, DrawnTapQuestion } from '../quiz/draw'
 import { segmentsToLetters } from '../tajweed/graphemes'
 import { applyMarks } from '../tajweed/marks'
 import { parseTajweed } from '../tajweed/parse'
+import { ALL_RULES } from '../tajweed/rules'
 import { TajweedText } from './TajweedText'
 
 type Answer = { kind: 'tap'; selected: Set<number> } | { kind: 'choice'; index?: number }
 
-const initialAnswer = (question: QuizQuestion): Answer =>
+const initialAnswer = (question: DrawnQuestion): Answer =>
   question.kind === 'tap' ? { kind: 'tap', selected: new Set() } : { kind: 'choice' }
 
 const isAnswered = (answer: Answer): boolean => (answer.kind === 'tap' ? answer.selected.size > 0 : answer.index !== undefined)
 
-/** Practice quiz shown after a lesson's examples: tap-the-letters and bilingual multiple choice. */
-export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
+/**
+ * One quiz attempt (see src/quiz/draw.ts): tap-the-letters, "which rule is on the highlighted
+ * letter?" and bilingual multiple choice.
+ */
+export function Quiz({ questions }: { questions: readonly DrawnQuestion[] }) {
   const { t, n } = useLocale()
   const [answers, setAnswers] = useState<Answer[]>(() => questions.map(initialAnswer))
   const [checked, setChecked] = useState(false)
@@ -31,11 +35,9 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
     if (!checked) return undefined
     return questions.map((question, i) => {
       const answer = answers[i]
-      if (question.kind === 'tap' && answer.kind === 'tap') {
-        const markup = getVerseMarkup(question.verseKey)
-        return markup ? isTapAnswerCorrect(answer.selected, tapCorrectIndices(markup, question.rule, question.marks)) : false
-      }
-      if (question.kind === 'choice' && answer.kind === 'choice') return isChoiceAnswerCorrect(question, answer.index)
+      if (question.kind === 'tap' && answer.kind === 'tap')
+        return isTapAnswerCorrect(answer.selected, tapCorrectIndices(question.markup, question.rule, question.marks))
+      if (question.kind !== 'tap' && answer.kind === 'choice') return isChoiceAnswerCorrect(question, answer.index)
       return false
     })
   }, [checked, questions, answers])
@@ -87,6 +89,8 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
           <div
             className={`card quiz-question${isMissing ? ' unanswered' : ''}`}
             key={i}
+            data-kind={question.kind}
+            data-verse={question.kind === 'choice' ? undefined : question.verseKey}
             ref={(el) => {
               cards.current[i] = el
             }}
@@ -96,9 +100,11 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
             {question.kind === 'tap' && answer.kind === 'tap' && (
               <TapQuestion question={question} selected={answer.selected} checked={checked} onToggle={(seg) => toggleTap(i, seg)} />
             )}
-            {question.kind === 'choice' && answer.kind === 'choice' && (
+            {question.kind === 'rule' && <RuleQuestionVerse question={question} />}
+            {question.kind !== 'tap' && answer.kind === 'choice' && (
               <ChoiceQuestion
-                question={question}
+                options={question.kind === 'rule' ? question.options.map((id) => ALL_RULES[id].name) : question.options}
+                correctIndex={question.correctIndex}
                 selectedIndex={answer.index}
                 checked={checked}
                 onChoose={(opt) => chooseOption(i, opt)}
@@ -140,22 +146,43 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
   )
 }
 
+/**
+ * The verse of a "which rule?" question with its letter highlighted, and that letter named again
+ * below with its word number: a highlighted harakah-sized letter (a dagger alif) is easy to miss.
+ */
+function RuleQuestionVerse({ question }: { question: DrawnRuleQuestion }) {
+  const { t, n } = useLocale()
+  const parsedSegments = parseTajweed(question.markup).segments
+  const letters = segmentsToLetters(question.marks?.length ? applyMarks(parsedSegments, question.marks) : parsedSegments)
+  const at = letters.findIndex((l) => l.tapIndex === question.letter)
+  const word = letters.slice(0, at).filter((l) => l.isSpace).length + 1
+  return (
+    <div>
+      <TajweedText markup={question.markup} marks={question.marks} target={question.letter} />
+      <p className="quiz-summary">
+        {t(ui.highlightedLetter)}:{' '}
+        <span className="quiz-letter" lang="ar" style={{ color: 'var(--tj-quiz-target)' }}>
+          {letters[at]?.text}
+        </span>{' '}
+        ({t(ui.wordNumber)} {n(word)})
+      </p>
+    </div>
+  )
+}
+
 function TapQuestion({
   question,
   selected,
   checked,
   onToggle,
 }: {
-  question: QuizTapQuestion
+  question: DrawnTapQuestion
   selected: ReadonlySet<number>
   checked: boolean
   onToggle: (segmentIndex: number) => void
 }) {
   const { t } = useLocale()
-  const markup = getVerseMarkup(question.verseKey)
-  // A missing verse means `npm run fetch-quran` wasn't run after this question's verseKey was added.
-  if (!markup) return null
-
+  const { markup } = question
   const parsedSegments = parseTajweed(markup).segments
   const ruledSegments = question.marks?.length ? applyMarks(parsedSegments, question.marks) : parsedSegments
   const letters = segmentsToLetters(ruledSegments)
@@ -181,12 +208,14 @@ function TapQuestion({
 }
 
 function ChoiceQuestion({
-  question,
+  options,
+  correctIndex,
   selectedIndex,
   checked,
   onChoose,
 }: {
-  question: QuizChoiceQuestion
+  options: readonly Bilingual[]
+  correctIndex: number
   selectedIndex: number | undefined
   checked: boolean
   onChoose: (optionIndex: number) => void
@@ -194,10 +223,10 @@ function ChoiceQuestion({
   const { t } = useLocale()
   return (
     <div className="quiz-options" role="radiogroup">
-      {question.options.map((option, i) => {
+      {options.map((option, i) => {
         const isSelected = selectedIndex === i
-        const isRightAnswer = checked && i === question.correctIndex
-        const isWrongPick = checked && isSelected && i !== question.correctIndex
+        const isRightAnswer = checked && i === correctIndex
+        const isWrongPick = checked && isSelected && i !== correctIndex
         const className = ['quiz-option', isSelected && 'selected', isRightAnswer && 'correct', isWrongPick && 'wrong']
           .filter(Boolean)
           .join(' ')

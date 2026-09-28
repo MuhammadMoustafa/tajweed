@@ -32,6 +32,8 @@
   --tj-quiz-selected: #6b46c1;
   --tj-quiz-correct: #1b8a3a;
   --tj-quiz-wrong: #c81e3a;
+  /* The letter a "which rule?" question asks about: the quiz's own "this letter" color. */
+  --tj-quiz-target: var(--tj-quiz-selected);
 
   /* Anatomy (src/animations/mouth/MouthDiagram.tsx) — never the tajweed rule colors above. */
   --anat-skin: #f6dcc8;
@@ -685,4 +687,39 @@ main {
   color: var(--muted);
   direction: ltr;
   word-break: break-all;
+
+/* Quiz page (src/components/QuizPage.tsx) and the link to it at the end of a lesson. */
+.test-yourself {
+  display: block;
+  margin-block: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.quiz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-block: 1rem;
+}
+
+.difficulty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.difficulty .selected {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* A quiz letter named on its own, outside its word: the Quran font, a little larger. */
+.quiz-letter {
+  font-family: var(--font-quran);
+  font-size: 1.4rem;
 }

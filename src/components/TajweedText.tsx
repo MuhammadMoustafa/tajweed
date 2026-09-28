@@ -36,20 +36,26 @@ interface Props {
    * rule, so the answer isn't given away before checking.
    */
   interactive?: InteractiveProps
+  /**
+   * Quiz "which rule?" mode: only the letter with this `tapIndex` is colored, in the neutral
+   * quiz-target color (never its rule's color, which would give the answer away).
+   */
+  target?: number
 }
 
 /**
  * Renders Quran text with tajweed coloring. Rule spans and letter-tap spans change ONLY `color` —
  * any font, size, spacing or padding change inside a word breaks Arabic letter joining.
  */
-export function TajweedText({ markup, highlight, marks, interactive }: Props) {
+export function TajweedText({ markup, highlight, marks, interactive, target }: Props) {
   const { t } = useLocale()
   const parsed = useMemo(() => parseTajweed(markup), [markup])
   const segments = useMemo(
     () => (marks && marks.length > 0 ? applyMarks(parsed.segments, marks) : parsed.segments),
     [parsed.segments, marks],
   )
-  const letters = useMemo(() => (interactive ? segmentsToLetters(segments) : []), [segments, interactive])
+  const byLetter = interactive !== undefined || target !== undefined
+  const letters = useMemo(() => (byLetter ? segmentsToLetters(segments) : []), [segments, byLetter])
   const { ayahNumber } = parsed
 
   return (
@@ -78,15 +84,25 @@ export function TajweedText({ markup, highlight, marks, interactive }: Props) {
               </span>
             )
           })
-        : segments.map((seg, i) => {
-            if (!seg.rule || (highlight && !highlight.includes(seg.rule))) return seg.text
-            const rule = ALL_RULES[seg.rule]
-            return (
-              <span key={i} style={{ color: `var(--tj-${rule.color})` }} title={t(rule.name)}>
-                {seg.text}
-              </span>
+        : target !== undefined
+          ? letters.map((letter, i) =>
+              letter.tapIndex === target ? (
+                <span key={i} className="quiz-target" style={{ color: 'var(--tj-quiz-target)' }}>
+                  {letter.text}
+                </span>
+              ) : (
+                letter.text
+              ),
             )
-          })}
+          : segments.map((seg, i) => {
+              if (!seg.rule || (highlight && !highlight.includes(seg.rule))) return seg.text
+              const rule = ALL_RULES[seg.rule]
+              return (
+                <span key={i} style={{ color: `var(--tj-${rule.color})` }} title={t(rule.name)}>
+                  {seg.text}
+                </span>
+              )
+            })}
       {ayahNumber && <span className="ayah-number"> ﴿{ayahNumber}﴾</span>}
     </p>
   )

@@ -2,17 +2,18 @@ import { fireEvent, render, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { getVerseMarkup } from '../data/quran'
 import { LocaleProvider } from '../i18n/LocaleProvider'
-import type { QuizQuestion } from '../lessons/types'
+import type { DrawnQuestion } from '../quiz/draw'
 import { segmentsToLetters } from '../tajweed/graphemes'
 import { parseTajweed } from '../tajweed/parse'
 import { Quiz } from './Quiz'
 
 // 112:1 has exactly one qalaqah letter, 'دٌ' (the API tags د; its tanween joins it as one letter).
-const questions: QuizQuestion[] = [
+const questions: DrawnQuestion[] = [
   {
     kind: 'tap',
     prompt: { ar: 'اضغط على حرف القلقلة', en: 'Tap the qalqalah letter' },
     verseKey: '112:1',
+    markup: getVerseMarkup('112:1')!,
     rule: 'qalaqah',
   },
   {
@@ -29,10 +30,10 @@ const questions: QuizQuestion[] = [
 
 // Renders are not auto-cleaned between tests (no `globals: true`), so every query below is scoped
 // to this render's own container rather than the shared `screen`.
-const renderQuiz = () => {
+const renderQuiz = (shown: readonly DrawnQuestion[] = questions) => {
   const { container } = render(
     <LocaleProvider>
-      <Quiz questions={questions} />
+      <Quiz questions={shown} />
     </LocaleProvider>,
   )
   return { container, screen: within(container) }
@@ -112,5 +113,32 @@ describe('Quiz', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
     expect(screen.getByRole('button', { name: 'Check answers' })).toBeEnabled()
     expect(screen.queryByText('Your score: 1 / 2')).not.toBeInTheDocument()
+  })
+
+  it('asks which rule is on a highlighted letter, coloring only that letter, and scores the pick', () => {
+    // 112:3: tapIndex 4 is the first qalqalah dal (see quiz.test.ts).
+    const ruleQuestion: DrawnQuestion = {
+      kind: 'rule',
+      prompt: { ar: 'ما الحكم؟', en: 'Which rule?' },
+      verseKey: '112:3',
+      markup: getVerseMarkup('112:3')!,
+      letter: 4,
+      options: ['madda_normal', 'qalaqah'],
+      correctIndex: 1,
+    }
+    const { container, screen } = renderQuiz([ruleQuestion])
+    const target = container.querySelectorAll('.quiz-target')
+    expect(target).toHaveLength(1)
+    expect(target[0].textContent).toBe('دْ')
+    expect(target[0]).toHaveStyle({ color: 'var(--tj-quiz-target)' })
+    // Named again below, with its word: 112:3's first dal ends word 2.
+    expect(container.querySelector('.quiz-letter')?.textContent).toBe('دْ')
+    expect(container.querySelector('.quiz-summary')).toHaveTextContent('(word 2)')
+    // No rule colors: the highlight must not give the answer away.
+    expect(container.querySelectorAll('.quran span[title]')).toHaveLength(0)
+
+    fireEvent.click(screen.getByRole('radio', { name: 'Qalqalah (echo)' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))
+    expect(screen.getByText('Your score: 1 / 1')).toBeInTheDocument()
   })
 })

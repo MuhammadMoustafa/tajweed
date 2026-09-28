@@ -59,7 +59,8 @@ export interface Lesson {
   examples: LessonExample[]
   /** Set true only after a qualified teacher has checked both languages. */
   reviewed: boolean
-  /** Practice quiz shown after the examples. */
+  /** Authored questions for the lesson's quiz page (#/lesson/<id>/quiz), drawn alongside questions
+   *  generated from the examples and the whole-Quran pool (src/quiz/draw.ts). */
   quiz?: QuizQuestion[]
   /** Lines from a classical poem (src/data/mutoon.json) that state this lesson's rule, shown in a
    * collapsed panel after the examples. Line numbers are found in the fetched data, never guessed. */
