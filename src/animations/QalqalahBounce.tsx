@@ -24,10 +24,13 @@ export function QalqalahBounce() {
                   fill="none"
                   stroke="var(--tj-qalqalah)"
                   strokeWidth={3}
+                  // Keyframes start invisible: Motion shows the first keyframe during `delay`, so a
+                  // visible first frame would draw every ring at once until its turn.
                   initial={{ r: 20, opacity: 0 }}
-                  animate={{ r: [20, 55], opacity: [0.9, 0] }}
+                  animate={{ r: [20, 20, 55], opacity: [0, 0.9, 0] }}
                   transition={{
                     duration: 0.8,
+                    times: [0, 0.05, 1],
                     delay: delay + offset,
                     repeat: Infinity,
                     repeatDelay: LETTERS.length * CYCLE * 0.5 - 0.8,
