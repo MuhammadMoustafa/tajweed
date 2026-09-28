@@ -1,0 +1,3 @@
+# Capacitor rewrites these on every `cap sync` with LF endings; keep them LF so the APK build
+# does not leave the tree dirty on Windows checkouts (core.autocrlf).
+android/**/*.gradle text eol=lf
