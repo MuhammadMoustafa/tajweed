@@ -1,5 +1,6 @@
 import { act, render, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { formatNumber } from '../i18n/bilingual'
 import { LocaleProvider } from '../i18n/LocaleProvider'
 import { LESSONS } from '../lessons'
 import { setLessonLearned } from '../progress'
@@ -45,7 +46,7 @@ describe('LessonList', () => {
   it('formats the count with Arabic-Indic digits in Arabic', () => {
     localStorage.setItem('tajweed.locale', 'ar')
     const { screen } = renderList()
-    const expectedTotal = new Intl.NumberFormat('ar', { numberingSystem: 'arab' }).format(LESSONS.length)
+    const expectedTotal = formatNumber('ar', LESSONS.length)
     expect(screen.getByText(`٠ من ${expectedTotal} تم تعلّمها`)).toBeInTheDocument()
   })
 })

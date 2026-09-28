@@ -74,12 +74,14 @@ export const TAJWEED_RULES: Record<TajweedRuleId, TajweedRule<TajweedRuleId>> = 
   madda_obligatory: {
     id: 'madda_obligatory',
     color: 'madd-obligatory',
-    name: { ar: 'مد واجب متصل (٤–٥ حركات)', en: 'Obligatory connected madd (4–5 counts)' },
+    // The API uses this class for both muttasil and munfasil: 4–5 counts in Hafs (red in the mushaf).
+    name: { ar: 'مد متصل أو منفصل (٤–٥ حركات)', en: 'Connected or separated madd (4–5 counts)' },
   },
   madda_permissible: {
     id: 'madda_permissible',
     color: 'madd-permissible',
-    name: { ar: 'مد جائز (٢ أو ٤ أو ٦)', en: 'Permissible madd (2, 4 or 6 counts)' },
+    // ʿArid lis-sukun and similar madd whose length is a choice.
+    name: { ar: 'مد عارض للسكون ونحوه (٢ أو ٤ أو ٦)', en: 'Madd ʿarid lis-sukun and similar (2, 4 or 6 counts)' },
   },
   madda_normal: {
     id: 'madda_normal',

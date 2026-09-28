@@ -16,7 +16,7 @@ npm run lint           # oxlint
 npm run typecheck      # tsc -b only
 npm test               # vitest run (jsdom)
 npx vitest run src/tajweed/parse.test.ts   # single file; add -t "<name>" for a single test
-npm run test:ui         # Playwright UI suite (Chromium only) against a production build
+npm run test:ui         # Playwright UI suite (Chromium only) against a production build; PW_PORT=<port> when another worktree's suite is running
 npx playwright test e2e/home.spec.ts   # single file; add -g "<name>" for a single test
 npx playwright install chromium   # one-time browser install, before the first test:ui run
 npm run fetch-quran    # re-download verse text for every lesson example → src/data/quran.json
@@ -44,7 +44,7 @@ Data flows one way: **lesson data → verse markup → parsed segments → color
 
 ## Content rules that span the codebase
 
-- **Never type, generate, or "fix" Quran text by hand.** All ayah/word text comes verbatim from a vetted source (Quran Foundation API `text_uthmani_tajweed`, Tanzil, or KFGQPC data) and is referenced by `surah:ayah[:word]` key. Keep source attribution/licensing info alongside imported data.
+- **Never type, generate, or "fix" Quran text by hand.** All ayah/word text comes verbatim from a vetted source (Quran Foundation API `text_uthmani_tajweed`, Tanzil, or KFGQPC data) and is referenced by `surah:ayah[:word]` key. Keep source attribution/licensing info alongside imported data. This includes quoting a word in a lesson note: point at the colored letter or the word's position instead.
 - **One tajweed color system**, defined once as tokens and reused by text highlighting, animations, and legends. Follow the widely used color-coded-mushaf convention (madd = reds by length, ghunnah/ikhfa/idgham-with-ghunnah = green, qalqalah/tafkhim = blues, silent letters = gray) so learners can transfer to a printed tajweed mushaf. Map the API's rule classes onto these tokens rather than inventing parallel names.
 - Colors must be distinguishable in dark mode and never the only signal: rule spans carry a `title`, and lessons show a RuleLegend naming each color.
 - When highlighting part of an Arabic word, change **only color** on the span. Changing font, size, weight, or inserting elements with padding/margins breaks letter joining.

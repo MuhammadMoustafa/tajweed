@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const PORT = 4173
+// Override with PW_PORT when several worktrees run the suite at once.
+const PORT = Number(process.env.PW_PORT ?? 4173)
 
 /**
  * UI checks run against the production build (`npm run build`), served by `vite preview`, not
@@ -23,7 +24,9 @@ export default defineConfig({
   webServer: {
     command: `npm run build && npm run preview -- --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
+    // Never reuse: a server already on this port may be another worktree's build, which would
+    // silently test the wrong code. With --strictPort a busy port fails the run instead.
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 })

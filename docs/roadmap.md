@@ -39,9 +39,9 @@ in brackets picks the agent.
 | L11 | #17 | [task] Lam rules: lam shamsiyyah (`laam_shamsiyah`) and qamariyyah, lam in the name of Allah. | T2, T6 | ready |
 | L12 | #18 | [task] Ra: tafkhim and tarqiq. | L3, T6 | blocked |
 | L13 | #19 | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | in-progress |
-| L14 | #20 | [task] Madd muttasil and munfasil (`madda_obligatory`, `madda_permissible`), reusing MaddBar. | L13 | blocked |
+| L14 | #20 | [task] Madd muttasil and munfasil — the API marks both as `madda_obligatory` (4–5 counts in Hafs), reusing MaddBar. | L13 | blocked |
 | L15 | #21 | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13 | blocked |
-| L16 | #22 | [task] Other madd: ʿarid lis-sukun, leen, badal, silah, reusing MaddBar. | L13 | blocked |
+| L16 | #22 | [task] Other madd: ʿarid lis-sukun (`madda_permissible`), leen, badal, silah, reusing MaddBar. | L13 | blocked |
 | L17 | #23 | [task] Hamzat al-wasl and silent letters (`ham_wasl`, `slnt`). | T2 | ready |
 | L18 | #24 | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | ready |
 | L19 | #25 | [task] Waqf and ibtida: the stop signs in the mushaf. | T2, T6 | ready |

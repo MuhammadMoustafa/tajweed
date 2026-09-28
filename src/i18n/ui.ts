@@ -1,4 +1,4 @@
-import type { Bilingual, Locale } from './bilingual'
+import { formatNumber, type Bilingual, type Locale } from './bilingual'
 
 /** Interface strings (not lesson content — that lives in src/lessons). */
 export const ui = {
@@ -44,6 +44,7 @@ export const ui = {
  * numbering system).
  */
 export function formatLearnedCount(locale: Locale, learned: number, total: number): string {
-  const numberFormat = new Intl.NumberFormat(locale, locale === 'ar' ? { numberingSystem: 'arab' } : undefined)
-  return ui.learnedCount[locale].replace('{learned}', numberFormat.format(learned)).replace('{total}', numberFormat.format(total))
+  return ui.learnedCount[locale]
+    .replace('{learned}', formatNumber(locale, learned))
+    .replace('{total}', formatNumber(locale, total))
 }
