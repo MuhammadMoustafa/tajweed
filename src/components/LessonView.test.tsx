@@ -82,6 +82,6 @@ describe('LessonView', () => {
     const [plain, withClip] = container.querySelectorAll('section')
     expect(plain.querySelector('.player')).toBeNull()
     expect(within(withClip).getByRole('group', { name: 'المد الطبيعي: عدّ الحركتين' })).toBeInTheDocument()
-    expect(within(withClip).getByText('الخطوة ١ من ٤')).toBeInTheDocument()
+    expect(within(withClip).getByText('الخطوة ١ من ٥')).toBeInTheDocument()
   })
 })

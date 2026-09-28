@@ -85,6 +85,12 @@ export interface MaddBarProps {
   /** The madd letter (or word) the bar is anchored under, e.g. "ا"; shown above the bar with an
    * arrow pointing at it, colored with the rule's token. */
   letter?: string
+  /**
+   * A whole Quran word shown above the bar instead of `letter`, in the plain text color and with no
+   * arrow — for a step that plays that word (ClipStep.audio). Its text must come from
+   * src/data/quran-words.json (`getWord`), never typed.
+   */
+  word?: string
   /** Optional bilingual caption shown under the bar. */
   label?: Bilingual
   /** Overrides the count's default color token (see DEFAULT_TOKEN). */
@@ -126,6 +132,7 @@ export function MaddBar({
   before,
   cause,
   letter,
+  word,
   label,
   token,
   markers,
@@ -146,6 +153,11 @@ export function MaddBar({
       className="anim-svg madd-bar"
       data-current={current || undefined}
     >
+      {word && !letter && (
+        <text x={ANCHOR_X} y={LETTER_Y} textAnchor="middle" className="anim-word">
+          {word}
+        </text>
+      )}
       {letter && (
         <text x={ANCHOR_X} y={LETTER_Y} textAnchor="middle" className="anim-letter" fill={color}>
           {letter}

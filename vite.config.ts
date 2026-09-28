@@ -42,6 +42,18 @@ export default defineConfig({
               rangeRequests: true,
             },
           },
+          {
+            // Al-Husary's per-ayah recitation, which clips cut words from (ClipStep.audio,
+            // src/data/quran-words.json): cached the same way, on first play.
+            urlPattern: /^https:\/\/mirrors\.quranicaudio\.com\/everyayah\//,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'word-audio',
+              expiration: { maxEntries: 100 },
+              cacheableResponse: { statuses: [0, 200] },
+              rangeRequests: true,
+            },
+          },
         ],
       },
     }),

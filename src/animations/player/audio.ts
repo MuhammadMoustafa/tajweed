@@ -59,12 +59,14 @@ export function createHtmlAudioDriver(createElement: () => HTMLAudioElement = ()
 
   return {
     unlock() {
+      // Only before the first span: load() would abort a span that is already loading.
       if (unlocked) return
       unlocked = true
       // load() inside a gesture is what lifts the per-element gesture requirement (WebKit, Chromium).
       audioElement().load()
     },
     play(span, onEnd) {
+      unlocked = true
       stopCurrent?.()
       const audio = audioElement()
       const endAt = span.end / 1000

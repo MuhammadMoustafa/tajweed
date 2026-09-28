@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { ANIMATIONS } from '../src/animations'
 import { LESSONS } from '../src/lessons'
+import { blockReciterAudio } from './reciter-audio'
 
 // Per-clip frame checks: each clip tweens within a step by default and shows each step's end
 // state, untweened, with reduced motion, while the player's controls keep working.
@@ -8,6 +9,10 @@ const withClip = (id: string) => LESSONS.filter((l) => l.animation === id)
 const withSectionClip = (id: string) => LESSONS.filter((l) => l.sections.some((s) => s.animation === id))
 
 test.describe('qalqalah clip and reduced motion', () => {
+  // Its first step plays a recited word; keep the timing off the network.
+  test.use({ serviceWorkers: 'block' })
+  test.beforeEach(({ page }) => blockReciterAudio(page))
+
   for (const lesson of withClip('qalqalah-bounce')) {
     test(`${lesson.id} clip points at a letter and sends echo circles while playing`, async ({ page }) => {
       await page.goto(`/#/lesson/${lesson.id}`)
@@ -34,6 +39,10 @@ test.describe('qalqalah clip and reduced motion', () => {
 // natural-madd (MaddBar, src/animations/MaddBar.tsx): one syllable per step, its arrow pointing at
 // the madd letter and its bar anchored underneath, filling one count at a time then holding at 2.
 test.describe('natural madd clip and reduced motion', () => {
+  // Its last step plays a recited word; keep the timing off the network.
+  test.use({ serviceWorkers: 'block' })
+  test.beforeEach(({ page }) => blockReciterAudio(page))
+
   for (const lesson of withClip('natural-madd')) {
     test(`${lesson.id} clip points an arrow at the madd letter, shows start/end markers, and fills its bar while playing`, async ({
       page,

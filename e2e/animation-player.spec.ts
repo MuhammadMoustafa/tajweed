@@ -1,11 +1,16 @@
 import { expect, test } from '@playwright/test'
 import { LESSONS } from '../src/lessons'
+import { blockReciterAudio } from './reciter-audio'
 
 // The player itself (src/animations/player/AnimationPlayer.tsx), on the qalqalah clip: five steps
 // of 2 s each. Per-clip frame checks live in reduced-motion.spec.ts.
 const lesson = LESSONS.find((l) => l.animation === 'qalqalah-bounce')!
 
 test.describe('animation player', () => {
+  // The qalqalah clip's first step plays a recited word; keep the timing off the network.
+  test.use({ serviceWorkers: 'block' })
+  test.beforeEach(({ page }) => blockReciterAudio(page))
+
   test('starts paused, then plays, pauses, steps and seeks', async ({ page }) => {
     await page.goto(`/#/lesson/${lesson.id}`)
     const player = page.locator('.animation .player')

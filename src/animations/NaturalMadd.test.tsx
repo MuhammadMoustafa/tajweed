@@ -2,7 +2,9 @@ import { render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { LocaleProvider } from '../i18n/LocaleProvider'
 import { COUNT_MS, MADD_READY_MS, MADD_STOP_MS, maddBeatFilled } from './MaddBar'
-import { naturalMadd } from './NaturalMadd'
+import { getWord } from '../data/quran'
+import { LISTEN_MS, naturalMadd } from './NaturalMadd'
+import { CLIP_WORDS } from './words'
 
 afterEach(() => localStorage.clear())
 
@@ -28,11 +30,33 @@ describe('maddBeatFilled (src/animations/MaddBar.tsx)', () => {
 })
 
 // natural-madd (MaddBar, src/animations/MaddBar.tsx): one counting demonstration on بَا — get
-// ready, count one, count two (the end marker), then stop (#34).
+// ready, count one, count two (the end marker), then stop (#34) — then listen to a Quran word (#35).
 describe('natural-madd clip (src/animations/NaturalMadd.tsx)', () => {
-  it('has 4 steps: get ready, count one, count two, stop', () => {
-    expect(naturalMadd.steps).toHaveLength(4)
-    expect(naturalMadd.steps.map((step) => step.duration)).toEqual([MADD_READY_MS, COUNT_MS, COUNT_MS, MADD_STOP_MS])
+  it('has 5 steps: get ready, count one, count two, stop, listen', () => {
+    expect(naturalMadd.steps).toHaveLength(5)
+    expect(naturalMadd.steps.map((step) => step.duration)).toEqual([
+      MADD_READY_MS,
+      COUNT_MS,
+      COUNT_MS,
+      MADD_STOP_MS,
+      LISTEN_MS,
+    ])
+  })
+
+  it('only step 5 (listen) plays audio: the reciter saying its Quran word, whose text it shows', () => {
+    expect(naturalMadd.steps.map((step) => step.audio)).toEqual([
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      { word: CLIP_WORDS.naturalMadd },
+    ])
+    const { container } = renderStep(4, 1)
+    expect(container.querySelector('.anim-word')).toHaveTextContent(getWord(CLIP_WORDS.naturalMadd)!.text)
+    // The word is shown plain, over a full 2-count bar; no arrow at a letter.
+    expect(container.querySelector('.madd-bar-arrow')).toBeNull()
+    expect(container.querySelector('.madd-bar-fill')).toHaveAttribute('width', '200')
+    expect(container.querySelector('[data-marker="end"]')).toHaveAttribute('data-beat', '2')
   })
 
   it('captions each step in both languages', () => {

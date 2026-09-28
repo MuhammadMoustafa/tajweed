@@ -112,4 +112,11 @@ describe('createHtmlAudioDriver', () => {
     audio.unlock!()
     expect(element.load).toHaveBeenCalledOnce()
   })
+
+  it('never reloads (so never aborts) once a span has been played', () => {
+    const audio = driver()
+    audio.play(span, vi.fn())
+    audio.unlock!()
+    expect(element.load).not.toHaveBeenCalled()
+  })
 })

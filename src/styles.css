@@ -447,6 +447,13 @@ main {
   font-size: 64px;
 }
 
+/* A whole Quran word in a clip frame (the word a step plays, ClipStep.audio): plain text color. */
+.anim-word {
+  font-family: var(--font-quran);
+  font-size: 40px;
+  fill: var(--text);
+}
+
 /* A clip attached to one lesson section (LessonSection.animation) sits under that section. */
 .section-animation {
   margin-block: 0.75rem;
