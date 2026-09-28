@@ -301,6 +301,135 @@ main {
   font-size: 64px;
 }
 
+/* A clip attached to one lesson section (LessonSection.animation) sits under that section. */
+.section-animation {
+  margin-block: 0.75rem;
+}
+
+/* AnimationPlayer (src/animations/player/AnimationPlayer.tsx) */
+.player {
+  display: grid;
+  gap: 0.5rem;
+  inline-size: 100%;
+  border-radius: 0.75rem;
+}
+
+.player:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.player-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.player-frame {
+  display: grid;
+  justify-items: center;
+  inline-size: 100%;
+}
+
+.player-big-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 4.5rem;
+  block-size: 4.5rem;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  opacity: 0.9;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
+}
+
+.player-big-play .player-icon {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+}
+
+.player-caption {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0;
+  min-block-size: 3.5rem;
+  text-align: center;
+}
+
+.player-step-count {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.player-seek {
+  position: relative;
+}
+
+.player-seek input {
+  inline-size: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+/* Step markers on the seek bar, placed from the timeline's start (mirrored in RTL). */
+.player-markers span {
+  position: absolute;
+  inset-block-start: 50%;
+  inline-size: 2px;
+  block-size: 0.9rem;
+  margin-inline-start: -1px;
+  translate: 0 -50%;
+  background: var(--muted);
+  pointer-events: none;
+}
+
+.player-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.player-controls button {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 2.5rem;
+  min-block-size: 2.5rem;
+  padding-inline: 0.6rem;
+}
+
+.player-controls .player-play {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.player-icon {
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+}
+
+/* Step back/forward follow the timeline, which runs right to left in Arabic. */
+[dir='rtl'] .player-directional .player-icon {
+  scale: -1 1;
+}
+
+.player-speed {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.player-speed button[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
 /* MaddBar (src/animations/MaddBar.tsx): one or more bars side by side, e.g. natural-madd's three
    madd letters. Overrides .anim-svg's 100% width so bars sit next to each other instead of
    stacking full-width. */

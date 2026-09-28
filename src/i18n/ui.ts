@@ -15,6 +15,14 @@ export const ui = {
   listen: { ar: 'استمع', en: 'Listen' },
   pause: { ar: 'إيقاف', en: 'Pause' },
   replay: { ar: 'إعادة الحركة', en: 'Replay animation' },
+  // AnimationPlayer (src/animations/player/AnimationPlayer.tsx)
+  play: { ar: 'تشغيل', en: 'Play' },
+  stepBack: { ar: 'الخطوة السابقة', en: 'Previous step' },
+  stepForward: { ar: 'الخطوة التالية', en: 'Next step' },
+  seek: { ar: 'موضع الحركة', en: 'Animation position' },
+  speed: { ar: 'السرعة', en: 'Speed' },
+  /** Template filled by formatTemplate with `{step}`/`{total}`. */
+  stepOf: { ar: 'الخطوة {step} من {total}', en: 'Step {step} of {total}' },
   notReviewed: {
     ar: 'هذا الدرس لم يُراجَع بعد من معلّم مُجاز.',
     en: 'This lesson has not yet been reviewed by a qualified teacher.',
@@ -72,12 +80,16 @@ export const withRuleName = (template: Bilingual, name: Bilingual): Bilingual =>
 })
 
 /**
- * "3 of 20 learned" / "٣ من ٢٠ تم تعلّمها" — digits via Intl.NumberFormat so Arabic renders
- * Arabic-Indic numerals (the `ar` macro-locale defaults to Latin digits without the explicit
- * numbering system).
+ * Fills a template's `{name}` slots with numbers in the locale's own digits (via formatNumber,
+ * so Arabic renders Arabic-Indic numerals), e.g. `ui.stepOf` → "Step 2 of 5" / "الخطوة ٢ من ٥".
  */
+export function formatTemplate(locale: Locale, template: Bilingual, values: Record<string, number>): string {
+  return template[locale].replace(/\{(\w+)\}/g, (slot, name: string) =>
+    name in values ? formatNumber(locale, values[name]) : slot,
+  )
+}
+
+/** "3 of 20 learned" / "٣ من ٢٠ تم تعلّمها". */
 export function formatLearnedCount(locale: Locale, learned: number, total: number): string {
-  return ui.learnedCount[locale]
-    .replace('{learned}', formatNumber(locale, learned))
-    .replace('{total}', formatNumber(locale, total))
+  return formatTemplate(locale, ui.learnedCount, { learned, total })
 }
