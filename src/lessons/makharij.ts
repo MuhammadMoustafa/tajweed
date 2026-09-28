@@ -18,8 +18,8 @@ export const makharij: Lesson = {
     {
       heading: { ar: 'كيف تعرف مخرج الحرف؟', en: "How to find a letter's makhraj" },
       body: {
-        ar: 'ضع قبل الحرف همزة وصل متحركة، وانطقه ساكنًا أو مشدّدًا، مثل: «أَبْ»، «أَقْ»، «أَعْ». الموضع الذي ينقطع عنده الصوت هو مخرج الحرف.',
-        en: 'Put a hamzat al-wasl with a vowel before the letter and say the letter with a sukun (or a shaddah), like "أَبْ" (ab), "أَقْ" (aq) or "أَعْ" (aʿ). The spot where the sound stops is the makhraj of that letter.',
+        ar: 'ضع قبل الحرف همزة متحركة، وانطقه ساكنًا أو مشدّدًا، مثل: «أَبْ»، «أَقْ»، «أَعْ». الموضع الذي ينقطع عنده الصوت هو مخرج الحرف.',
+        en: 'Put a hamzah with a vowel before the letter and say the letter with a sukun (or a shaddah), like "أَبْ" (ab), "أَقْ" (aq) or "أَعْ" (aʿ). The spot where the sound stops is the makhraj of that letter.',
       },
     },
     {
