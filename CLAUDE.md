@@ -75,7 +75,7 @@ Each lesson: short explanation → animation → highlighted Quran examples with
 
 Audience is family and friends, not app stores. Store publishing is out of scope.
 
-- Primary: the PWA on a free static host, shared as a link and installed via "Add to Home Screen" (works on iPhone too, auto-updates).
+- Primary: the PWA deployed to GitHub Pages (https://muhammadmoustafa.github.io/tajweed/) via `.github/workflows/deploy.yml` on every push to main, shared as a link and installed via "Add to Home Screen" (works on iPhone too, auto-updates).
 - Secondary: a sideloaded Android APK built with Capacitor from the same web build (`npx cap sync android`, then a Gradle build). Keep the web app free of browser-only assumptions that would break inside the Capacitor WebView (e.g. rely on relative asset paths, cache audio for offline use).
 
 ## Task agents
