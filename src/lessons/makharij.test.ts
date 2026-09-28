@@ -1,26 +1,54 @@
 import { describe, expect, it } from 'vitest'
 import { LESSONS } from '.'
+import { hasQuiz } from './quiz'
 
-const makharij = LESSONS.find((l) => l.id === 'makharij')!
+const unit = LESSONS.filter((l) => l.unit === 'makharij')
+const intro = LESSONS.find((l) => l.id === 'makharij')!
 
-// Every area section gets its own controllable clip (L2b); the introductory sections before them
-// don't, and the lesson itself carries no clip of its own (each section plays its own instead).
-describe('makharij lesson clips', () => {
-  it('has no lesson-level clip', () => {
-    expect(makharij.animation).toBeUndefined()
-  })
-
-  it('gives the three introductory sections no clip', () => {
-    expect(makharij.sections.slice(0, 3).map((s) => s.animation)).toEqual([undefined, undefined, undefined])
-  })
-
-  it('gives each of the five area sections its own clip, in area order', () => {
-    expect(makharij.sections.slice(3).map((s) => s.animation)).toEqual([
-      'makharij-jawf',
-      'makharij-halq',
-      'makharij-lisan',
-      'makharij-shafatan',
-      'makharij-khayshum',
+// L2c: the makharij unit is an intro plus one chapter per area. The intro keeps the old lesson's
+// id so progress saved for it still matches.
+describe('makharij unit', () => {
+  it('is the intro, then the five area chapters, in order and next to each other', () => {
+    expect(unit.map((l) => [l.id, l.order])).toEqual([
+      ['makharij', 2],
+      ['makharij-jawf', 2.1],
+      ['makharij-halq', 2.2],
+      ['makharij-lisan', 2.3],
+      ['makharij-shafatan', 2.4],
+      ['makharij-khayshum', 2.5],
     ])
+    const first = LESSONS.indexOf(intro)
+    expect(LESSONS.slice(first, first + unit.length)).toEqual(unit)
+  })
+
+  it('gives the intro no lesson-level clip and the five-areas overview under its last section', () => {
+    expect(intro.animation).toBeUndefined()
+    expect(intro.sections.map((s) => s.animation)).toEqual([undefined, undefined, 'makharij-areas'])
+  })
+
+  it.each(unit.slice(1).map((l) => [l.id, l] as const))('%s plays its own area clip beside the text', (id, lesson) => {
+    expect(lesson.animation).toBe(id)
+    expect(lesson.sections.every((s) => s.animation === undefined)).toBe(true)
+  })
+
+  it.each(unit.map((l) => [l.id, l] as const))('%s colors no rule, has a quiz and awaits review', (_id, lesson) => {
+    expect(lesson.focusRules).toEqual([])
+    expect(hasQuiz(lesson)).toBe(true)
+    expect(lesson.quiz?.length).toBeGreaterThanOrEqual(3)
+    expect(lesson.examples.length).toBeGreaterThan(0)
+    expect(lesson.reviewed).toBe(false)
+  })
+
+  // Tuhfat al-Atfal has no makharij chapter; al-Jazariyyah's (lines 9–19) is shared out: the
+  // opening line to the intro, then each area's lines to its chapter (a line that moves from one
+  // area to the next is shown in both).
+  it('cites al-Jazariyyah lines 9–19 across the unit, and Tuhfa nowhere', () => {
+    const ranges = unit.map((l) => {
+      expect(l.mutoon?.tuhfa).toBe('not-covered')
+      const passages = l.mutoon?.jazariyya
+      if (!passages || passages === 'not-covered') throw new Error(`${l.id} cites no Jazariyya line`)
+      return passages.map((p) => [p.from, p.to ?? p.from])
+    })
+    expect(ranges).toEqual([[[9, 9]], [[10, 10]], [[11, 12]], [[12, 18]], [[18, 19]], [[19, 19]]])
   })
 })

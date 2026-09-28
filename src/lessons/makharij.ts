@@ -4,7 +4,7 @@ export const makharij: Lesson = {
   id: 'makharij',
   order: 2,
   unit: 'makharij',
-  title: { ar: 'مخارج الحروف', en: 'Makharij (where letters come from)' },
+  title: { ar: 'مخارج الحروف: مدخل', en: 'Makharij: introduction' },
   summary: {
     ar: 'لكل حرف موضع يخرج منه، وهي خمسة مواضع: الجوف والحلق واللسان والشفتان والخيشوم.',
     en: 'Every letter comes out from its own place, within five areas: the empty space of the mouth and throat, the throat, the tongue, the lips and the nose.',
@@ -26,53 +26,14 @@ export const makharij: Lesson = {
     {
       heading: { ar: 'المواضع الخمسة', en: 'The five areas' },
       body: {
-        ar: 'تخرج الحروف من خمسة مواضع عامة: الجوف، والحلق، واللسان، والشفتان، والخيشوم. وتنقسم هذه المواضع إلى سبعة عشر مخرجًا تفصيليًّا على المذهب المشهور (مذهب ابن الجزري)، وسنبدأ هنا بالمواضع الخمسة.',
-        en: 'Letters come from five main areas: the jawf, the throat, the tongue, the lips and the nose. These areas split into 17 detailed points on the best-known view (that of Ibn al-Jazari), but here we start with the five areas.',
+        ar: 'تخرج الحروف من خمسة مواضع عامة: الجوف، والحلق، واللسان، والشفتان، والخيشوم. وتنقسم هذه المواضع إلى سبعة عشر مخرجًا تفصيليًّا على المذهب المشهور (مذهب ابن الجزري): مخرج في الجوف، وثلاثة في الحلق، وعشرة في اللسان، ومخرجان في الشفتين، ومخرج في الخيشوم. وفي كل فصل من الفصول الخمسة التالية موضع واحد بمخارجه وحروفه.',
+        en: 'Letters come from five main areas: the jawf, the throat, the tongue, the lips and the nose (the khayshum). On the best-known view (that of Ibn al-Jazari) these split into 17 detailed points: one in the jawf, three in the throat, ten on the tongue, two at the lips and one in the nose. Each of the next five chapters takes one area, point by point and letter by letter.',
       },
-    },
-    {
-      heading: { ar: '١. الجوف', en: '1. Al-jawf (the empty space)' },
-      body: {
-        ar: 'الجوف هو الفراغ داخل الحلق والفم، ومنه تخرج حروف المد الثلاثة: الألف الساكنة المفتوح ما قبلها، والواو الساكنة المضموم ما قبلها، والياء الساكنة المكسور ما قبلها. وليس لها موضع محدد ينقطع عنده الصوت، بل تنتهي بانتهاء الهواء.',
-        en: 'The jawf is the empty space inside the throat and mouth. The three madd letters come from it: alif (always sakinah, after a fatha), waw sakinah after a damma, and ya sakinah after a kasra. They have no fixed spot where the sound stops; they end when the breath ends.',
-      },
-      animation: 'makharij-jawf',
-    },
-    {
-      heading: { ar: '٢. الحلق', en: '2. Al-halq (the throat)' },
-      body: {
-        ar: 'في الحلق ثلاثة مخارج لستة حروف: من أقصاه (أبعده عن الفم) الهمزة والهاء، ومن وسطه العين والحاء، ومن أدناه (أقربه إلى الفم) الغين والخاء.',
-        en: 'The throat has three points for six letters: ء ه from its deepest part (farthest from the mouth), ع ح from its middle, and غ خ from its nearest part (closest to the mouth).',
-      },
-      animation: 'makharij-halq',
-    },
-    {
-      heading: { ar: '٣. اللسان', en: '3. Al-lisan (the tongue)' },
-      body: {
-        ar: 'اللسان أكثر المواضع حروفًا: فيه عشرة مخارج لثمانية عشر حرفًا. من أقصاه القاف ثم الكاف أسفل منها قليلًا، ومن وسطه الجيم والشين والياء غير المدية، ومن حافته مع الأضراس العليا الضاد، ومن حافته إلى طرفه اللام، ومن طرفه مع اللثة أو الثنايا بقية الحروف: النون والراء والطاء والدال والتاء والصاد والسين والزاي والظاء والذال والثاء.',
-        en: 'The tongue has the most letters: ten points for eighteen letters. From its back come ق and then ك, a little closer to the mouth; from its middle ج ش and ي (when it is not a madd letter); from its side, against the upper molars, ض; from its side up to its tip ل; and from its tip, against the gums or the front teeth, the other eleven: ن ر ط د ت ص س ز ظ ذ ث, each at its own spot.',
-      },
-      animation: 'makharij-lisan',
-    },
-    {
-      heading: { ar: '٤. الشفتان', en: '4. Ash-shafatan (the lips)' },
-      body: {
-        ar: 'في الشفتين مخرجان لأربعة حروف: الفاء من بطن الشفة السفلى مع أطراف الثنايا العليا، والباء والميم والواو غير المدية من بين الشفتين؛ تنطبقان في الباء والميم، وتنضمّان دون انطباق في الواو.',
-        en: 'The lips have two points for four letters: ف from the inside of the lower lip against the tips of the upper front teeth, and ب م و (a waw that is not a madd letter) from both lips, which close for ba and meem and round without closing for waw.',
-      },
-      animation: 'makharij-shafatan',
-    },
-    {
-      heading: { ar: '٥. الخيشوم', en: '5. Al-khayshum (the nose)' },
-      body: {
-        ar: 'الخيشوم أعلى الأنف من الداخل، ومنه تخرج الغنة، وهي صوت رخيم يصاحب النون والميم. جرّب أن تمسك أنفك وأنت تنطق نونًا مشدّدة: ينحبس الصوت.',
-        en: 'The khayshum is the inner top of the nose. The ghunnah comes from it: a soft humming sound that goes with noon and meem. Try holding your nose while saying a noon with a shaddah: the sound is blocked.',
-      },
-      animation: 'makharij-khayshum',
+      animation: 'makharij-areas',
     },
   ],
-  // No lesson-level clip: each area section carries its own, so the learner controls it and can
-  // replay just the area being taught instead of one long tour.
+  // No lesson-level clip: the five-areas section carries the overview; each area's makharij get
+  // their own chapter (makharij-jawf … makharij-khayshum), each with its own clip.
   // No rule is colored here: the notes point at letters and their makharij instead.
   focusRules: [],
   examples: [
@@ -103,10 +64,9 @@ export const makharij: Lesson = {
     jazariyya: [
       {
         from: 9,
-        to: 19,
         note: {
-          ar: 'باب مخارج الحروف كاملاً: يذكر البيت الأول أن مخارج الحروف سبعة عشر، ثم يعدّدها موضعًا موضعًا من الجوف (الألف وأختاها الواو والياء، حروف المدّ) إلى أقصى الحلق فوسطه فأدناه، فأقصى اللسان فوسطه فحافته فطرفه، فالثنايا والشفتين، وينتهي بغنّة النون والميم التي مخرجها الخيشوم.',
-          en: 'The whole chapter on makharij: the first line gives the count — seventeen — then it walks through them one region at a time, from the jawf (the alif and its two "sisters" waw and ya, the madd letters) to the throat (far, middle, near), the tongue (base to tip), the teeth and lips, ending with the ghunnah of noon and meem, whose makhraj is the nose.',
+          ar: 'أول باب مخارج الحروف: يذكر أن المخارج سبعة عشر على ما يختاره أهل التحقيق. ثم تعدّها الأبيات التالية موضعًا موضعًا، وكل فصل من فصول هذه الوحدة يعرض أبياته.',
+          en: 'The opening line of the chapter on makharij: there are seventeen of them, on the view chosen by those who examined them closely. The lines after it name them area by area; each chapter of this unit shows its own lines.',
         },
       },
     ],
@@ -145,19 +105,19 @@ export const makharij: Lesson = {
     {
       kind: 'choice',
       prompt: {
-        ar: 'أي حرفين يخرجان من أقصى الحلق؟',
-        en: 'Which two letters come from the deepest part of the throat?',
+        ar: 'كم عدد المخارج التفصيلية على مذهب ابن الجزري؟',
+        en: "How many detailed makharij are there on Ibn al-Jazari's count?",
       },
       options: [
-        { ar: 'ع ح', en: 'ع ح' },
-        { ar: 'غ خ', en: 'غ خ' },
-        { ar: 'ء ه', en: 'ء ه' },
-        { ar: 'ق ك', en: 'ق ك' },
+        { ar: 'خمسة', en: 'Five' },
+        { ar: 'أربعة عشر', en: 'Fourteen' },
+        { ar: 'سبعة عشر', en: 'Seventeen' },
+        { ar: 'تسعة وعشرون', en: 'Twenty-nine' },
       ],
       correctIndex: 2,
       explanation: {
-        ar: 'الهمزة والهاء من أقصى الحلق، والعين والحاء من وسطه، والغين والخاء من أدناه.',
-        en: 'Hamzah and ha come from the deepest part, ʿayn and ḥa from the middle, and ghayn and kha from the nearest part.',
+        ar: 'سبعة عشر مخرجًا في خمسة مواضع: واحد في الجوف، وثلاثة في الحلق، وعشرة في اللسان، واثنان في الشفتين، وواحد في الخيشوم.',
+        en: 'Seventeen points in five areas: one in the jawf, three in the throat, ten on the tongue, two at the lips and one in the nose.',
       },
     },
     {

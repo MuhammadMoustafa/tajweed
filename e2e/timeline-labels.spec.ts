@@ -63,4 +63,16 @@ test.describe('makharij timeline labels', () => {
     await expect(middleAr).toHaveAttribute('data-current')
     await expect(playerAr.getByRole('button', { name: 'أقصى الحلق' })).not.toHaveAttribute('data-current')
   })
+
+  // Al-lisan has ten steps: each segment is far too narrow for its label on a phone, so the current
+  // label takes the whole row there and shows in full.
+  test('on a narrow screen, the current al-lisan label shows in full', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 800 })
+    await page.goto('/#/lesson/makharij-lisan')
+    const player = page.getByRole('group', { name: ANIMATIONS['makharij-lisan'].title.en })
+    await player.getByRole('button', { name: 'Next step' }).click()
+    const current = player.locator('.player-label[data-current]')
+    await expect(current).toHaveText('Back of the tongue, a little lower')
+    expect(await current.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
+  })
 })

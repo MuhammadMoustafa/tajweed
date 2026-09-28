@@ -1,5 +1,5 @@
 import { useReducedMotion } from 'motion/react'
-import { useEffect, useMemo, useReducer, useState, type KeyboardEvent } from 'react'
+import { useEffect, useMemo, useReducer, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { WORD_RECITATION } from '../../data/quran'
 import { dirOf } from '../../i18n/bilingual'
 import { useLocale } from '../../i18n/LocaleProvider'
@@ -148,10 +148,14 @@ export function AnimationPlayer({ clip, clock = frameClock, audio }: AnimationPl
                 className="player-label"
                 data-current={current || undefined}
                 aria-current={current ? 'step' : undefined}
-                style={{
-                  insetInlineStart: `${(span.start / total) * 100}%`,
-                  inlineSize: `${(span.duration / total) * 100}%`,
-                }}
+                // Custom properties, not inline position/size, so the narrow-screen CSS can give the
+                // current label the full row instead of its (by then very narrow) segment.
+                style={
+                  {
+                    '--label-start': `${(span.start / total) * 100}%`,
+                    '--label-size': `${(span.duration / total) * 100}%`,
+                  } as CSSProperties
+                }
                 onClick={() => dispatch({ type: 'seek', time: span.start })}
               >
                 {t(span.label)}

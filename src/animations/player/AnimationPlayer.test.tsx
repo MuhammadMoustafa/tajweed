@@ -209,9 +209,9 @@ describe('AnimationPlayer', () => {
     const { screen, player } = renderPlayer('en', sharedLabelClip)
     const pass = screen.getByRole('button', { name: '4 counts' })
     const stop = screen.getByRole('button', { name: 'Stop' })
-    expect(pass.style.insetInlineStart).toBe('0%')
-    expect(pass.style.inlineSize).toBe('75%')
-    expect(stop.style.insetInlineStart).toBe('75%')
+    expect(pass.style.getPropertyValue('--label-start')).toBe('0%')
+    expect(pass.style.getPropertyValue('--label-size')).toBe('75%')
+    expect(stop.style.getPropertyValue('--label-start')).toBe('75%')
 
     fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
     fireEvent.click(screen.getByRole('button', { name: 'Next step' }))

@@ -137,12 +137,14 @@ test.describe('makharij clips and reduced motion', () => {
     }
   }
 
-  test('the makharij lesson gives each of the five areas its own player, all at once', async ({ page }) => {
-    for (const lesson of withSectionClip('makharij-jawf')) {
+  // The unit (src/lessons/makharij*.ts): the intro plays the five-areas overview under its section;
+  // each chapter plays its own clip beside the text, with no section players.
+  test('the makharij intro shows the overview and each chapter one clip of its own', async ({ page }) => {
+    for (const lesson of LESSONS.filter((l) => l.unit === 'makharij')) {
       await page.goto(`/#/lesson/${lesson.id}`)
-      await expect(page.locator('.section-animation .player')).toHaveCount(5)
-      // No lesson-level clip alongside the per-section ones (see makharij.test.ts).
-      await expect(page.locator('.lesson-body > .card.animation')).toHaveCount(0)
+      const [sectionPlayers, lessonPlayers] = lesson.animation ? [0, 1] : [1, 0]
+      await expect(page.locator('.section-animation .player')).toHaveCount(sectionPlayers)
+      await expect(page.locator('.card.animation .player')).toHaveCount(lessonPlayers)
     }
   })
 })
