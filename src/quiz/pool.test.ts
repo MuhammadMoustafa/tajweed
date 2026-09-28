@@ -85,8 +85,9 @@ describe('buildQuizPool (fixture)', () => {
   it('picks lesson verses for the qalqalah rule', () => {
     const picked = DIFFICULTIES.flatMap((d) => pool.rules.qalaqah?.[d] ?? [])
     expect(picked.length).toBeGreaterThan(0)
-    // 85:1 (L14's example) also carries a qalqalah letter, alongside the qalqalah lesson's own.
-    expect(picked.every((key) => ['85:1', '97:1', '112:1', '112:3', '113:1'].includes(key))).toBe(true)
+    // Every verse the pool picks for qalqalah must actually contain it; the set grows as lessons
+    // add example verses, so check the property rather than a hardcoded list of keys.
+    expect(picked.every((key) => /class=qalaqah>/.test(fixture[key]))).toBe(true)
   })
 
   it('caps each tier', () => {

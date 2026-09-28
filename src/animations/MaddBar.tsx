@@ -70,6 +70,13 @@ export interface MaddBarProps {
   /** The madd letter (or word) the bar is anchored under, e.g. "ا"; shown above the bar with an
    * arrow pointing at it, colored with the rule's token. */
   letter?: string
+  /**
+   * Text right after the madd letter (the letter that causes a lazim/obligatory madd, e.g. a
+   * shaddah "جّ" or a plain sukun "جْ"), shown in the plain text color to its left — the order
+   * it's pronounced in. Omit when the clip doesn't need to show the cause (see L15's madd-lazim
+   * cause clip, src/animations/MaddLazim.tsx).
+   */
+  after?: string
   /** Optional bilingual caption shown under the bar. */
   label?: Bilingual
   /** Overrides the count's default color token (see DEFAULT_TOKEN). */
@@ -110,6 +117,7 @@ export function MaddBar({
   current,
   before,
   letter,
+  after,
   label,
   token,
   markers,

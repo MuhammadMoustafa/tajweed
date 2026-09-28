@@ -6,6 +6,7 @@ import {
   makharijLisan,
   makharijShafatan,
 } from './MakharijClips'
+import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { naturalMadd } from './NaturalMadd'
 import type { Clip } from './player/clip'
@@ -22,4 +23,6 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'natural-madd': naturalMadd,
   'madd-muttasil': maddMuttasil,
   'madd-munfasil': maddMunfasil,
+  'madd-lazim-bar': maddLazimBar,
+  'madd-lazim-cause': maddLazimCause,
 }

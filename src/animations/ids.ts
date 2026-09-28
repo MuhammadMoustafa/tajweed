@@ -9,3 +9,5 @@ export type AnimationId =
   | 'natural-madd'
   | 'madd-muttasil'
   | 'madd-munfasil'
+  | 'madd-lazim-bar'
+  | 'madd-lazim-cause'

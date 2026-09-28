@@ -485,6 +485,12 @@ main {
   fill: var(--text);
 }
 
+/* The consonant right after the madd letter (its cause, e.g. a shaddah or sukun, L15): also plain
+   text, so only the madd letter itself is colored. */
+.madd-bar-after {
+  fill: var(--text);
+}
+
 .madd-bar-count {
   font-size: 32px;
   font-weight: 600;

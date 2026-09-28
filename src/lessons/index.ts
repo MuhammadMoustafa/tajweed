@@ -1,3 +1,4 @@
+import { maddLazim } from './madd-lazim'
 import { makharij } from './makharij'
 import { muttasilMunfasil } from './muttasil-munfasil'
 import { naturalMadd } from './natural-madd'
@@ -5,7 +6,7 @@ import { qalqalah } from './qalqalah'
 import type { Lesson } from './types'
 
 /** Register new lessons here; they are shown in `order`. */
-export const LESSONS: Lesson[] = [makharij, qalqalah, naturalMadd, muttasilMunfasil].sort(
+export const LESSONS: Lesson[] = [makharij, qalqalah, naturalMadd, muttasilMunfasil, maddLazim].sort(
   (a, b) => a.order - b.order,
 )
 
