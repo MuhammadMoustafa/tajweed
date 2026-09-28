@@ -1,15 +1,20 @@
 /**
  * Downloads the tajweed-annotated Uthmani text (Hafs) for every verse referenced by a lesson
- * and writes it to src/data/quran.json. The JSON is committed so the app builds and runs offline.
+ * and writes it to src/data/quran.json; and, for every Quran word a clip plays
+ * (src/animations/words.ts), its text and where the reciter (WORD_RECITATION) says it in the ayah's
+ * audio, written to src/data/quran-words.json. The JSON is committed so the app builds and runs
+ * offline.
  *
- * Run after adding or changing lesson examples:  npm run fetch-quran
+ * Run after adding or changing lesson examples or clip words:  npm run fetch-quran
  */
-import { compareVerseKeys } from '../src/data/quran.ts'
+import { CLIP_WORDS } from '../src/animations/words.ts'
+import { compareVerseKeys, splitWordKey, WORD_RECITATION, type QuranWord } from '../src/data/quran.ts'
 import { LESSONS } from '../src/lessons/index.ts'
 import { writeJsonFile } from './lib/fetch.ts'
-import { fetchTajweedVerses, tajweedSource } from './lib/quran-api.ts'
+import { fetchTajweedVerses, fetchVerseWords, tajweedSource, wordsSource } from './lib/quran-api.ts'
 
 const OUT = new URL('../src/data/quran.json', import.meta.url)
+const WORDS_OUT = new URL('../src/data/quran-words.json', import.meta.url)
 
 const keys = [...new Set(LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)))].sort(compareVerseKeys)
 
@@ -20,3 +25,17 @@ const data = { source: tajweedSource(), verses }
 
 await writeJsonFile(OUT, data)
 console.log(`Wrote ${keys.length} verses to src/data/quran.json`)
+
+const wordKeys = [...new Set(Object.values(CLIP_WORDS))].sort(compareVerseKeys)
+const verseWords = new Map<string, Record<number, QuranWord>>()
+const words: Record<string, QuranWord> = {}
+for (const key of wordKeys) {
+  const { verseKey, position } = splitWordKey(key)
+  if (!verseWords.has(verseKey)) verseWords.set(verseKey, await fetchVerseWords(verseKey, WORD_RECITATION.id))
+  const word = verseWords.get(verseKey)![position]
+  if (!word) throw new Error(`${key}: ${verseKey} has no word ${position}`)
+  words[key] = word
+}
+
+await writeJsonFile(WORDS_OUT, { source: wordsSource(WORD_RECITATION.id), words })
+console.log(`Wrote ${wordKeys.length} words to src/data/quran-words.json`)

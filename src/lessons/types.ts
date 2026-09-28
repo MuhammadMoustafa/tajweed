@@ -7,6 +7,12 @@ import type { MatnId } from '../mutoon/types'
 /** `surah:ayah`, e.g. `112:1`. Text is looked up in src/data/quran.json — never written inline. */
 export type VerseKey = `${number}:${number}`
 
+/**
+ * `surah:ayah:word`, the word's 1-based position in the ayah, e.g. `1:1:3`. Its text and recited
+ * audio are looked up in src/data/quran-words.json (see `getWord` in src/data/quran.ts).
+ */
+export type WordKey = `${number}:${number}:${number}`
+
 export interface LessonExample {
   verseKey: VerseKey
   note: Bilingual

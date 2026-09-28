@@ -1,0 +1,34 @@
+{
+  "source": {
+    "name": "Quran Foundation API (quran.com) — word text_uthmani, riwayat Hafs; audio: recitation 6 (Mahmoud Khalil al-Husary, murattal), per-ayah files with per-word timing segments",
+    "url": "https://api.quran.com/api/v4/verses/by_key/{verse_key}?words=true&word_fields=text_uthmani&audio=6",
+    "recitationId": 6,
+    "fetchedAt": "2026-09-28"
+  },
+  "words": {
+    "1:1:3": {
+      "text": "ٱلرَّحْمَـٰنِ",
+      "audio": {
+        "url": "https://mirrors.quranicaudio.com/everyayah/Husary_64kbps/001001.mp3",
+        "start": 1190,
+        "end": 2340
+      }
+    },
+    "112:3:2": {
+      "text": "يَلِدْ",
+      "audio": {
+        "url": "https://mirrors.quranicaudio.com/everyayah/Husary_64kbps/112003.mp3",
+        "start": 920,
+        "end": 2080
+      }
+    },
+    "113:1:4": {
+      "text": "ٱلْفَلَقِ",
+      "audio": {
+        "url": "https://mirrors.quranicaudio.com/everyayah/Husary_64kbps/113001.mp3",
+        "start": 4100,
+        "end": 5330
+      }
+    }
+  }
+}

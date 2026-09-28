@@ -1,0 +1,61 @@
+{
+  "verse": {
+    "verse_key": "1:1",
+    "words": [
+      {
+        "position": 1,
+        "char_type_name": "word",
+        "text_uthmani": "بِسْمِ"
+      },
+      {
+        "position": 2,
+        "char_type_name": "word",
+        "text_uthmani": "ٱللَّهِ"
+      },
+      {
+        "position": 3,
+        "char_type_name": "word",
+        "text_uthmani": "ٱلرَّحْمَـٰنِ"
+      },
+      {
+        "position": 4,
+        "char_type_name": "word",
+        "text_uthmani": "ٱلرَّحِيمِ"
+      },
+      {
+        "position": 5,
+        "char_type_name": "end",
+        "text_uthmani": "١"
+      }
+    ],
+    "audio": {
+      "url": "//mirrors.quranicaudio.com/everyayah/Husary_64kbps/001001.mp3",
+      "segments": [
+        [
+          0,
+          1,
+          50,
+          510
+        ],
+        [
+          1,
+          2,
+          520,
+          1180
+        ],
+        [
+          2,
+          3,
+          1190,
+          2340
+        ],
+        [
+          3,
+          4,
+          2350,
+          4480
+        ]
+      ]
+    }
+  }
+}
