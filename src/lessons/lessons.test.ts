@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { getVerseMarkup } from '../data/quran'
+import { matnLineCount } from '../data/mutoon'
 import { readFileSync } from 'node:fs'
 import { LOCALES, type Bilingual } from '../i18n/bilingual'
 import { ui } from '../i18n/ui'
@@ -29,6 +30,17 @@ describe('lessons', () => {
         expectBothLanguages(s.body, `${id}.sections[${i}].body`)
       })
       lesson.examples.forEach((e) => expectBothLanguages(e.note, `${id} example ${e.verseKey}`))
+      lesson.mutoon?.forEach((m, i) => expectBothLanguages(m.note, `${id}.mutoon[${i}].note`))
+    })
+
+    it.each(lesson.mutoon ?? [])('mutoon ref %o is in range for its text', (m) => {
+      const count = matnLineCount(m.text)
+      expect(m.from).toBeGreaterThanOrEqual(1)
+      expect(m.from).toBeLessThanOrEqual(count)
+      if (m.to !== undefined) {
+        expect(m.to).toBeGreaterThanOrEqual(m.from)
+        expect(m.to).toBeLessThanOrEqual(count)
+      }
     })
 
     it.each(lesson.examples.map((e) => [e.verseKey, e] as const))(

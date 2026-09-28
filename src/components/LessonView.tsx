@@ -7,6 +7,7 @@ import { adjacentLessons } from '../lessons'
 import type { Lesson } from '../lessons/types'
 import { useProgress } from '../progress'
 import { AyahExample } from './AyahExample'
+import { MatnPanel } from './MatnPanel'
 import { Quiz } from './Quiz'
 import { RuleLegend } from './RuleLegend'
 
@@ -66,6 +67,8 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
       {lesson.examples.map((example) => (
         <AyahExample key={example.verseKey} example={example} highlight={lesson.focusRules} />
       ))}
+
+      {lesson.mutoon && <MatnPanel refs={lesson.mutoon} />}
 
       {lesson.quiz && lesson.quiz.length > 0 && <Quiz questions={lesson.quiz} />}
 

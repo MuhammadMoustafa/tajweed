@@ -12,7 +12,9 @@
   "include": [
     "scripts",
     "src/lessons",
-    "src/data/quran.json"
+    "src/mutoon",
+    "src/data/quran.json",
+    "src/data/mutoon.json"
   ],
   "exclude": [
     "src/**/*.test.ts"

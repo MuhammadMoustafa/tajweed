@@ -91,6 +91,17 @@ export const makharij: Lesson = {
       },
     },
   ],
+  mutoon: [
+    {
+      text: 'jazariyya',
+      from: 9,
+      to: 10,
+      note: {
+        ar: 'يذكر البيت الأول أن مخارج الحروف سبعة عشر، ثم يبدأ الثاني بالجوف: الألف وأختاها الواو والياء، حروف المدّ التي لا تنتهي عند موضع محدد بل بانتهاء الهواء.',
+        en: 'The first line gives the count — seventeen makharij — then the second starts with the jawf: the alif and its two "sisters" waw and ya, the madd letters with no fixed stopping point; they simply end when the breath does.',
+      },
+    },
+  ],
   quiz: [
     {
       kind: 'choice',

@@ -2,6 +2,7 @@ import type { Bilingual } from '../i18n/bilingual'
 import type { Mark } from '../tajweed/marks'
 import type { RuleId } from '../tajweed/rules'
 import type { AnimationId } from '../animations/ids'
+import type { MatnId } from '../mutoon/types'
 
 /** `surah:ayah`, e.g. `112:1`. Text is looked up in src/data/quran.json — never written inline. */
 export type VerseKey = `${number}:${number}`
@@ -60,4 +61,7 @@ export interface Lesson {
   reviewed: boolean
   /** Practice quiz shown after the examples. */
   quiz?: QuizQuestion[]
+  /** Lines from a classical poem (src/data/mutoon.json) that state this lesson's rule, shown in a
+   * collapsed panel after the examples. Line numbers are found in the fetched data, never guessed. */
+  mutoon?: { text: MatnId; from: number; to?: number; note: Bilingual }[]
 }

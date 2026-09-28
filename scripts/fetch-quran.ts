@@ -4,8 +4,8 @@
  *
  * Run after adding or changing lesson examples:  npm run fetch-quran
  */
-import { writeFile } from 'node:fs/promises'
 import { LESSONS } from '../src/lessons/index.ts'
+import { fetchJson, writeJsonFile } from './lib/fetch.ts'
 
 const API = 'https://api.quran.com/api/v4/quran/verses/uthmani_tajweed'
 const OUT = new URL('../src/data/quran.json', import.meta.url)
@@ -24,9 +24,7 @@ const keys = [...new Set(LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey
 
 const verses: Record<string, string> = {}
 for (const key of keys) {
-  const res = await fetch(`${API}?verse_key=${key}`)
-  if (!res.ok) throw new Error(`${key}: HTTP ${res.status}`)
-  const body = (await res.json()) as ApiResponse
+  const body = await fetchJson<ApiResponse>(`${API}?verse_key=${key}`)
   const verse = body.verses[0]
   if (!verse || verse.verse_key !== key) throw new Error(`${key}: not found in API response`)
   verses[key] = verse.text_uthmani_tajweed
@@ -41,5 +39,5 @@ const data = {
   verses,
 }
 
-await writeFile(OUT, JSON.stringify(data, null, 2) + '\n', 'utf8')
+await writeJsonFile(OUT, data)
 console.log(`Wrote ${keys.length} verses to src/data/quran.json`)

@@ -62,6 +62,17 @@ export const naturalMadd: Lesson = {
       },
     },
   ],
+  mutoon: [
+    {
+      text: 'tuhfa',
+      from: 35,
+      to: 41,
+      note: {
+        ar: 'تُعرِّف هذه الأبيات المدّ الطبيعي بأنه ما لا يحتاج إلى سبب زائد (همز أو سكون)، وتذكر حروف المدّ الثلاثة وشرط كل حرف منها.',
+        en: 'These lines define natural madd as needing no extra cause (a hamza or a sukun), then name the three madd letters and the condition — the harakah right before each — that makes it a madd letter.',
+      },
+    },
+  ],
   quiz: [
     {
       kind: 'tap',

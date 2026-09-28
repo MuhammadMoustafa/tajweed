@@ -36,6 +36,16 @@ export const ui = {
   markedAsLearned: { ar: 'تم التعلّم', en: 'Learned' },
   /** Template for the lesson-list progress summary; `{learned}`/`{total}` are filled by formatLearnedCount. */
   learnedCount: { ar: '{learned} من {total} تم تعلّمها', en: '{learned} of {total} learned' },
+  /** MatnPanel's <summary>: shown identically in both locales, so either reader recognizes it. */
+  matnPanelSummary: {
+    ar: 'من المتن · From the classical texts',
+    en: 'من المتن · From the classical texts',
+  },
+  matnSource: { ar: 'المصدر', en: 'Source' },
+  /** Prefix before a matn line's number, e.g. "البيت ٢٤" / "Line 24". */
+  matnLine: { ar: 'البيت', en: 'Line' },
+  matnTuhfaTitle: { ar: 'تحفة الأطفال', en: 'Tuhfat al-Atfal' },
+  matnJazariyyaTitle: { ar: 'المقدمة الجزرية', en: 'Al-Muqaddimah al-Jazariyyah' },
 } satisfies Record<string, Bilingual>
 
 /**
