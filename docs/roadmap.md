@@ -31,7 +31,7 @@ in brackets picks the agent.
 | T10 | #30 | [task-hard] AnimationPlayer: timeline clips with video-style controls (play/pause, seek, step, speed, replay; no autoplay), per-section clips via `LessonSection.animation`; existing animations migrate (maintainer, 2026-09-28: madd too fast and points at nothing; makharij needs a controllable clip per section). | none | done |
 | L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | ready |
 | L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | done |
-| L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | in-progress |
+| L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | done |
 | L3 | #9 | [task] Heavy and light letters (tafkhim/tarqiq basics, خص ضغط قظ), reusing MouthDiagram. | L2, T6, T10 | blocked |
 | L4 | #10 | [task] Noon sakinah/tanween 1: izhar halqi. | T2, T6 | ready |
 | L5 | #11 | [task] Noon sakinah/tanween 2: idgham with and without ghunnah (`idgham_ghunnah`, `idgham_wo_ghunnah`). Animation: the noon merging into the next letter. | T2 | ready |
