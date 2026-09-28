@@ -31,29 +31,33 @@ test.describe('qalqalah clip and reduced motion', () => {
   }
 })
 
-// natural-madd (MaddBar, src/animations/MaddBar.tsx): three bars, the current one filling.
+// natural-madd (MaddBar, src/animations/MaddBar.tsx): one syllable per step, its arrow pointing at
+// the madd letter and its bar anchored underneath, filling one count at a time then holding at 2.
 test.describe('natural madd clip and reduced motion', () => {
   for (const lesson of withClip('natural-madd')) {
-    test(`${lesson.id} clip fills the current bar while playing`, async ({ page }) => {
+    test(`${lesson.id} clip points an arrow at the madd letter and fills its bar while playing`, async ({ page }) => {
       await page.goto(`/#/lesson/${lesson.id}`)
       const player = page.locator('.animation .player')
-      await expect(player.locator('.madd-bar')).toHaveCount(3)
-      const fill = player.locator('.madd-bar[data-current] .madd-bar-fill')
+      await expect(player.locator('.madd-bar[data-current]')).toHaveCount(1)
+      await expect(player.locator('.madd-bar-arrow')).toHaveCount(1)
+      const fill = player.locator('.madd-bar-fill')
       await expect(fill).toHaveAttribute('width', '0')
       await player.getByRole('button', { name: 'Play', exact: true }).click()
       await expect(fill).not.toHaveAttribute('width', '0')
     })
 
-    test(`${lesson.id} clip shows each bar full, untweened, with reduced motion`, async ({ page }) => {
+    test(`${lesson.id} clip steps through three syllables, each ending full at count 2, with reduced motion`, async ({
+      page,
+    }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.goto(`/#/lesson/${lesson.id}`)
       const player = page.locator('.animation .player')
-      await expect(player.locator('.madd-bar[data-current] .madd-bar-fill')).toHaveAttribute('width', '200')
-      await player.getByRole('button', { name: 'Next step' }).click()
-      const fills = player.locator('.madd-bar-fill')
-      await expect(fills.nth(0)).toHaveAttribute('width', '200')
-      await expect(fills.nth(1)).toHaveAttribute('width', '200')
-      await expect(fills.nth(2)).toHaveAttribute('width', '0')
+      for (let step = 0; step < 3; step += 1) {
+        await expect(player).toHaveAttribute('data-step', String(step))
+        await expect(player.locator('.madd-bar-fill')).toHaveAttribute('width', '200')
+        await expect(player.locator('.madd-bar-count')).toHaveText('2')
+        if (step < 2) await player.getByRole('button', { name: 'Next step' }).click()
+      }
     })
   }
 })

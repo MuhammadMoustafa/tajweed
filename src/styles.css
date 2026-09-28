@@ -430,24 +430,16 @@ main {
   font-weight: 600;
 }
 
-/* MaddBar (src/animations/MaddBar.tsx): one or more bars side by side, e.g. natural-madd's three
-   madd letters. Overrides .anim-svg's 100% width so bars sit next to each other instead of
-   stacking full-width. */
-.madd-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  inline-size: 100%;
+/* MaddBar (src/animations/MaddBar.tsx): a single bar anchored under one letter/word, e.g.
+   natural-madd's syllables (L13b) or a longer madd word in L14-L16. Overrides .anim-svg's 100%
+   width so it reads as one large focal shape instead of stretching edge to edge. */
+.madd-bar {
+  inline-size: min(100%, 320px);
 }
 
-.madd-row .madd-bar {
-  inline-size: 220px;
-}
-
-/* In a clip, the bar the current step is about stands out; the others are dimmed. */
-.madd-row:has([data-current]) .madd-bar:not([data-current]) {
-  opacity: 0.45;
+/* The harakah/consonant before the madd letter: plain text, so only the letter itself is colored. */
+.madd-bar-before {
+  fill: var(--text);
 }
 
 .madd-bar-count {

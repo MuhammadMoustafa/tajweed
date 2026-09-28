@@ -1,56 +1,53 @@
 import type { Bilingual } from '../i18n/bilingual'
-import { MaddBar } from './MaddBar'
+import { MaddBar, maddFilled, maddStepDuration } from './MaddBar'
 import type { Clip, ClipStep } from './player/clip'
 
-/** The three madd letters, each preceded by its matching harakah, stretching to 2 counts. */
-const LETTERS: { letter: string; label: Bilingual; caption: Bilingual }[] = [
+const COUNTS = 2
+
+/**
+ * The three madd letters, each shown as a real syllable (a single consonant, not Quran text) so
+ * the harakah that makes it a madd letter is visible: the harakah/consonant (`before`) in the
+ * plain text color, then the madd letter itself (`letter`), which MaddBar highlights and anchors
+ * its arrow and bar under.
+ */
+const SYLLABLES: { before: string; letter: string; label: Bilingual; caption: Bilingual }[] = [
   {
-    letter: 'ـَا',
+    before: 'بَ',
+    letter: 'ا',
     label: { ar: 'ألف بعد فتحة', en: 'Alif after fatha' },
-    caption: { ar: 'الألف بعد الفتحة تُمدّ حركتين', en: 'An alif after a fatha is stretched for two counts' },
+    caption: { ar: 'ألف بعد فتحة: تُمدّ حركتين', en: 'Alif after fatha: 2 counts' },
   },
   {
-    letter: 'ـُو',
+    before: 'بُ',
+    letter: 'و',
     label: { ar: 'واو ساكنة بعد ضمة', en: 'Waw sukun after damma' },
-    caption: {
-      ar: 'الواو الساكنة بعد الضمة تُمدّ حركتين',
-      en: 'A waw with a sukun after a damma is stretched for two counts',
-    },
+    caption: { ar: 'واو ساكنة بعد ضمة: تُمدّ حركتين', en: 'Waw sukun after damma: 2 counts' },
   },
   {
-    letter: 'ـِي',
+    before: 'بِ',
+    letter: 'ي',
     label: { ar: 'ياء ساكنة بعد كسرة', en: 'Ya sukun after kasra' },
-    caption: {
-      ar: 'الياء الساكنة بعد الكسرة تُمدّ حركتين',
-      en: 'A ya with a sukun after a kasra is stretched for two counts',
-    },
+    caption: { ar: 'ياء ساكنة بعد كسرة: تُمدّ حركتين', en: 'Ya sukun after kasra: 2 counts' },
   },
 ]
 
-const COUNTS = 2
-/** One count lasts about a second at 1×. */
-const COUNT_MS = 1000
-
-/** Frame for letter `current`: its bar fills over the step; earlier bars stay full, later ones empty. */
-const frame = (current: number, progress: number) => (
-  <div className="madd-row">
-    {LETTERS.map(({ letter, label }, i) => (
-      <MaddBar
-        key={letter}
-        counts={COUNTS}
-        filled={i < current ? COUNTS : i === current ? progress * COUNTS : 0}
-        current={i === current}
-        letter={letter}
-        label={label}
-      />
-    ))}
-  </div>
+/**
+ * Frame for one syllable: a single, large MaddBar anchored under its madd letter, filling one
+ * count at a time (see `maddFilled`) and holding at `counts` for the step's trailing pause before
+ * the next syllable — the clip plays "so fast it didn't point at anything" no longer (L13b).
+ */
+const frame = ({ before, letter, label }: (typeof SYLLABLES)[number], progress: number) => (
+  <MaddBar counts={COUNTS} filled={maddFilled(COUNTS, progress)} current before={before} letter={letter} label={label} />
 )
 
-/** Natural madd (al-madd al-tabi'i): the three madd letters, each stretched 2 counts (L13). */
+/** Natural madd (al-madd al-tabi'i): the three madd letters, each stretched 2 counts (L13, L13b). */
 export const naturalMadd: Clip = {
   title: { ar: 'المد الطبيعي: حروف المد الثلاثة', en: 'Natural madd: the three madd letters' },
-  steps: LETTERS.map(
-    ({ caption }, i): ClipStep => ({ duration: COUNTS * COUNT_MS, caption, render: (progress) => frame(i, progress) }),
+  steps: SYLLABLES.map(
+    (syllable): ClipStep => ({
+      duration: maddStepDuration(COUNTS),
+      caption: syllable.caption,
+      render: (progress) => frame(syllable, progress),
+    }),
   ),
 }
