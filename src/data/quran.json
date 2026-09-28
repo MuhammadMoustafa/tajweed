@@ -1,0 +1,12 @@
+{
+  "source": {
+    "name": "Quran Foundation API (quran.com) — text_uthmani_tajweed, riwayat Hafs",
+    "url": "https://api.quran.com/api/v4/quran/verses/uthmani_tajweed",
+    "fetchedAt": "2026-09-28"
+  },
+  "verses": {
+    "112:1": "قُلْ هُوَ <tajweed class=ham_wasl>ٱ</tajweed>للَّهُ أَحَ<tajweed class=qalaqah>د</tajweed>ٌ <span class=end>١</span>",
+    "112:3": "لَمْ يَلِ<tajweed class=qalaqah>دْ</tajweed> وَلَمْ يُولَ<tajweed class=qalaqah>دْ</tajweed> <span class=end>٣</span>",
+    "113:1": "قُلْ أَعُوذُ بِرَبِّ <tajweed class=ham_wasl>ٱ</tajweed>لْفَلَ<tajweed class=qalaqah>ق</tajweed>ِ <span class=end>١</span>"
+  }
+}

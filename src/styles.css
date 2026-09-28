@@ -1,0 +1,257 @@
+/*
+ * Layout uses logical properties only (inline/block, start/end) so it mirrors automatically
+ * between dir="rtl" (Arabic) and dir="ltr" (English).
+ */
+:root {
+  --bg: #fdfaf3;
+  --surface: #ffffff;
+  --text: #1f2328;
+  --muted: #5d6570;
+  --border: #e6e0d2;
+  --accent: #0f766e;
+  --notice-bg: #fff4d6;
+  --notice-text: #6b4e00;
+
+  /* Tajweed colors — one token per color family in src/tajweed/rules.ts */
+  --tj-madd-necessary: #9b1020;
+  --tj-madd-obligatory: #d91e36;
+  --tj-madd-permissible: #e0660f;
+  --tj-madd-normal: #b07d00;
+  --tj-ghunnah: #1b8a3a;
+  --tj-qalqalah: #0a7fc2;
+  --tj-silent: #878e97;
+
+  --font-quran: 'Amiri Quran', serif;
+  --font-ui-ar: 'Noto Naskh Arabic', 'Noto Sans', serif;
+  --font-ui-en: 'Noto Sans', 'Noto Naskh Arabic', system-ui, sans-serif;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --surface: #1d2026;
+    --text: #e8e6e1;
+    --muted: #a3a9b3;
+    --border: #30343c;
+    --accent: #5eead4;
+    --notice-bg: #3a3014;
+    --notice-text: #f5d98b;
+
+    --tj-madd-necessary: #e0364a;
+    --tj-madd-obligatory: #ff7b86;
+    --tj-madd-permissible: #ffa24c;
+    --tj-madd-normal: #e8c14a;
+    --tj-ghunnah: #4ccf73;
+    --tj-qalqalah: #4fb8f0;
+    --tj-silent: #7d848d;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui-en);
+  line-height: 1.6;
+}
+
+:lang(ar) {
+  font-family: var(--font-ui-ar);
+  line-height: 1.9;
+}
+
+:lang(en) {
+  font-family: var(--font-ui-en);
+}
+
+a {
+  color: var(--accent);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding-block: 0.35rem;
+  padding-inline: 0.9rem;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1rem;
+  padding-inline: max(1rem, calc((100% - 60rem) / 2));
+  border-block-end: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.brand {
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.brand span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+main {
+  max-inline-size: 60rem;
+  margin-inline: auto;
+  padding: 1rem;
+}
+
+.card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin: 0;
+}
+
+.lesson-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.lesson-list a {
+  color: inherit;
+  text-decoration: none;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.lesson-list span {
+  color: var(--muted);
+}
+
+.back {
+  display: inline-block;
+  margin-block-end: 0.5rem;
+}
+
+.notice {
+  background: var(--notice-bg);
+  color: var(--notice-text);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.summary {
+  font-size: 1.15rem;
+}
+
+.lesson-body {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 48rem) {
+  .lesson-body {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .animation {
+    position: sticky;
+    inset-block-start: 1rem;
+  }
+}
+
+.animation {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+}
+
+.anim-svg {
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.anim-letter {
+  font-family: var(--font-quran);
+  font-size: 64px;
+}
+
+/* Quran text: font-size/line-height only on the block, never on the colored spans inside it. */
+.quran {
+  font-family: var(--font-quran);
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  line-height: 2.4;
+  margin: 0;
+  text-align: start;
+}
+
+.ayah-number {
+  color: var(--muted);
+  font-size: 0.8em;
+}
+
+.example {
+  margin-block-end: 0.75rem;
+}
+
+.example figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  color: var(--muted);
+}
+
+.verse-key {
+  font-family: var(--font-ui-en);
+  font-size: 0.85rem;
+  direction: ltr;
+}
+
+.legend {
+  margin-block-end: 0.75rem;
+}
+
+.legend h3 {
+  font-size: 0.95rem;
+  margin: 0 0 0.25rem;
+  color: var(--muted);
+}
+
+.legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.swatch {
+  display: inline-block;
+  inline-size: 0.9rem;
+  block-size: 0.9rem;
+  border-radius: 50%;
+  margin-inline-end: 0.4rem;
+  vertical-align: middle;
+}
