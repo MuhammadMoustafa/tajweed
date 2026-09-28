@@ -16,6 +16,9 @@ npm run lint           # oxlint
 npm run typecheck      # tsc -b only
 npm test               # vitest run (jsdom)
 npx vitest run src/tajweed/parse.test.ts   # single file; add -t "<name>" for a single test
+npm run test:ui         # Playwright UI suite (Chromium only) against a production build
+npx playwright test e2e/home.spec.ts   # single file; add -g "<name>" for a single test
+npx playwright install chromium   # one-time browser install, before the first test:ui run
 npm run fetch-quran    # re-download verse text for every lesson example → src/data/quran.json
 ```
 
@@ -122,6 +125,6 @@ Gates:
   also: the new/changed tests in `src/**/*.test.ts(x)` assert the rendered
   data (colored rule spans, `lang`/`dir`, both languages present), not pixels.
 - Every ~5 merged tasks, and before any push: `npm run check` on main after
-  the merges; the full UI suite (none yet — Playwright is a card); a
+  the merges; the full UI suite (`npm run test:ui`); a
   `npm run preview` pass over every lesson in Arabic and English, at phone
   width and with reduced motion; the Android APK build once Capacitor lands.

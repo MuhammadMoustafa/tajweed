@@ -50,6 +50,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     // Task-board worktrees live inside the checkout; never pick up their tests.
-    exclude: [...configDefaults.exclude, '.claude/**'],
+    // e2e/** holds the Playwright UI suite, run separately via `npm run test:ui`.
+    exclude: [...configDefaults.exclude, '.claude/**', 'e2e/**'],
   },
 })

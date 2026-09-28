@@ -25,3 +25,7 @@ dist-ssr
 
 # vite-plugin-pwa dev output
 dev-dist
+
+# Playwright
+test-results
+playwright-report
