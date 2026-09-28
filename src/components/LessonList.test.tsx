@@ -15,6 +15,11 @@ const renderList = () => {
   return { container, screen: within(container) }
 }
 
+// The state classes live on the card container, not the link inside it (no nested links: the
+// container is a plain div with the lesson link and the quiz side panel as separate children).
+const cardFor = (container: HTMLElement, lessonId: string) =>
+  container.querySelector(`a[href="#/lesson/${lessonId}"]`)?.closest('.lesson-card')
+
 beforeEach(() => {
   localStorage.clear()
 })
@@ -52,7 +57,7 @@ describe('LessonList', () => {
 
   it('marks the first not-learned lesson as "next", with a plain not-started card otherwise', () => {
     const { container } = renderList()
-    const firstCard = container.querySelector(`a[href="#/lesson/${LESSONS[0].id}"]`)
+    const firstCard = cardFor(container, LESSONS[0].id)
     expect(firstCard).toHaveClass('is-next')
     expect(firstCard).toHaveClass('is-not-started')
     expect(container.querySelectorAll('.lesson-list .is-next')).toHaveLength(1)
@@ -63,7 +68,7 @@ describe('LessonList', () => {
     recordQuizAttempt(lesson.id, 'easy', [{ correct: true }])
     const { container } = renderList()
 
-    const card = container.querySelector(`a[href="#/lesson/${lesson.id}"]`)
+    const card = cardFor(container, lesson.id)
     expect(card).toHaveClass('is-started')
     expect(card).not.toHaveClass('is-learned')
     expect(card?.querySelector('.card-badge.started')).not.toBeNull()
@@ -75,12 +80,12 @@ describe('LessonList', () => {
     setLessonLearned(first.id, true)
     const { container } = renderList()
 
-    const firstCard = container.querySelector(`a[href="#/lesson/${first.id}"]`)
+    const firstCard = cardFor(container, first.id)
     expect(firstCard).toHaveClass('is-learned')
     expect(firstCard).not.toHaveClass('is-next')
 
     if (second) {
-      const secondCard = container.querySelector(`a[href="#/lesson/${second.id}"]`)
+      const secondCard = cardFor(container, second.id)
       expect(secondCard).toHaveClass('is-next')
     }
   })

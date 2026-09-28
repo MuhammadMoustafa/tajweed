@@ -112,6 +112,9 @@ export const ui = {
   cardStateStarted: { ar: 'بدأ التعلّم', en: 'Started' },
   cardStateNotStarted: { ar: 'لم يبدأ', en: 'Not started' },
   nextLessonBadge: { ar: 'التالي', en: 'Next' },
+  // Lesson-card quiz side panel (src/components/LessonCard.tsx).
+  takeQuizButton: { ar: 'ابدأ الاختبار', en: 'Take the quiz' },
+  retryQuizButton: { ar: 'إعادة الاختبار', en: 'Retry quiz' },
   cardStateLegend: {
     ar: 'أخضر: تم التعلّم · كهرماني: بدأ التعلّم · حدّ ملوّن: الدرس التالي المقترح',
     en: 'Green: learned · Amber: started · Accent border: suggested next lesson',
@@ -142,4 +145,11 @@ export function formatLearnedCount(locale: Locale, learned: number, total: numbe
 /** "3 attempts" / "٣ محاولة" (see ui.attemptsCount). */
 export function formatAttemptsCount(locale: Locale, count: number): string {
   return formatTemplate(locale, ui.attemptsCount, { count })
+}
+
+/** "6/8" / "٦/٨" for a quiz attempt's score, in the locale's own digits. Shared by the lesson
+ *  card's grade side panel (src/components/LessonCard.tsx) and the progress page's score rows
+ *  (src/components/ProgressPage.tsx) so both format a score the same way. */
+export function formatScore(locale: Locale, score: { correct: number; total: number }): string {
+  return `${formatNumber(locale, score.correct)}/${formatNumber(locale, score.total)}`
 }

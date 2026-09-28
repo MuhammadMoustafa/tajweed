@@ -224,6 +224,21 @@ export function recordQuizAttempt(lessonId: string, difficulty: Difficulty, resu
   writeAttempts({ ...current, [lessonId]: forLesson })
 }
 
+/** The most recent of `attempts` (stored oldest first). Shared by the lesson card's grade side
+ *  panel (src/components/LessonCard.tsx) and the progress page (src/components/ProgressPage.tsx)
+ *  so "last score" means the same attempt in both places. */
+export function lastAttempt(attempts: readonly QuizAttempt[]): QuizAttempt | undefined {
+  return attempts[attempts.length - 1]
+}
+
+/** The attempt with the highest correct/total ratio among `attempts`; ties keep the earlier one. */
+export function bestAttempt(attempts: readonly QuizAttempt[]): QuizAttempt | undefined {
+  return attempts.reduce<QuizAttempt | undefined>((best, attempt) => {
+    if (!best) return attempt
+    return attempt.score.correct / attempt.score.total > best.score.correct / best.score.total ? attempt : best
+  }, undefined)
+}
+
 /** Accuracy per rule, across every recorded attempt of every lesson: correct/total counts,
  *  weakest (lowest accuracy) first, ties broken by more attempts first. Only rules that have
  *  actually been asked appear. */

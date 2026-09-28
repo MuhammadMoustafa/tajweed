@@ -2,9 +2,10 @@ import { useLocale } from '../i18n/LocaleProvider'
 import { formatLearnedCount, ui } from '../i18n/ui'
 import { LESSONS } from '../lessons'
 import { useProgress } from '../progress'
+import { LessonCard } from './LessonCard'
 
 /** Color is never the only signal: each lesson-card state below also has a text badge or
- *  sr-only label (see the map in LessonList). This legend names what the colors mean. */
+ *  sr-only label (see the map in LessonCard). This legend names what the colors mean. */
 function CardStateLegend() {
   const { t } = useLocale()
   return (
@@ -39,28 +40,11 @@ export function LessonList() {
       <p className="progress-summary">{formatLearnedCount(locale, count, LESSONS.length)}</p>
       <CardStateLegend />
       <ol className="lesson-list">
-        {LESSONS.map((lesson) => {
-          const state = cardState(lesson.id)
-          const isNext = lesson.id === nextId
-          return (
-            <li key={lesson.id}>
-              <a href={`#/lesson/${lesson.id}`} className={`card lesson-card is-${state}${isNext ? ' is-next' : ''}`}>
-                <strong>
-                  {t(lesson.title)}
-                  {state === 'learned' && (
-                    <span className="learned-check">
-                      {' '}
-                      ✓<span className="sr-only"> {t(ui.markedAsLearned)}</span>
-                    </span>
-                  )}
-                  {state === 'started' && <span className="card-badge started"> {t(ui.cardStateStarted)}</span>}
-                  {isNext && <span className="card-badge next"> {t(ui.nextLessonBadge)}</span>}
-                </strong>
-                <span>{t(lesson.summary)}</span>
-              </a>
-            </li>
-          )
-        })}
+        {LESSONS.map((lesson) => (
+          <li key={lesson.id}>
+            <LessonCard lesson={lesson} state={cardState(lesson.id)} isNext={lesson.id === nextId} />
+          </li>
+        ))}
       </ol>
     </section>
   )

@@ -1,29 +1,18 @@
 import { useState } from 'react'
 import { formatDate, type Bilingual, type Locale } from '../i18n/bilingual'
 import { useLocale } from '../i18n/LocaleProvider'
-import { formatAttemptsCount, ui } from '../i18n/ui'
+import { formatAttemptsCount, formatScore, ui } from '../i18n/ui'
 import { LESSONS } from '../lessons'
-import { useProgress, type LessonCardState, type QuizAttempt } from '../progress'
+import { bestAttempt, lastAttempt, useProgress, type LessonCardState, type QuizAttempt } from '../progress'
 import { DIFFICULTY_LABEL } from '../quiz/difficultyLabel'
 import { ALL_RULES } from '../tajweed/rules'
 
 /** Bilingual label for a lesson's card state, reusing the same strings as the home cards
- *  (src/components/LessonList.tsx): "learned" reuses ui.markedAsLearned. */
+ *  (src/components/LessonCard.tsx): "learned" reuses ui.markedAsLearned. */
 const STATE_LABEL: Record<LessonCardState, Bilingual> = {
   learned: ui.markedAsLearned,
   started: ui.cardStateStarted,
   'not-started': ui.cardStateNotStarted,
-}
-
-/** The most recent attempt (attempts are stored oldest first). */
-const lastOf = (attempts: readonly QuizAttempt[]): QuizAttempt | undefined => attempts[attempts.length - 1]
-
-/** The attempt with the highest correct/total ratio; ties keep the earlier one. */
-function bestOf(attempts: readonly QuizAttempt[]): QuizAttempt | undefined {
-  return attempts.reduce<QuizAttempt | undefined>((best, attempt) => {
-    if (!best) return attempt
-    return attempt.score.correct / attempt.score.total > best.score.correct / best.score.total ? attempt : best
-  }, undefined)
 }
 
 /**
@@ -58,8 +47,8 @@ export function ProgressPage() {
             <ul className="progress-lesson-list">
               {LESSONS.map((lesson) => {
                 const attempts = attemptsFor(lesson.id)
-                const best = bestOf(attempts)
-                const last = lastOf(attempts)
+                const best = bestAttempt(attempts)
+                const last = lastAttempt(attempts)
                 return (
                   <li key={lesson.id} className="card progress-lesson">
                     <a href={`#/lesson/${lesson.id}`}>
@@ -73,11 +62,11 @@ export function ProgressPage() {
                       <dl className="progress-lesson-scores">
                         <div>
                           <dt>{t(ui.bestScore)}</dt>
-                          <dd>{scoreLine(locale, t, n, best)}</dd>
+                          <dd>{scoreLine(locale, t, best)}</dd>
                         </div>
                         <div>
                           <dt>{t(ui.lastScore)}</dt>
-                          <dd>{scoreLine(locale, t, n, last)}</dd>
+                          <dd>{scoreLine(locale, t, last)}</dd>
                         </div>
                       </dl>
                     )}
@@ -131,7 +120,8 @@ export function ProgressPage() {
   )
 }
 
-/** "6/8 (Easy, Jan 5, 2026)" / "٦/٨ (سهل، ٥ يناير ٢٠٢٦)" for a best/last attempt row. */
-function scoreLine(locale: Locale, t: (text: Bilingual) => string, n: (value: number) => string, attempt: QuizAttempt): string {
-  return `${n(attempt.score.correct)}/${n(attempt.score.total)} (${t(DIFFICULTY_LABEL[attempt.difficulty])}, ${formatDate(locale, attempt.date)})`
+/** "6/8 (Easy, Jan 5, 2026)" / "٦/٨ (سهل، ٥ يناير ٢٠٢٦)" for a best/last attempt row. Reuses
+ *  formatScore (src/i18n/ui.ts), the same score formatting the lesson card's grade panel uses. */
+function scoreLine(locale: Locale, t: (text: Bilingual) => string, attempt: QuizAttempt): string {
+  return `${formatScore(locale, attempt.score)} (${t(DIFFICULTY_LABEL[attempt.difficulty])}, ${formatDate(locale, attempt.date)})`
 }

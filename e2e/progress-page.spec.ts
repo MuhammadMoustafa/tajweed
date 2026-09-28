@@ -34,7 +34,7 @@ test.describe('progress page', () => {
     await expect(card.locator('.progress-lesson-scores')).toBeVisible()
 
     await page.goto('/')
-    const homeCard = page.locator(`a[href="#/lesson/${lesson.id}"]`)
+    const homeCard = page.locator('.lesson-card', { has: page.locator(`a[href="#/lesson/${lesson.id}"]`) })
     await expect(homeCard).toHaveClass(/is-started/)
     await expect(homeCard).not.toHaveClass(/is-learned/)
   })
@@ -44,21 +44,73 @@ test.describe('progress page', () => {
     const second = LESSONS[1]
     test.skip(!second, 'needs at least two lessons')
 
+    const cardFor = (id: string) => page.locator('.lesson-card', { has: page.locator(`a[href="#/lesson/${id}"]`) })
+
     await page.goto('/')
-    await expect(page.locator(`a[href="#/lesson/${first.id}"]`)).toHaveClass(/is-next/)
+    await expect(cardFor(first.id)).toHaveClass(/is-next/)
 
     await page.goto(`/#/lesson/${first.id}`)
     await page.locator('.learned-toggle').click()
     await expect(page.locator('.learned-toggle')).toHaveAttribute('aria-pressed', 'true')
 
     await page.goto('/')
-    await expect(page.locator(`a[href="#/lesson/${first.id}"]`)).toHaveClass(/is-learned/)
-    await expect(page.locator(`a[href="#/lesson/${first.id}"]`)).not.toHaveClass(/is-next/)
-    await expect(page.locator(`a[href="#/lesson/${second.id}"]`)).toHaveClass(/is-next/)
+    await expect(cardFor(first.id)).toHaveClass(/is-learned/)
+    await expect(cardFor(first.id)).not.toHaveClass(/is-next/)
+    await expect(cardFor(second.id)).toHaveClass(/is-next/)
 
     await page.goto('/#/progress')
     const card = page.locator('.progress-lesson', { has: page.locator(`a[href="#/lesson/${first.id}"]`) })
     await expect(card).toContainText('Learned')
+  })
+
+  test('a new card\'s quiz side panel is a "Take the quiz" link to the quiz page', async ({ page }) => {
+    const lesson = LESSONS.find(hasQuiz)!
+    await page.goto('/')
+
+    const card = page.locator('.lesson-card', { has: page.locator(`a[href="#/lesson/${lesson.id}"]`) })
+    const quizLink = card.locator('.lesson-card-quiz-link')
+    await expect(quizLink).toBeVisible()
+    await expect(quizLink).toHaveAttribute('href', `#/lesson/${lesson.id}/quiz`)
+  })
+
+  test('after a quiz the card shows the grade and a "Retry quiz" link that opens the quiz page', async ({ page }) => {
+    const lesson = LESSONS.find(hasQuiz)!
+
+    await page.goto(`/#/lesson/${lesson.id}/quiz`)
+    await answerAll(page)
+    await page.locator('.quiz-actions button').click()
+    await expect(page.locator('.quiz-score')).toBeVisible()
+
+    await page.goto('/')
+    const card = page.locator('.lesson-card', { has: page.locator(`a[href="#/lesson/${lesson.id}"]`) })
+    await expect(card.locator('.lesson-card-quiz-link')).toHaveCount(0)
+    await expect(card.locator('.lesson-card-grade-best')).toBeVisible()
+
+    const retry = card.locator('.lesson-card-retry')
+    await expect(retry).toHaveAttribute('href', `#/lesson/${lesson.id}/quiz`)
+    await retry.click()
+    await expect(page).toHaveURL(new RegExp(`#/lesson/${lesson.id}/quiz$`))
+  })
+
+  test('a learned card\'s computed background differs from a plain card\'s, in both color schemes', async ({ page }) => {
+    const [first, second] = LESSONS
+    test.skip(!second, 'needs at least two lessons')
+
+    await page.goto(`/#/lesson/${first.id}`)
+    await page.locator('.learned-toggle').click()
+
+    for (const colorScheme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme })
+      await page.goto('/')
+
+      const learnedCard = page.locator('.lesson-card', { has: page.locator(`a[href="#/lesson/${first.id}"]`) })
+      const plainCard = page.locator('.lesson-card', { has: page.locator(`a[href="#/lesson/${second.id}"]`) })
+      const [learnedBg, plainBg] = await Promise.all([
+        learnedCard.evaluate((el) => getComputedStyle(el).backgroundColor),
+        plainCard.evaluate((el) => getComputedStyle(el).backgroundColor),
+      ])
+      expect(learnedBg).not.toBe(plainBg)
+    }
   })
 
   test('reset clears learned lessons and attempts after confirming', async ({ page }) => {
