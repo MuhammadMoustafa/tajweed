@@ -34,7 +34,7 @@ export function App() {
       </header>
       <main>
         {route.page === 'home' && <LessonList />}
-        {route.page === 'lesson' && (lesson ? <LessonView lesson={lesson} /> : <p>{t(ui.lessonNotFound)}</p>)}
+        {route.page === 'lesson' && (lesson ? <LessonView key={lesson.id} lesson={lesson} /> : <p>{t(ui.lessonNotFound)}</p>)}
       </main>
     </>
   )
