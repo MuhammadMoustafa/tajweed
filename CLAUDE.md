@@ -19,7 +19,7 @@ npx vitest run src/tajweed/parse.test.ts   # single file; add -t "<name>" for a 
 npm run test:ui         # Playwright UI suite (Chromium only) against a production build; PW_PORT=<port> when another worktree's suite is running
 npx playwright test e2e/home.spec.ts   # single file; add -g "<name>" for a single test
 npx playwright install chromium   # one-time browser install, before the first test:ui run
-npm run fetch-quran    # re-download verse text for every lesson example → src/data/quran.json
+npm run fetch-quran    # re-download verse text for every lesson example → src/data/quran.json, plus the words clips recite (text + al-Husary ayah audio and word timings) → src/data/quran-words.json
 npm run fetch-mutoon   # re-download the classical poem lines (Tuhfa, Jazariyyah) → src/data/mutoon.json
 npm run build-quiz-pool   # download the whole Quran (one API call), pick quiz verses → src/data/quiz-pool.json (prints its size; ≤ 400 KB)
 npm run apk            # web build + `cap sync android` + Gradle assembleDebug → apk/tajweed-debug.apk
