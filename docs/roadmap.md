@@ -31,12 +31,12 @@ in brackets picks the agent.
 | T10 | #30 | [task-hard] AnimationPlayer: timeline clips with video-style controls (play/pause, seek, step, speed, replay; no autoplay), per-section clips via `LessonSection.animation`; existing animations migrate (maintainer, 2026-09-28: madd too fast and points at nothing; makharij needs a controllable clip per section). | none | done |
 | T11 | #33 | [task] Step labels above the clip timeline (click to seek; current label only on phones); labels for makharij, qalqalah, madd clips (maintainer, 2026-09-28). | none | done |
 | T12 | #35 | [task] Reciter audio in clips: quran.com word-by-word audio by `surah:ayah:word`; isolated letters/syllables need recordings (maintainer asked for a qari per letter, 2026-09-28). | T11 | in-progress |
-| T13 | #36 | [task] Matn: each bayt on one line at every width; every line on the lesson's rule; both poems in every lesson, clearly separated, with a 'not covered' line when a poem doesn't treat the rule (maintainer, 2026-09-28). | none | in-progress |
-| T14 | #38 | [task] Progress page (#/progress): quiz attempts, best/last scores, per-rule accuracy with review links; home cards colored by state (learned/started/next/not started) with text badges (maintainer, 2026-09-28). | none | in-progress |
+| T13 | #36 | [task] Matn: each bayt on one line at every width; every line on the lesson's rule; both poems in every lesson, clearly separated, with a 'not covered' line when a poem doesn't treat the rule (maintainer, 2026-09-28). | none | done |
+| T14 | #38 | [task] Progress page (#/progress): quiz attempts, best/last scores, per-rule accuracy with review links; home cards colored by state (learned/started/next/not started) with text badges (maintainer, 2026-09-28). | none | done |
 | L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | ready |
 | L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | done |
 | L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | done |
-| L2c | #37 | [task-hard] Makharij as a unit: intro + five chapters (jawf, halq, lisan, shafatan, khayshum), one clip step per makhraj (17, ن/ل/ر separate) and each letter shown in turn; lesson list groups units (maintainer, 2026-09-28). | T13 | blocked |
+| L2c | #37 | [task-hard] Makharij as a unit: intro + five chapters (jawf, halq, lisan, shafatan, khayshum), one clip step per makhraj (17, ن/ل/ر separate) and each letter shown in turn; lesson list groups units (maintainer, 2026-09-28). | T13 | ready |
 | L3 | #9 | [task] Heavy and light letters (tafkhim/tarqiq basics, خص ضغط قظ), reusing MouthDiagram. | L2, T6, T10 | blocked |
 | L4 | #10 | [task] Noon sakinah/tanween 1: izhar halqi. | T2, T6 | ready |
 | L5 | #11 | [task] Noon sakinah/tanween 2: idgham with and without ghunnah (`idgham_ghunnah`, `idgham_wo_ghunnah`). Animation: the noon merging into the next letter. | T2 | ready |
@@ -50,8 +50,8 @@ in brackets picks the agent.
 | L13 | #19 | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | done |
 | L13b | #32 | [task] Natural-madd clip redone: real syllables بَا بُو بِي, arrow at the madd letter, bar growing ~1 s per count under it, captions. | T10 | done |
 | L13c | #34 | [task] Natural madd as one counting demo: say-it-with-me, marker at the first count and at the end of the second, one syllable (the three take the same time) (maintainer, 2026-09-28). | none | done |
-| L14 | #20 | [task] Madd muttasil and munfasil — the API marks both as `madda_obligatory` (4–5 counts in Hafs), reusing MaddBar. | L13c | in-progress |
-| L15 | #21 | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13c | in-progress |
+| L14 | #20 | [task] Madd muttasil and munfasil — the API marks both as `madda_obligatory` (4–5 counts in Hafs), reusing MaddBar. | L13c | done |
+| L15 | #21 | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13c | done |
 | L16 | #22 | [task] Other madd: ʿarid lis-sukun (`madda_permissible`), leen, badal, silah, reusing MaddBar. | L13c | in-progress |
 | L17 | #23 | [task] Hamzat al-wasl and silent letters (`ham_wasl`, `slnt`). | T2 | ready |
 | L18 | #24 | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | ready |
