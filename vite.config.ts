@@ -51,6 +51,10 @@ export default defineConfig({
     // Worker threads, not the default child-process forks: forks timed out on startup in the
     // sandboxed shell while other builds ran, failing the run with "no tests" (seen by T2, T3, T6).
     pool: 'threads',
+    // On this 32-core machine vitest started ~31 jsdom workers at once; under load from builds some
+    // missed the start-up timeout ('Timeout waiting for worker to respond', 'no tests'). Measured:
+    // uncapped 25-76 s and flaky, 8 workers ~38 s and steady, 4 workers 43-86 s.
+    maxWorkers: 8,
     setupFiles: ['./src/test/setup.ts'],
     // Task-board worktrees live inside the checkout; never pick up their tests.
     // e2e/** holds the Playwright UI suite, run separately via `npm run test:ui`.
