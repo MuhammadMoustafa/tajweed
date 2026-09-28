@@ -4,12 +4,12 @@ import { MouthDiagram } from './mouth/MouthDiagram'
 import type { MakhrajRegion } from './mouth/regions'
 import type { Clip, ClipStep } from './player/clip'
 
-// Single letters (not Quran text), in the order each area's lesson section teaches them. A
-// tatweel (ـ) placeholder carries a harakah so a madd letter can be shown after it without
-// implying any particular consonant.
-const MADD_A = 'ـَا'
-const MADD_U = 'ـُو'
-const MADD_I = 'ـِي'
+// Single letters (not Quran text), in the order each area's lesson section teaches them. The madd
+// letters are shown in the same practice syllables as the natural-madd lesson (بَا بُو بِي), so the
+// harakah before each is visible on a real letter.
+const MADD_A = 'بَا'
+const MADD_U = 'بُو'
+const MADD_I = 'بِي'
 const HALQ_DEEPEST = 'ء ه'
 const HALQ_MIDDLE = 'ع ح'
 const HALQ_CLOSEST = 'غ خ'
