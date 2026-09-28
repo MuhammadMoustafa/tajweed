@@ -18,29 +18,29 @@ in brackets picks the agent.
 
 | ID | Issue | Card | Blocked by | Status |
 |----|-------|------|------------|--------|
-| T1 | — | [task] Lesson navigation and progress: previous/next links on a lesson, "mark as learned" kept per device (localStorage, try/catch), progress shown in the lesson list. Done when routes/links and progress have tests. | none | ready |
-| T2 | — | [task] Practice quiz: a `quiz` field on Lesson with (a) "tap the letters that have <rule> in this ayah" (answers come from parsed segments, not typed text) and (b) bilingual multiple choice; Quiz component after the examples; a quiz for the qalqalah lesson. Done when scoring is tested. | none | ready |
-| T3 | — | [task] Playwright UI suite (`npm run test:ui`): every lesson route renders, the language toggle sets `<html lang dir>`, examples contain colored rule spans, reduced motion shows a static animation. Checks data, not pixels. Becomes the heavy-tier "full UI suite". | none | ready |
-| T4 | — | [task] Android APK with Capacitor: @capacitor/core/cli/android, capacitor.config.ts, `npm run apk` (debug APK), instructions in CLAUDE.md. Needs JDK and Android SDK installed by the maintainer first. | maintainer: install Android Studio | blocked |
-| T5 | — | [task-easy] Deploy the PWA to a free static host from GitHub Actions on push to main. Host to be chosen by the maintainer (GitHub Pages suggested). | maintainer: host choice | blocked |
-| T6 | — | [task] Highlights for rules the API does not annotate (izhar, lam qamariyyah, tafkhim/tarqiq, ra, stop signs): lesson examples mark letters by word/letter index into the fetched text (never retyped); new color tokens (e.g. dark blue for tafkhim) in both themes. Design to settle with the maintainer first. | none | ready |
-| L1 | — | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | blocked |
-| L2 | — | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | blocked |
-| L3 | — | [task] Heavy and light letters (tafkhim/tarqiq basics, خص ضغط قظ), reusing MouthDiagram. | L2, T6 | blocked |
-| L4 | — | [task] Noon sakinah/tanween 1: izhar halqi. | T2, T6 | blocked |
-| L5 | — | [task] Noon sakinah/tanween 2: idgham with and without ghunnah (`idgham_ghunnah`, `idgham_wo_ghunnah`). Animation: the noon merging into the next letter. | T2 | blocked |
-| L6 | — | [task] Noon sakinah/tanween 3: iqlab (`iqlab`). Animation: noon turning into meem. | T2 | blocked |
-| L7 | — | [task] Noon sakinah/tanween 4: ikhfa (`ikhafa`). Animation: noon hidden in a nasal cloud. | T2 | blocked |
-| L8 | — | [task] Meem sakinah: ikhfa, idgham and izhar shafawi (`ikhafa_shafawi`, `idgham_shafawi`), lips on MouthDiagram. | L2, T6 | blocked |
-| L9 | — | [task] Ghunnah on mushaddad noon/meem (`ghunnah`), nose on MouthDiagram, 2 counts. | L2 | blocked |
-| L10 | — | Qalqalah — sample lesson from the scaffold. Quiz added by T2. | — | done |
-| L11 | — | [task] Lam rules: lam shamsiyyah (`laam_shamsiyah`) and qamariyyah, lam in the name of Allah. | T2, T6 | blocked |
-| L12 | — | [task] Ra: tafkhim and tarqiq. | L3, T6 | blocked |
-| L13 | — | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | blocked |
-| L14 | — | [task] Madd muttasil and munfasil (`madda_obligatory`, `madda_permissible`), reusing MaddBar. | L13 | blocked |
-| L15 | — | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13 | blocked |
-| L16 | — | [task] Other madd: ʿarid lis-sukun, leen, badal, silah, reusing MaddBar. | L13 | blocked |
-| L17 | — | [task] Hamzat al-wasl and silent letters (`ham_wasl`, `slnt`). | T2 | blocked |
-| L18 | — | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | blocked |
-| L19 | — | [task] Waqf and ibtida: the stop signs in the mushaf. | T2, T6 | blocked |
-| L20 | — | [task-hard] Sifat al-huruf in depth, reusing MouthDiagram. | L2 | blocked |
+| T1 | #1 | [task] Lesson navigation and progress: previous/next links on a lesson, "mark as learned" kept per device (localStorage, try/catch), progress shown in the lesson list. Done when routes/links and progress have tests. | none | ready |
+| T2 | #2 | [task] Practice quiz: a `quiz` field on Lesson with (a) "tap the letters that have <rule> in this ayah" (answers come from parsed segments, not typed text) and (b) bilingual multiple choice; Quiz component after the examples; a quiz for the qalqalah lesson. Done when scoring is tested. | none | in-progress |
+| T3 | #3 | [task] Playwright UI suite (`npm run test:ui`): every lesson route renders, the language toggle sets `<html lang dir>`, examples contain colored rule spans, reduced motion shows a static animation. Checks data, not pixels. Becomes the heavy-tier "full UI suite". | none | in-progress |
+| T4 | #4 | [task] Android APK with Capacitor: @capacitor/core/cli/android, capacitor.config.ts, `npm run apk` (debug APK), instructions in CLAUDE.md. Needs JDK and Android SDK installed by the maintainer first. | maintainer: install Android Studio | blocked |
+| T5 | #5 | [task-easy] Deploy the PWA to a free static host from GitHub Actions on push to main. Host to be chosen by the maintainer (GitHub Pages suggested). | maintainer: host choice | blocked |
+| T6 | #6 | [task] Highlights for rules the API does not annotate (izhar, lam qamariyyah, tafkhim/tarqiq, ra, stop signs): lesson examples mark letters by word/letter index into the fetched text (never retyped); new color tokens (e.g. dark blue for tafkhim) in both themes. Design by the coordinator (maintainer allowed any order, 2026-09-28): `marks` on examples by word/letter index, applied after parsing; see the issue. | none | in-progress |
+| L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | blocked |
+| L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | blocked |
+| L3 | #9 | [task] Heavy and light letters (tafkhim/tarqiq basics, خص ضغط قظ), reusing MouthDiagram. | L2, T6 | blocked |
+| L4 | #10 | [task] Noon sakinah/tanween 1: izhar halqi. | T2, T6 | blocked |
+| L5 | #11 | [task] Noon sakinah/tanween 2: idgham with and without ghunnah (`idgham_ghunnah`, `idgham_wo_ghunnah`). Animation: the noon merging into the next letter. | T2 | blocked |
+| L6 | #12 | [task] Noon sakinah/tanween 3: iqlab (`iqlab`). Animation: noon turning into meem. | T2 | blocked |
+| L7 | #13 | [task] Noon sakinah/tanween 4: ikhfa (`ikhafa`). Animation: noon hidden in a nasal cloud. | T2 | blocked |
+| L8 | #14 | [task] Meem sakinah: ikhfa, idgham and izhar shafawi (`ikhafa_shafawi`, `idgham_shafawi`), lips on MouthDiagram. | L2, T6 | blocked |
+| L9 | #15 | [task] Ghunnah on mushaddad noon/meem (`ghunnah`), nose on MouthDiagram, 2 counts. | L2 | blocked |
+| L10 | #16 | Qalqalah — sample lesson from the scaffold. Quiz added by T2. | — | done |
+| L11 | #17 | [task] Lam rules: lam shamsiyyah (`laam_shamsiyah`) and qamariyyah, lam in the name of Allah. | T2, T6 | blocked |
+| L12 | #18 | [task] Ra: tafkhim and tarqiq. | L3, T6 | blocked |
+| L13 | #19 | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | blocked |
+| L14 | #20 | [task] Madd muttasil and munfasil (`madda_obligatory`, `madda_permissible`), reusing MaddBar. | L13 | blocked |
+| L15 | #21 | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13 | blocked |
+| L16 | #22 | [task] Other madd: ʿarid lis-sukun, leen, badal, silah, reusing MaddBar. | L13 | blocked |
+| L17 | #23 | [task] Hamzat al-wasl and silent letters (`ham_wasl`, `slnt`). | T2 | blocked |
+| L18 | #24 | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | blocked |
+| L19 | #25 | [task] Waqf and ibtida: the stop signs in the mushaf. | T2, T6 | blocked |
+| L20 | #26 | [task-hard] Sifat al-huruf in depth, reusing MouthDiagram. | L2 | blocked |
