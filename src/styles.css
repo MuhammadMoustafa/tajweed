@@ -573,7 +573,7 @@ main {
   fill: var(--muted);
 }
 
-/* MakharijTour (src/animations/MakharijTour.tsx) */
+/* Makharij clips (src/animations/MakharijClips.tsx) */
 .makharij-tour {
   display: grid;
   gap: 0.5rem;
