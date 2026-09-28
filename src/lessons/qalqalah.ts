@@ -55,24 +55,25 @@ export const qalqalah: Lesson = {
       },
     },
   ],
-  mutoon: [
-    {
-      text: 'jazariyya',
-      from: 24,
-      note: {
-        ar: 'يذكر هذا البيت حروف القلقلة الخمسة مجموعة في «قُطْبُ جَدٍّ»، ضمن أبيات صفات الحروف.',
-        en: 'Among the lines on the letters’ characteristics, this one names the five qalqalah letters, gathered in "qutbu jadd" (ق ط ب ج د).',
+  mutoon: {
+    tuhfa: 'not-covered',
+    jazariyya: [
+      {
+        from: 24,
+        note: {
+          ar: 'يذكر هذا البيت حروف القلقلة الخمسة مجموعة في «قُطْبُ جَدٍّ»، ضمن أبيات صفات الحروف.',
+          en: 'Among the lines on the letters’ characteristics, this one names the five qalqalah letters, gathered in "qutbu jadd" (ق ط ب ج د).',
+        },
       },
-    },
-    {
-      text: 'jazariyya',
-      from: 39,
-      note: {
-        ar: 'أوضح القلقلة إذا كان الحرف ساكنًا، وهي أبين إذا وقفتَ عليه — وهو الفرق بين القلقلة الصغرى والكبرى.',
-        en: 'Make the qalqalah clear when the letter is sakin, and it is even clearer when you stop on it — the difference between minor and major qalqalah.',
+      {
+        from: 39,
+        note: {
+          ar: 'أوضح القلقلة إذا كان الحرف ساكنًا، وهي أبين إذا وقفتَ عليه — وهو الفرق بين القلقلة الصغرى والكبرى.',
+          en: 'Make the qalqalah clear when the letter is sakin, and it is even clearer when you stop on it — the difference between minor and major qalqalah.',
+        },
       },
-    },
-  ],
+    ],
+  },
   quiz: [
     {
       kind: 'tap',

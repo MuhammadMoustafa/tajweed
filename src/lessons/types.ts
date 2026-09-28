@@ -65,7 +65,28 @@ export interface Lesson {
   /** Authored questions for the lesson's quiz page (#/lesson/<id>/quiz), drawn alongside questions
    *  generated from the examples and the whole-Quran pool (src/quiz/draw.ts). */
   quiz?: QuizQuestion[]
-  /** Lines from a classical poem (src/data/mutoon.json) that state this lesson's rule, shown in a
-   * collapsed panel after the examples. Line numbers are found in the fetched data, never guessed. */
-  mutoon?: { text: MatnId; from: number; to?: number; note: Bilingual }[]
+  /** Both classical poems' coverage of this lesson's rule (src/data/mutoon.json), shown in a
+   * collapsed panel after the examples as two always-present, clearly separated sections — Tuhfa
+   * first, then Jazariyya, each with its own heading and meaning note(s). Line numbers are found
+   * in the fetched data, never guessed; every line the poem gives the rule is cited (whole
+   * passages, not a sample). A poem with no section on the rule gets `'not-covered'`, which still
+   * renders its section (with a "doesn't cover this" line) instead of omitting the poem. When a
+   * lesson has a matn panel at all, both `tuhfa` and `jazariyya` are required (lessons.test.ts
+   * enforces this) so no lesson can drift to showing only one poem. */
+  mutoon?: MatnRefs
 }
+
+/** One contiguous range of a poem's lines that states part of a lesson's rule, plus the plain
+ * meaning of that passage. A poem's coverage of a rule may need more than one (e.g. qalqalah's
+ * letters and, several lines later, how to sound them — see src/lessons/qalqalah.ts). */
+export interface MatnPassage {
+  from: number
+  to?: number
+  note: Bilingual
+}
+
+/** A poem's coverage of one lesson's rule: the passages that state it, or `'not-covered'` when
+ * the poem has no section on it. */
+export type MatnCoverage = MatnPassage[] | 'not-covered'
+
+export type MatnRefs = Record<MatnId, MatnCoverage>

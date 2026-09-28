@@ -9,7 +9,10 @@ import { parseTajweed } from '../tajweed/parse'
 import { CUSTOM_RULES, TAJWEED_RULES } from '../tajweed/rules'
 import { LESSONS } from '.'
 import { tapCorrectIndices } from './quiz'
+import type { MatnId } from '../mutoon/types'
 import type { QuizChoiceQuestion, QuizTapQuestion } from './types'
+
+const MATN_IDS: MatnId[] = ['tuhfa', 'jazariyya']
 
 const expectBothLanguages = (text: Bilingual, where: string) => {
   for (const locale of LOCALES) expect(text[locale].trim(), `${where} [${locale}]`).not.toBe('')
@@ -30,16 +33,42 @@ describe('lessons', () => {
         expectBothLanguages(s.body, `${id}.sections[${i}].body`)
       })
       lesson.examples.forEach((e) => expectBothLanguages(e.note, `${id} example ${e.verseKey}`))
-      lesson.mutoon?.forEach((m, i) => expectBothLanguages(m.note, `${id}.mutoon[${i}].note`))
+      for (const text of MATN_IDS) {
+        const coverage = lesson.mutoon?.[text]
+        if (!coverage || coverage === 'not-covered') continue
+        coverage.forEach((p, i) => expectBothLanguages(p.note, `${id}.mutoon.${text}[${i}].note`))
+      }
     })
 
-    it.each(lesson.mutoon ?? [])('mutoon ref %o is in range for its text', (m) => {
-      const count = matnLineCount(m.text)
-      expect(m.from).toBeGreaterThanOrEqual(1)
-      expect(m.from).toBeLessThanOrEqual(count)
-      if (m.to !== undefined) {
-        expect(m.to).toBeGreaterThanOrEqual(m.from)
-        expect(m.to).toBeLessThanOrEqual(count)
+    // A lesson with a matn panel always shows both poems (one section each, 'not-covered' when a
+    // poem has no section on the rule) so a reader never sees just one poem without the other
+    // having been considered.
+    it('mutoon, if present, has both tuhfa and jazariyya', () => {
+      if (!lesson.mutoon) return
+      for (const text of MATN_IDS) expect(lesson.mutoon, `${id}.mutoon.${text}`).toHaveProperty(text)
+    })
+
+    it.each(MATN_IDS.flatMap((text) => (lesson.mutoon?.[text] === 'not-covered' ? [] : (lesson.mutoon?.[text] ?? []).map((p) => [text, p] as const))))(
+      'mutoon passage in %s %o is in range',
+      (text, p) => {
+        const count = matnLineCount(text)
+        expect(p.from).toBeGreaterThanOrEqual(1)
+        expect(p.from).toBeLessThanOrEqual(count)
+        if (p.to !== undefined) {
+          expect(p.to).toBeGreaterThanOrEqual(p.from)
+          expect(p.to).toBeLessThanOrEqual(count)
+        }
+      },
+    )
+
+    it('mutoon passages within the same poem do not overlap', () => {
+      for (const text of MATN_IDS) {
+        const coverage = lesson.mutoon?.[text]
+        if (!coverage || coverage === 'not-covered') continue
+        const sorted = coverage.map((p) => ({ from: p.from, to: p.to ?? p.from })).sort((a, b) => a.from - b.from)
+        for (let i = 1; i < sorted.length; i++) {
+          expect(sorted[i].from, `${id}.mutoon.${text} ranges overlap: ${JSON.stringify(sorted)}`).toBeGreaterThan(sorted[i - 1].to)
+        }
       }
     })
 

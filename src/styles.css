@@ -12,6 +12,11 @@
   --notice-bg: #fff4d6;
   --notice-text: #6b4e00;
 
+  /* MatnPanel (src/components/MatnPanel.tsx): each poem's block gets its own background tint, but
+     the two are told apart by border style too (solid vs dashed), not color alone. */
+  --matn-tuhfa-bg: #f2f7f0;
+  --matn-jazariyya-bg: #f1f4fa;
+
   /* Tajweed colors — one token per color family in src/tajweed/rules.ts */
   --tj-madd-necessary: #9b1020;
   --tj-madd-obligatory: #d91e36;
@@ -64,6 +69,9 @@
     --accent: #5eead4;
     --notice-bg: #3a3014;
     --notice-text: #f5d98b;
+
+    --matn-tuhfa-bg: #1a211c;
+    --matn-jazariyya-bg: #1a1e29;
 
     --tj-madd-necessary: #e0364a;
     --tj-madd-obligatory: #ff7b86;
@@ -799,13 +807,63 @@ main {
   font-weight: 600;
 }
 
-.matn-ref {
+/* One block per poem, always both present (see MatnPanel), visually separated by more than color:
+   a background tint (--matn-*-bg, distinct in both themes) plus a border style that differs
+   between the two poems (solid for Tuhfa, dashed for Jazariyya), not the tint alone. */
+.matn-poem {
   margin-block-start: 0.75rem;
-  padding-block-start: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border);
+}
+
+.matn-poem:first-of-type {
+  margin-block-start: 0.5rem;
+}
+
+.matn-poem-tuhfa {
+  background: var(--matn-tuhfa-bg);
+  border-style: solid;
+}
+
+.matn-poem-jazariyya {
+  background: var(--matn-jazariyya-bg);
+  border-style: dashed;
+}
+
+.matn-poem-heading {
+  margin: 0 0 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.matn-poem-name {
+  font-weight: 600;
+}
+
+.matn-poem-author {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-family: var(--font-ui-ar);
+}
+
+.matn-not-covered {
+  margin: 0;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.matn-passage {
+  margin-block-start: 0.5rem;
+  padding-block-start: 0.5rem;
   border-block-start: 1px solid var(--border);
 }
 
-.matn-ref:first-of-type {
+.matn-passage:first-of-type {
+  margin-block-start: 0;
+  padding-block-start: 0;
   border-block-start: none;
 }
 
@@ -813,30 +871,34 @@ main {
   margin: 0 0 0.5rem;
 }
 
-.matn-ref-heading {
+.matn-section-heading {
   margin: 0 0 0.5rem;
   color: var(--muted);
   font-size: 0.9rem;
 }
 
+/* Sadr and ajuz always sit on the same row, right to left with the line number at the start
+   (the first grid column, on the right in rtl). On a narrow phone the font shrinks (clamp) before
+   either half wraps; a half only wraps inside its own column and the two halves never stack. */
 .matn-line {
   display: grid;
-  gap: 0.15rem;
+  grid-template-columns: auto 1fr 1fr;
+  align-items: baseline;
+  gap: 0.5rem;
   padding-block: 0.35rem;
   font-family: var(--font-ui-ar);
+  font-size: clamp(0.8rem, 0.65rem + 1.6vw, 1rem);
+}
+
+.matn-sadr,
+.matn-ajuz {
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .matn-line-number {
   color: var(--muted);
   font-size: 0.8rem;
-}
-
-@media (min-width: 48rem) {
-  .matn-line {
-    grid-template-columns: auto 1fr 1fr;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
 }
 
 .matn-source {
@@ -847,6 +909,7 @@ main {
   color: var(--muted);
   direction: ltr;
   word-break: break-all;
+}
 
 /* Quiz page (src/components/QuizPage.tsx) and the link to it at the end of a lesson. */
 .test-yourself {

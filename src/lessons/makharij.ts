@@ -97,17 +97,19 @@ export const makharij: Lesson = {
       },
     },
   ],
-  mutoon: [
-    {
-      text: 'jazariyya',
-      from: 9,
-      to: 10,
-      note: {
-        ar: 'يذكر البيت الأول أن مخارج الحروف سبعة عشر، ثم يبدأ الثاني بالجوف: الألف وأختاها الواو والياء، حروف المدّ التي لا تنتهي عند موضع محدد بل بانتهاء الهواء.',
-        en: 'The first line gives the count — seventeen makharij — then the second starts with the jawf: the alif and its two "sisters" waw and ya, the madd letters with no fixed stopping point; they simply end when the breath does.',
+  mutoon: {
+    tuhfa: 'not-covered',
+    jazariyya: [
+      {
+        from: 9,
+        to: 19,
+        note: {
+          ar: 'باب مخارج الحروف كاملاً: يذكر البيت الأول أن مخارج الحروف سبعة عشر، ثم يعدّدها موضعًا موضعًا من الجوف (الألف وأختاها الواو والياء، حروف المدّ) إلى أقصى الحلق فوسطه فأدناه، فأقصى اللسان فوسطه فحافته فطرفه، فالثنايا والشفتين، وينتهي بغنّة النون والميم التي مخرجها الخيشوم.',
+          en: 'The whole chapter on makharij: the first line gives the count — seventeen — then it walks through them one region at a time, from the jawf (the alif and its two "sisters" waw and ya, the madd letters) to the throat (far, middle, near), the tongue (base to tip), the teeth and lips, ending with the ghunnah of noon and meem, whose makhraj is the nose.',
+        },
       },
-    },
-  ],
+    ],
+  },
   quiz: [
     {
       kind: 'choice',

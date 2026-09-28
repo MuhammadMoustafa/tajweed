@@ -62,17 +62,27 @@ export const naturalMadd: Lesson = {
       },
     },
   ],
-  mutoon: [
-    {
-      text: 'tuhfa',
-      from: 35,
-      to: 40,
-      note: {
-        ar: 'تُعرِّف هذه الأبيات المدّ الطبيعي بأنه ما لا يحتاج إلى سبب زائد (همز أو سكون)، وتذكر حروف المدّ الثلاثة وشرط كل حرف منها.',
-        en: 'These lines define natural madd as needing no extra cause (a hamza or a sukun), then name the three madd letters and the condition — the harakah right before each — that makes it a madd letter.',
+  mutoon: {
+    tuhfa: [
+      {
+        from: 35,
+        to: 40,
+        note: {
+          ar: 'تُعرِّف هذه الأبيات المدّ الطبيعي بأنه ما لا يحتاج إلى سبب زائد (همز أو سكون)، وتذكر حروف المدّ الثلاثة وشرط كل حرف منها.',
+          en: 'These lines define natural madd as needing no extra cause (a hamza or a sukun), then name the three madd letters and the condition — the harakah right before each — that makes it a madd letter.',
+        },
       },
-    },
-  ],
+    ],
+    jazariyya: [
+      {
+        from: 69,
+        note: {
+          ar: 'يذكر هذا البيت أقسام المدّ الأربعة: لازم وواجب وجائز، و"قصر" — وهو المدّ الطبيعي بلا زيادة؛ أما الأنواع الثلاثة الأخرى فموضوعها دروس لاحقة.',
+          en: 'This line names the four kinds of madd — lazim, wajib, ja’iz, and qasr ("shortening"), which is the natural madd with no extra length; the other three belong to later lessons.',
+        },
+      },
+    ],
+  },
   quiz: [
     {
       kind: 'tap',

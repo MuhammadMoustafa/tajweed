@@ -71,6 +71,12 @@ export const ui = {
   matnLine: { ar: 'البيت', en: 'Line' },
   matnTuhfaTitle: { ar: 'تحفة الأطفال', en: 'Tuhfat al-Atfal' },
   matnJazariyyaTitle: { ar: 'المقدمة الجزرية', en: 'Al-Muqaddimah al-Jazariyyah' },
+  /** Shown in a poem's own block of the matn panel when that poem has no section on the lesson's
+   * rule (the other poem's block, shown right beside it, is expected to cover it instead). */
+  matnNotCovered: {
+    ar: 'ليس في هذا المتن باب يتناول هذا الحكم.',
+    en: 'This text has no section on this rule.',
+  },
 } satisfies Record<string, Bilingual>
 
 /** Fills a `{rule}` template (e.g. `ui.quizTapPrompt`) with a rule's name, in both languages. */
