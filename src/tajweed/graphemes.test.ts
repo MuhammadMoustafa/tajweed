@@ -30,6 +30,12 @@ describe('segmentsToLetters', () => {
     expect(letters[0].tapIndex).toBe(0)
   })
 
+  it('traces each letter back to the segment holding its base character', () => {
+    // The 112:1 split below: the tanween sits in segment 2 but belongs to the د of segment 1.
+    const letters = segmentsToLetters([{ text: 'أَحَ' }, { text: 'د', rule: 'qalaqah' }, { text: 'ٌ ' }])
+    expect(letters.map((l) => l.segment)).toEqual([0, 0, 1, 2])
+  })
+
   it('keeps a harakah the API left outside a tagged letter on that letter (112:1)', () => {
     // From quran.json 112:1: the API tags د but its tanween follows in the untagged segment.
     const letters = segmentsToLetters([{ text: 'أَحَ' }, { text: 'د', rule: 'qalaqah' }, { text: 'ٌ ' }])

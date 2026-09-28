@@ -14,6 +14,7 @@
     "typecheck": "tsc -b",
     "fetch-quran": "tsx scripts/fetch-quran.ts",
     "fetch-mutoon": "tsx scripts/fetch-mutoon.ts",
+    "build-quiz-pool": "tsx scripts/build-quiz-pool.ts",
     "apk": "tsx scripts/build-apk.ts",
     "check": "npm run lint && npm test && npm run build"
   },

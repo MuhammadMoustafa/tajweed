@@ -207,3 +207,41 @@ export const ALL_RULES: Record<RuleId, TajweedRule> = { ...TAJWEED_RULES, ...CUS
 export function isRuleId(value: string): value is RuleId {
   return Object.hasOwn(ALL_RULES, value)
 }
+
+/**
+ * Groups of API rules a learner easily mixes up, used for the "which rule is on this letter?"
+ * quiz options (and to pick hard quiz verses, where a look-alike rule sits near the target). A
+ * rule's confusables are every other member of the groups it belongs to, so the relation is
+ * symmetric by construction. Note the API's madd classes: `madda_obligatory` covers both
+ * muttasil and munfasil (4–5 counts in Hafs), `madda_permissible` is ʿarid lis-sukun and similar,
+ * `madda_normal` is natural madd and `madda_necessary` is lazim.
+ */
+const CONFUSABLE_GROUPS: readonly (readonly TajweedRuleId[])[] = [
+  // Noon sakinah / tanween: what the next letter does to the noon.
+  ['ikhafa', 'idgham_ghunnah', 'idgham_wo_ghunnah', 'iqlab'],
+  // Meem sakinah: before ب (ikhfa shafawi) vs before م (idgham shafawi); iqlab also ends in a
+  // hidden meem before ب.
+  ['ikhafa_shafawi', 'idgham_shafawi', 'iqlab'],
+  ['ikhafa', 'ikhafa_shafawi'],
+  // A nasal held for two counts: doubled noon/meem vs a merge into noon/meem.
+  ['ghunnah', 'idgham_shafawi', 'idgham_ghunnah'],
+  // The four madd classes: the length depends on what follows the madd letter.
+  ['madda_normal', 'madda_obligatory', 'madda_permissible', 'madda_necessary'],
+  // A sakin qalqalah letter merged into the next letter is not echoed (the dal in 2:256, the qaf
+  // in 77:20).
+  ['qalaqah', 'idgham_mutajanisayn', 'idgham_mutaqaribayn'],
+  // Letters merged into the next one.
+  ['idgham_mutajanisayn', 'idgham_mutaqaribayn', 'idgham_wo_ghunnah'],
+  // Written but not pronounced.
+  ['ham_wasl', 'laam_shamsiyah', 'slnt'],
+]
+
+/** Rules easily confused with `rule` (never `rule` itself), in group order; empty for a custom rule. */
+export function confusableRules(rule: RuleId): TajweedRuleId[] {
+  const out = new Set<TajweedRuleId>()
+  for (const group of CONFUSABLE_GROUPS) {
+    if (!(group as readonly RuleId[]).includes(rule)) continue
+    for (const other of group) if (other !== rule) out.add(other)
+  }
+  return [...out]
+}

@@ -33,6 +33,9 @@ export interface LetterGrapheme {
   /** 0-based index among only the non-space letters; `undefined` for a space. This is the id a
    *  "tap the letters" quiz question uses for selection/correctness — spaces never get one. */
   tapIndex?: number
+  /** Index (into the input segments) of the segment holding the letter's base character, so a
+   *  letter can be traced back to the rule run it came from (see `ruleRunLetters`). */
+  segment: number
 }
 
 /**
@@ -45,16 +48,24 @@ export interface LetterGrapheme {
  * never get a `tapIndex`.
  */
 export function segmentsToLetters(segments: readonly RuledSegment[]): LetterGrapheme[] {
-  const ruleAt: (RuleId | undefined)[] = []
-  for (const seg of segments) for (let i = 0; i < seg.text.length; i++) ruleAt.push(seg.rule)
+  const segmentAt: number[] = []
+  segments.forEach((seg, s) => {
+    for (let i = 0; i < seg.text.length; i++) segmentAt.push(s)
+  })
   const text = segments.map((seg) => seg.text).join('')
 
   const letters: LetterGrapheme[] = []
   let tapIndex = 0
   for (const { segment, index } of splitGraphemes(text)) {
     const isSpace = segment === ' '
-    const rule = ruleAt[index]
-    letters.push({ text: segment, ...(rule ? { rule } : {}), isSpace, tapIndex: isSpace ? undefined : tapIndex++ })
+    const rule = segments[segmentAt[index]].rule
+    letters.push({
+      text: segment,
+      ...(rule ? { rule } : {}),
+      isSpace,
+      tapIndex: isSpace ? undefined : tapIndex++,
+      segment: segmentAt[index],
+    })
   }
   return letters
 }

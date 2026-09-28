@@ -4,40 +4,19 @@
  *
  * Run after adding or changing lesson examples:  npm run fetch-quran
  */
+import { compareVerseKeys } from '../src/data/quran.ts'
 import { LESSONS } from '../src/lessons/index.ts'
-import { fetchJson, writeJsonFile } from './lib/fetch.ts'
+import { writeJsonFile } from './lib/fetch.ts'
+import { fetchTajweedVerses, tajweedSource } from './lib/quran-api.ts'
 
-const API = 'https://api.quran.com/api/v4/quran/verses/uthmani_tajweed'
 const OUT = new URL('../src/data/quran.json', import.meta.url)
 
-interface ApiResponse {
-  verses: { verse_key: string; text_uthmani_tajweed: string }[]
-}
-
-const keys = [...new Set(LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)))].sort(
-  (a, b) => {
-    const [sa, aa] = a.split(':').map(Number)
-    const [sb, ab] = b.split(':').map(Number)
-    return sa - sb || aa - ab
-  },
-)
+const keys = [...new Set(LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)))].sort(compareVerseKeys)
 
 const verses: Record<string, string> = {}
-for (const key of keys) {
-  const body = await fetchJson<ApiResponse>(`${API}?verse_key=${key}`)
-  const verse = body.verses[0]
-  if (!verse || verse.verse_key !== key) throw new Error(`${key}: not found in API response`)
-  verses[key] = verse.text_uthmani_tajweed
-}
+for (const key of keys) verses[key] = (await fetchTajweedVerses(key))[key]
 
-const data = {
-  source: {
-    name: 'Quran Foundation API (quran.com) — text_uthmani_tajweed, riwayat Hafs',
-    url: API,
-    fetchedAt: new Date().toISOString().slice(0, 10),
-  },
-  verses,
-}
+const data = { source: tajweedSource(), verses }
 
 await writeJsonFile(OUT, data)
 console.log(`Wrote ${keys.length} verses to src/data/quran.json`)

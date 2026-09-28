@@ -8,19 +8,39 @@ import type { QuizChoiceQuestion } from './types'
 export type SegmentState = 'selected' | 'correct' | 'wrong'
 
 /**
- * The correct answers for a "tap the letters" question: the `tapIndex` of every letter (grapheme)
- * whose rule matches — never a whole rule run. For a custom rule (one the API markup doesn't tag),
- * pass the question's `marks` so they're applied before splitting into letters. Reuses
- * `parseTajweed`/`applyMarks` — the only places verse markup/marks are interpreted — so the answer
- * is derived from the real verse rather than hand-picked.
+ * The letters of every run of `rule` in a verse, as `tapIndex` lists in reading order: one list
+ * per rule span of the markup (or per mark). The API sometimes tags a noon with the letter after
+ * it (ikhfa, idgham), so a run can hold more than one letter. `unplaced` counts runs that hold no
+ * letter at all — a span of only harakat or signs, which no letter tap can answer — so callers
+ * can skip such a verse. Reuses `parseTajweed`/`applyMarks` — the only places verse markup/marks
+ * are interpreted.
  */
-export function tapCorrectIndices(markup: string, rule: RuleId, marks?: readonly Mark[]): number[] {
+export function ruleRunLetters(
+  markup: string,
+  rule: RuleId,
+  marks?: readonly Mark[],
+): { runs: number[][]; unplaced: number } {
   const { segments } = parseTajweed(markup)
   const ruled = marks && marks.length > 0 ? applyMarks(segments, marks) : segments
-  return segmentsToLetters(ruled).reduce<number[]>((indices, letter) => {
-    if (letter.tapIndex !== undefined && letter.rule === rule) indices.push(letter.tapIndex)
-    return indices
-  }, [])
+  const bySegment = new Map<number, number[]>()
+  for (const letter of segmentsToLetters(ruled)) {
+    if (letter.tapIndex === undefined || letter.rule !== rule) continue
+    const run = bySegment.get(letter.segment)
+    if (run) run.push(letter.tapIndex)
+    else bySegment.set(letter.segment, [letter.tapIndex])
+  }
+  const spans = ruled.filter((seg) => seg.rule === rule).length
+  return { runs: [...bySegment.values()], unplaced: spans - bySegment.size }
+}
+
+/**
+ * The correct answers for a "tap the letters" question: the `tapIndex` of every letter (grapheme)
+ * whose rule matches — never a whole rule run. For a custom rule (one the API markup doesn't tag),
+ * pass the question's `marks` so they're applied before splitting into letters. The answer is
+ * derived from the real verse rather than hand-picked.
+ */
+export function tapCorrectIndices(markup: string, rule: RuleId, marks?: readonly Mark[]): number[] {
+  return ruleRunLetters(markup, rule, marks).runs.flat()
 }
 
 /** A tap answer is correct only when the tapped letters are exactly the correct ones. */
@@ -28,7 +48,7 @@ export function isTapAnswerCorrect(selected: ReadonlySet<number>, correct: reado
   return selected.size === correct.length && correct.every((i) => selected.has(i))
 }
 
-export function isChoiceAnswerCorrect(question: QuizChoiceQuestion, selectedIndex: number | undefined): boolean {
+export function isChoiceAnswerCorrect(question: Pick<QuizChoiceQuestion, 'correctIndex'>, selectedIndex: number | undefined): boolean {
   return selectedIndex === question.correctIndex
 }
 

@@ -8,6 +8,13 @@ export function getVerseMarkup(key: VerseKey): string | undefined {
 
 export const QURAN_SOURCE = quran.source
 
+/** Mushaf order for `surah:ayah` keys, for `Array.prototype.sort`. */
+export function compareVerseKeys(a: string, b: string): number {
+  const [sa, aa] = a.split(':').map(Number)
+  const [sb, ab] = b.split(':').map(Number)
+  return sa - sb || aa - ab
+}
+
 /** Per-ayah recitation (Mishary Alafasy) from EveryAyah, e.g. 112:1 → .../112001.mp3 */
 export function verseAudioUrl(key: VerseKey): string {
   const [surah, ayah] = key.split(':').map((n) => n.padStart(3, '0'))
