@@ -7,7 +7,7 @@ import { segmentsToLetters } from '../tajweed/graphemes'
 import { parseTajweed } from '../tajweed/parse'
 import { Quiz } from './Quiz'
 
-// 112:1 has exactly one qalaqah letter, 'د' (see src/data/quran.json / parse.test.ts).
+// 112:1 has exactly one qalaqah letter, 'دٌ' (the API tags د; its tanween joins it as one letter).
 const questions: QuizQuestion[] = [
   {
     kind: 'tap',
@@ -39,7 +39,7 @@ const renderQuiz = () => {
 }
 
 const tapTheQalqalahLetter = (container: HTMLElement) => {
-  const span = [...container.querySelectorAll('.tap')].find((el) => el.textContent === 'د')
+  const span = [...container.querySelectorAll('.tap')].find((el) => el.textContent === 'دٌ')
   if (!span) throw new Error('qalqalah letter span not found')
   fireEvent.click(span)
 }
@@ -63,7 +63,7 @@ describe('Quiz', () => {
 
     const pressed = [...container.querySelectorAll('.tap[aria-pressed="true"]')]
     expect(pressed).toHaveLength(1)
-    expect(pressed[0].textContent).toBe('د')
+    expect(pressed[0].textContent).toBe('دٌ')
 
     fireEvent.click(screen.getByRole('radio', { name: 'B' }))
     fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))

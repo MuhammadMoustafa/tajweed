@@ -37,18 +37,24 @@ export interface LetterGrapheme {
 
 /**
  * Splits already-ruled segments (from `parseTajweed` and/or `applyMarks`) into one entry per
- * grapheme, so each letter — not each rule run — can be its own quiz tap target. Spaces stay in
- * the list, in order, so rendering can reproduce them exactly, but are flagged `isSpace` and never
- * get a `tapIndex`.
+ * grapheme, so each letter — not each rule run — can be its own quiz tap target. Graphemes are
+ * taken over the whole verse, not per segment: the API sometimes tags a letter but leaves its
+ * harakah in the next segment (112:1 tags د but not its tanween), and splitting per segment would
+ * make that lone mark its own target. A letter takes the rule of its base character. Spaces stay
+ * in the list, in order, so rendering can reproduce them exactly, but are flagged `isSpace` and
+ * never get a `tapIndex`.
  */
 export function segmentsToLetters(segments: readonly RuledSegment[]): LetterGrapheme[] {
+  const ruleAt: (RuleId | undefined)[] = []
+  for (const seg of segments) for (let i = 0; i < seg.text.length; i++) ruleAt.push(seg.rule)
+  const text = segments.map((seg) => seg.text).join('')
+
   const letters: LetterGrapheme[] = []
   let tapIndex = 0
-  for (const seg of segments) {
-    for (const { segment } of splitGraphemes(seg.text)) {
-      const isSpace = segment === ' '
-      letters.push({ text: segment, rule: seg.rule, isSpace, tapIndex: isSpace ? undefined : tapIndex++ })
-    }
+  for (const { segment, index } of splitGraphemes(text)) {
+    const isSpace = segment === ' '
+    const rule = ruleAt[index]
+    letters.push({ text: segment, ...(rule ? { rule } : {}), isSpace, tapIndex: isSpace ? undefined : tapIndex++ })
   }
   return letters
 }

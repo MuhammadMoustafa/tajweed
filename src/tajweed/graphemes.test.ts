@@ -30,6 +30,14 @@ describe('segmentsToLetters', () => {
     expect(letters[0].tapIndex).toBe(0)
   })
 
+  it('keeps a harakah the API left outside a tagged letter on that letter (112:1)', () => {
+    // From quran.json 112:1: the API tags د but its tanween follows in the untagged segment.
+    const letters = segmentsToLetters([{ text: 'أَحَ' }, { text: 'د', rule: 'qalaqah' }, { text: 'ٌ ' }])
+    const dal = letters.find((l) => l.rule === 'qalaqah')
+    expect(dal?.text).toBe('دٌ')
+    expect(letters.filter((l) => !l.isSpace).map((l) => l.text)).toEqual(['أَ', 'حَ', 'دٌ'])
+  })
+
   it('returns an empty list for no segments', () => {
     expect(segmentsToLetters([])).toEqual([])
   })
