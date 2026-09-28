@@ -77,6 +77,39 @@ export const ui = {
     ar: 'ليس في هذا المتن باب يتناول هذا الحكم.',
     en: 'This text has no section on this rule.',
   },
+
+  // Progress page (#/progress) and home-card states (src/components/ProgressPage.tsx, LessonList.tsx)
+  progressTitle: { ar: 'التقدّم', en: 'Progress' },
+  progressEmpty: {
+    ar: 'لم تبدأ التعلّم بعد. افتح أحد الدروس لتبدأ.',
+    en: "You haven't started learning yet. Open a lesson to begin.",
+  },
+  /** Template for a lesson's attempt count; `{count}` is filled by formatAttemptsCount. */
+  attemptsCount: { ar: '{count} محاولة', en: '{count} attempts' },
+  noAttemptsYet: { ar: 'لا محاولات بعد', en: 'No attempts yet' },
+  bestScore: { ar: 'أفضل نتيجة', en: 'Best score' },
+  lastScore: { ar: 'آخر نتيجة', en: 'Last score' },
+  ruleAccuracyHeading: { ar: 'الدقة حسب كل حكم', en: 'Accuracy by rule' },
+  ruleAccuracyEmpty: {
+    ar: 'لا توجد بيانات بعد. اختبر نفسك في أي درس لرؤية دقتك هنا.',
+    en: 'No data yet. Take a quiz in any lesson to see your accuracy here.',
+  },
+  resetProgress: { ar: 'إعادة ضبط التقدّم', en: 'Reset progress' },
+  resetConfirmQuestion: {
+    ar: 'هل تريد حذف كل بيانات التقدّم؟ لا يمكن التراجع عن هذا.',
+    en: 'Delete all progress data? This cannot be undone.',
+  },
+  resetConfirmYes: { ar: 'نعم، إعادة الضبط', en: 'Yes, reset' },
+  cancel: { ar: 'إلغاء', en: 'Cancel' },
+  // Lesson-card states on the home page: color is never the only signal (each also gets this text).
+  // The "learned" state reuses ui.markedAsLearned (same meaning as the lesson page's toggle).
+  cardStateStarted: { ar: 'بدأ التعلّم', en: 'Started' },
+  cardStateNotStarted: { ar: 'لم يبدأ', en: 'Not started' },
+  nextLessonBadge: { ar: 'التالي', en: 'Next' },
+  cardStateLegend: {
+    ar: 'أخضر: تم التعلّم · كهرماني: بدأ التعلّم · حدّ ملوّن: الدرس التالي المقترح',
+    en: 'Green: learned · Amber: started · Accent border: suggested next lesson',
+  },
 } satisfies Record<string, Bilingual>
 
 /** Fills a `{rule}` template (e.g. `ui.quizTapPrompt`) with a rule's name, in both languages. */
@@ -98,4 +131,9 @@ export function formatTemplate(locale: Locale, template: Bilingual, values: Reco
 /** "3 of 20 learned" / "٣ من ٢٠ تم تعلّمها". */
 export function formatLearnedCount(locale: Locale, learned: number, total: number): string {
   return formatTemplate(locale, ui.learnedCount, { learned, total })
+}
+
+/** "3 attempts" / "٣ محاولة" (see ui.attemptsCount). */
+export function formatAttemptsCount(locale: Locale, count: number): string {
+  return formatTemplate(locale, ui.attemptsCount, { count })
 }

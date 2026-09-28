@@ -3,11 +3,13 @@ import type { Bilingual } from '../i18n/bilingual'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import { isChoiceAnswerCorrect, isTapAnswerCorrect, scoreQuiz, tapCorrectIndices, type SegmentState } from '../lessons/quiz'
+import { recordQuizAttempt, type QuestionResult } from '../progress'
 import type { DrawnQuestion, DrawnRuleQuestion, DrawnTapQuestion } from '../quiz/draw'
+import type { Difficulty } from '../quiz/pool'
 import { segmentsToLetters } from '../tajweed/graphemes'
 import { applyMarks } from '../tajweed/marks'
 import { parseTajweed } from '../tajweed/parse'
-import { ALL_RULES } from '../tajweed/rules'
+import { ALL_RULES, type RuleId } from '../tajweed/rules'
 import { TajweedText } from './TajweedText'
 
 type Answer = { kind: 'tap'; selected: Set<number> } | { kind: 'choice'; index?: number }
@@ -17,11 +19,36 @@ const initialAnswer = (question: DrawnQuestion): Answer =>
 
 const isAnswered = (answer: Answer): boolean => (answer.kind === 'tap' ? answer.selected.size > 0 : answer.index !== undefined)
 
+/** A question's outcome given its current answer, whether or not Check has been pressed yet. */
+const evaluate = (question: DrawnQuestion, answer: Answer): boolean => {
+  if (question.kind === 'tap' && answer.kind === 'tap')
+    return isTapAnswerCorrect(answer.selected, tapCorrectIndices(question.markup, question.rule, question.marks))
+  if (question.kind !== 'tap' && answer.kind === 'choice') return isChoiceAnswerCorrect(question, answer.index)
+  return false
+}
+
+/** The rule a question tested, for recording an attempt (src/progress.ts): a generated "tap" or
+ *  "which rule?" question always has one; an authored multiple-choice question never does. */
+const ruleOf = (question: DrawnQuestion): RuleId | undefined => {
+  if (question.kind === 'tap') return question.rule
+  if (question.kind === 'rule') return question.options[question.correctIndex]
+  return undefined
+}
+
 /**
  * One quiz attempt (see src/quiz/draw.ts): tap-the-letters, "which rule is on the highlighted
- * letter?" and bilingual multiple choice.
+ * letter?" and bilingual multiple choice. Checking a fully answered attempt records it for
+ * `lessonId` (src/progress.ts) so the progress page and home cards can reflect it.
  */
-export function Quiz({ questions }: { questions: readonly DrawnQuestion[] }) {
+export function Quiz({
+  questions,
+  lessonId,
+  difficulty,
+}: {
+  questions: readonly DrawnQuestion[]
+  lessonId: string
+  difficulty: Difficulty
+}) {
   const { t, n } = useLocale()
   const [answers, setAnswers] = useState<Answer[]>(() => questions.map(initialAnswer))
   const [checked, setChecked] = useState(false)
@@ -33,13 +60,7 @@ export function Quiz({ questions }: { questions: readonly DrawnQuestion[] }) {
 
   const results = useMemo(() => {
     if (!checked) return undefined
-    return questions.map((question, i) => {
-      const answer = answers[i]
-      if (question.kind === 'tap' && answer.kind === 'tap')
-        return isTapAnswerCorrect(answer.selected, tapCorrectIndices(question.markup, question.rule, question.marks))
-      if (question.kind !== 'tap' && answer.kind === 'choice') return isChoiceAnswerCorrect(question, answer.index)
-      return false
-    })
+    return questions.map((question, i) => evaluate(question, answers[i]))
   }, [checked, questions, answers])
 
   const score = results && scoreQuiz(results)
@@ -72,6 +93,11 @@ export function Quiz({ questions }: { questions: readonly DrawnQuestion[] }) {
     const firstMissing = answers.findIndex((answer) => !isAnswered(answer))
     if (firstMissing === -1) {
       setChecked(true)
+      const results: QuestionResult[] = questions.map((question, i) => ({
+        rule: ruleOf(question),
+        correct: evaluate(question, answers[i]),
+      }))
+      recordQuizAttempt(lessonId, difficulty, results)
       return
     }
     setShowMissing(true)

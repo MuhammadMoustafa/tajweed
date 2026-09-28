@@ -3,16 +3,11 @@ import { loadQuizPool } from '../data/quizPool'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import type { Lesson } from '../lessons/types'
+import { DIFFICULTY_LABEL } from '../quiz/difficultyLabel'
 import { drawQuiz, taughtRules } from '../quiz/draw'
 import { DIFFICULTIES, type Difficulty, type QuizPool } from '../quiz/pool'
 import { createRng, randomSeed } from '../quiz/random'
 import { Quiz } from './Quiz'
-
-const DIFFICULTY_LABEL = {
-  easy: ui.difficultyEasy,
-  medium: ui.difficultyMedium,
-  hard: ui.difficultyHard,
-} as const satisfies Record<Difficulty, unknown>
 
 /**
  * A lesson's quiz page (#/lesson/<id>/quiz). Each attempt is drawn from the lesson's examples,
@@ -79,7 +74,7 @@ export function QuizPage({ lesson, seed: initialSeed }: { lesson: Lesson; seed?:
       </div>
 
       {questions ? (
-        <Quiz key={`${difficulty}-${seed}`} questions={questions} />
+        <Quiz key={`${difficulty}-${seed}`} questions={questions} lessonId={lesson.id} difficulty={difficulty} />
       ) : (
         <p role="status">{t(ui.loadingQuiz)}</p>
       )}

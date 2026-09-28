@@ -1,7 +1,8 @@
 import { fireEvent, render, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { getVerseMarkup } from '../data/quran'
 import { LocaleProvider } from '../i18n/LocaleProvider'
+import { attemptsForLesson } from '../progress'
 import type { DrawnQuestion } from '../quiz/draw'
 import { segmentsToLetters } from '../tajweed/graphemes'
 import { parseTajweed } from '../tajweed/parse'
@@ -30,14 +31,22 @@ const questions: DrawnQuestion[] = [
 
 // Renders are not auto-cleaned between tests (no `globals: true`), so every query below is scoped
 // to this render's own container rather than the shared `screen`.
-const renderQuiz = (shown: readonly DrawnQuestion[] = questions) => {
+const renderQuiz = (shown: readonly DrawnQuestion[] = questions, lessonId = 'qalqalah') => {
   const { container } = render(
     <LocaleProvider>
-      <Quiz questions={shown} />
+      <Quiz questions={shown} lessonId={lessonId} difficulty="easy" />
     </LocaleProvider>,
   )
   return { container, screen: within(container) }
 }
+
+beforeEach(() => {
+  localStorage.clear()
+})
+
+afterEach(() => {
+  localStorage.clear()
+})
 
 const tapTheQalqalahLetter = (container: HTMLElement) => {
   const span = [...container.querySelectorAll('.tap')].find((el) => el.textContent === 'دٌ')
@@ -140,5 +149,31 @@ describe('Quiz', () => {
     fireEvent.click(screen.getByRole('radio', { name: 'Qalqalah (echo)' }))
     fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))
     expect(screen.getByText('Your score: 1 / 1')).toBeInTheDocument()
+  })
+
+  it('records an attempt, tagged with the rule each generated question tested, once Check passes', () => {
+    const { container, screen } = renderQuiz(questions, 'qalqalah')
+    expect(attemptsForLesson('qalqalah')).toHaveLength(0)
+
+    tapTheQalqalahLetter(container)
+    fireEvent.click(screen.getByRole('radio', { name: 'B' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))
+
+    const attempts = attemptsForLesson('qalqalah')
+    expect(attempts).toHaveLength(1)
+    expect(attempts[0].difficulty).toBe('easy')
+    expect(attempts[0].score).toEqual({ correct: 2, total: 2 })
+    // The tap question tested qalaqah; the authored choice question carries no rule.
+    expect(attempts[0].results).toEqual([
+      { rule: 'qalaqah', correct: true },
+      { correct: true },
+    ])
+  })
+
+  it('does not record an attempt for an unanswered Check press', () => {
+    const { container, screen } = renderQuiz(questions, 'qalqalah')
+    tapTheQalqalahLetter(container)
+    fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))
+    expect(attemptsForLesson('qalqalah')).toHaveLength(0)
   })
 })

@@ -7,6 +7,10 @@ describe('parseHash', () => {
     expect(parseHash('#/lesson/natural-madd/quiz')).toEqual({ page: 'quiz', id: 'natural-madd' })
   })
 
+  it('routes the progress page', () => {
+    expect(parseHash('#/progress')).toEqual({ page: 'progress' })
+  })
+
   it('falls back to home for anything else', () => {
     expect(parseHash('')).toEqual({ page: 'home' })
     expect(parseHash('#/lesson/qalqalah/other')).toEqual({ page: 'home' })
