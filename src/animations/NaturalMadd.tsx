@@ -48,11 +48,10 @@ const stopFrame = () => (
   <MaddBar counts={COUNTS} filled={COUNTS} current markers stopped before={SYLLABLE.before} letter={SYLLABLE.letter} label={LABEL} />
 )
 
-// TODO(T11, #33): once ClipStep gets `label`, give these four steps their on-timeline labels
-// ("Get ready" / "Count one" / "Count two" / "Stop"); left out for now so this card doesn't race T11.
 const STEPS: ClipStep[] = [
   {
     duration: MADD_READY_MS,
+    label: { ar: 'استعدّ', en: 'Get ready' },
     caption: {
       ar: 'قل معي: انطق بَا، وعُدّ معها. بُو، بِي بنفس المقدار تمامًا.',
       en: 'Say it with me: pronounce بَا and count along. بُو and بِي take exactly the same time.',
@@ -61,16 +60,19 @@ const STEPS: ClipStep[] = [
   },
   {
     duration: COUNT_MS,
+    label: { ar: 'الحركة ١', en: 'Count 1' },
     caption: { ar: 'الحركة الأولى.', en: 'Count one.' },
     render: (progress) => beatFrame(1, progress),
   },
   {
     duration: COUNT_MS,
+    label: { ar: 'الحركة ٢', en: 'Count 2' },
     caption: { ar: 'الحركة الثانية — علامة النهاية.', en: 'Count two — the end marker.' },
     render: (progress) => beatFrame(2, progress),
   },
   {
     duration: MADD_STOP_MS,
+    label: { ar: 'قف', en: 'Stop' },
     caption: { ar: 'قف هنا؛ لا تُطِل الحرف أكثر من ذلك.', en: 'Stop here — don’t stretch the letter any further.' },
     render: stopFrame,
   },
