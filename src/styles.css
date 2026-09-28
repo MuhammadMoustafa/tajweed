@@ -274,12 +274,16 @@ main {
   }
 
   .animation {
+    order: 0;
     position: sticky;
     inset-block-start: 1rem;
   }
 }
 
+/* On phones the animation comes first, right under the title, so it sits next to the text it
+   illustrates instead of after the whole lesson; from 48rem it moves beside the text. */
 .animation {
+  order: -1;
   display: grid;
   justify-items: center;
   gap: 0.5rem;
