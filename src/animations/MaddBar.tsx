@@ -70,13 +70,6 @@ export interface MaddBarProps {
   /** The madd letter (or word) the bar is anchored under, e.g. "ا"; shown above the bar with an
    * arrow pointing at it, colored with the rule's token. */
   letter?: string
-  /**
-   * Text right after the madd letter (the letter that causes a lazim/obligatory madd, e.g. a
-   * shaddah "جّ" or a plain sukun "جْ"), shown in the plain text color to its left — the order
-   * it's pronounced in. Omit when the clip doesn't need to show the cause (see L15's madd-lazim
-   * cause clip, src/animations/MaddLazim.tsx).
-   */
-  after?: string
   /** Optional bilingual caption shown under the bar. */
   label?: Bilingual
   /** Overrides the count's default color token (see DEFAULT_TOKEN). */
@@ -93,9 +86,9 @@ export interface MaddBarProps {
    * running pulse and caps the bar with a stop tick past the end marker. */
   stopped?: boolean
   /**
-   * Text right after the madd letter — the hamza (with its own harakah) that turns a natural madd
-   * into a secondary one, shown in the same plain text color as `before` so only the madd letter
-   * itself carries the rule's color (L14: muttasil/munfasil, reusing this bar at 4/5 counts).
+   * Text right after the madd letter — the cause of a longer madd: the hamza (L14: muttasil and
+   * munfasil) or the letter with a permanent sukun or shaddah (L15: madd lazim). Shown in the same
+   * plain text color as `before`, so only the madd letter itself carries the rule's color.
    */
   after?: string
   /** With `after` set: draws it with a visible gap from the letter, showing a new word starts
@@ -117,7 +110,6 @@ export function MaddBar({
   current,
   before,
   letter,
-  after,
   label,
   token,
   markers,

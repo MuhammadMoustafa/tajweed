@@ -66,7 +66,7 @@ export const maddLazim: Lesson = {
       verseKey: '2:1',
       note: {
         ar: 'مدّ لازم حرفيّ: هذه فاتحة السورة بحروف مقطَّعة. الحرف الأول ألف لا مدّ فيه. أما اللام فاسمها «لام» بمدّ لازم حرفيّ مثقَّل، لأن الميم الساكنة في آخر اسمها تُدغم في الميم التي يبدأ بها اسم «ميم» بعدها. والميم اسمها «ميم» بمدّ لازم حرفيّ مخفَّف (سكونها العادي في آخر اسمها).',
-        en: 'Harfi necessary madd: this is the surah\'s opening, in disjointed letters. The first, alif, carries no madd. Lam\'s spoken name is "laam", a muthaqqal harfi necessary madd, because the sakin meem that ends its name merges into the meem that starts the next letter's name, "meem". Meem\'s spoken name is "meem", a mukhaffaf harfi necessary madd (a plain sukun ends its name).',
+        en: 'Harfi necessary madd: this is the surah\'s opening, in disjointed letters. The first, alif, carries no madd. Lam\'s spoken name is "laam", a muthaqqal harfi necessary madd, because the sakin meem that ends its name merges into the meem that starts the next letter’s name, "meem". Meem\'s spoken name is "meem", a mukhaffaf harfi necessary madd (a plain sukun ends its name).',
       },
     },
   ],
