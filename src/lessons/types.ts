@@ -1,6 +1,6 @@
 import type { Bilingual } from '../i18n/bilingual'
 import type { Mark } from '../tajweed/marks'
-import type { RuleId } from '../tajweed/rules'
+import type { RuleId, TajweedRuleId } from '../tajweed/rules'
 import type { AnimationId } from '../animations/ids'
 
 /** `surah:ayah`, e.g. `112:1`. Text is looked up in src/data/quran.json — never written inline. */
