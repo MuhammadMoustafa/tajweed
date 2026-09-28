@@ -48,6 +48,9 @@ export default defineConfig({
   ],
   test: {
     environment: 'jsdom',
+    // Worker threads, not the default child-process forks: forks timed out on startup in the
+    // sandboxed shell while other builds ran, failing the run with "no tests" (seen by T2, T3, T6).
+    pool: 'threads',
     setupFiles: ['./src/test/setup.ts'],
     // Task-board worktrees live inside the checkout; never pick up their tests.
     // e2e/** holds the Playwright UI suite, run separately via `npm run test:ui`.
