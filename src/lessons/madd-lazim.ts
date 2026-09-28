@@ -70,26 +70,28 @@ export const maddLazim: Lesson = {
       },
     },
   ],
-  mutoon: [
-    {
-      text: 'tuhfa',
-      from: 47,
-      to: 57,
-      note: {
-        ar: 'يعرّف هذا البيت المدّ اللازم بأنه ما كان السكون بعد حرفه أصليًا ثابتًا وصلًا ووقفًا، ثم تفصّل الأبيات التالية أقسامه الأربعة (كلْمي/حرفي، مثقَّل/مخفَّف) وحروف القسم الحرفي الثمانية.',
-        en: 'This line defines necessary madd as one where the sukun after its letter is original and fixed whether you stop or continue, and the following lines detail its four kinds (kalimi/harfi, muthaqqal/mukhaffaf) and the eight letters of the harfi kind.',
+  mutoon: {
+    tuhfa: [
+      {
+        from: 47,
+        to: 57,
+        note: {
+          ar: 'يعرّف هذا البيت المدّ اللازم بأنه ما كان السكون بعد حرفه أصليًا ثابتًا وصلًا ووقفًا، ثم تفصّل الأبيات التالية أقسامه الأربعة (كلْمي/حرفي، مثقَّل/مخفَّف) وحروف القسم الحرفي الثمانية.',
+          en: 'This line defines necessary madd as one where the sukun after its letter is original and fixed whether you stop or continue, and the following lines detail its four kinds (kalimi/harfi, muthaqqal/mukhaffaf) and the eight letters of the harfi kind.',
+        },
       },
-    },
-    {
-      text: 'jazariyya',
-      from: 69,
-      to: 70,
-      note: {
-        ar: 'يسمّي هذا الموضع اللازم أول أقسام المدّ الأربعة، ثم يعرّفه بأنه ما جاء بعد حرف المدّ فيه سكون في الحالين (الوصل والوقف)، ويُمدّ بالطول (ست حركات).',
-        en: 'This passage names lazim first among the four kinds of madd, then defines it as a sukun coming after the madd letter in both cases (continuing or stopping), stretched fully (six counts).',
+    ],
+    jazariyya: [
+      {
+        from: 69,
+        to: 70,
+        note: {
+          ar: 'يسمّي هذا الموضع اللازم أول أقسام المدّ الأربعة، ثم يعرّفه بأنه ما جاء بعد حرف المدّ فيه سكون في الحالين (الوصل والوقف)، ويُمدّ بالطول (ست حركات).',
+          en: 'This passage names lazim first among the four kinds of madd, then defines it as a sukun coming after the madd letter in both cases (continuing or stopping), stretched fully (six counts).',
+        },
       },
-    },
-  ],
+    ],
+  },
   quiz: [
     {
       kind: 'tap',

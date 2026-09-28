@@ -70,35 +70,36 @@ export const muttasilMunfasil: Lesson = {
       },
     },
   ],
-  mutoon: [
-    {
-      text: 'tuhfa',
-      from: 42,
-      to: 44,
-      note: {
-        ar: 'تذكر هذه الأبيات أن للمدّ ثلاثة أحكام (الوجوب، والجواز، واللزوم)، ثم تُعرِّف الواجب المتصل والجائز المنفصل بمكان الهمزة من الكلمة.',
-        en: 'These lines name the three rulings a madd can have (wajib, jaiz, luzum), then define wajib muttasil and jaiz munfasil by where the hamza falls relative to the word.',
+  mutoon: {
+    tuhfa: [
+      {
+        from: 42,
+        to: 44,
+        note: {
+          ar: 'تذكر هذه الأبيات أن للمدّ ثلاثة أحكام (الوجوب، والجواز، واللزوم)، ثم تُعرِّف الواجب المتصل والجائز المنفصل بمكان الهمزة من الكلمة.',
+          en: 'These lines name the three rulings a madd can have (wajib, jaiz, luzum), then define wajib muttasil and jaiz munfasil by where the hamza falls relative to the word.',
+        },
       },
-    },
-    {
-      text: 'jazariyya',
-      from: 69,
-      to: 69,
-      note: {
-        ar: 'يذكر هذا البيت أنواع المدّ الأربعة: اللازم والواجب والجائز والقصر.',
-        en: 'This line names the four kinds of madd: lazim, wajib, jaiz, and qasr (shortening).',
+    ],
+    jazariyya: [
+      {
+        from: 69,
+        to: 69,
+        note: {
+          ar: 'يذكر هذا البيت أنواع المدّ الأربعة: اللازم والواجب والجائز والقصر.',
+          en: 'This line names the four kinds of madd: lazim, wajib, jaiz, and qasr (shortening).',
+        },
       },
-    },
-    {
-      text: 'jazariyya',
-      from: 71,
-      to: 72,
-      note: {
-        ar: 'يُعرِّف هذان البيتان الواجب بأن الهمزة بعد حرف المدّ في كلمة واحدة (المتصل)، والجائز بأن الهمزة في كلمة منفصلة (المنفصل)، أو بعروض السكون وقفًا (درس لاحق).',
-        en: 'These two lines define wajib as the hamza coming after the madd letter within one word (muttasil), and jaiz as the hamza being in a separate word (munfasil) — or the sukun only arising from a stop (a later lesson).',
+      {
+        from: 71,
+        to: 72,
+        note: {
+          ar: 'يُعرِّف هذان البيتان الواجب بأن الهمزة بعد حرف المدّ في كلمة واحدة (المتصل)، والجائز بأن الهمزة في كلمة منفصلة (المنفصل)، أو بعروض السكون وقفًا (درس لاحق).',
+          en: 'These two lines define wajib as the hamza coming after the madd letter within one word (muttasil), and jaiz as the hamza being in a separate word (munfasil) — or the sukun only arising from a stop (a later lesson).',
+        },
       },
-    },
-  ],
+    ],
+  },
   quiz: [
     {
       kind: 'tap',
