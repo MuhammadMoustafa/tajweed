@@ -22,6 +22,9 @@ const BAR_WIDTH = 200
 const BAR_HEIGHT = 24
 const VIEW_WIDTH = 260
 const VIEW_HEIGHT = 170
+/** Room above y = 0 for the harakat and sukun over the letters (e.g. the fatha on بَ, the tanween
+ * on بً), which sit above the 64px letters' baseline at LETTER_Y and were clipped without it. */
+const VIEW_TOP = -28
 const BAR_X = 20
 const BAR_Y = 82
 /** Anchor: the x every madd lesson's letter, arrow and bar are centered on (see MaddBarProps). */
@@ -138,7 +141,7 @@ export function MaddBar({
 
   return (
     <svg
-      viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
+      viewBox={`0 ${VIEW_TOP} ${VIEW_WIDTH} ${VIEW_HEIGHT - VIEW_TOP}`}
       aria-hidden="true"
       className="anim-svg madd-bar"
       data-current={current || undefined}

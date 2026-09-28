@@ -625,10 +625,13 @@ main {
 }
 
 /* The harakah/consonant before the madd letter, and the letter after it: plain text, so only the
-   madd letter itself is colored. */
+   madd letter itself is colored. Their x is the edge next to the madd letter (text-anchor start /
+   end), which an inherited rtl direction would flip onto the letter, so they are laid out ltr in
+   both languages (the Arabic run itself still reads right to left). */
 .madd-bar-before,
 .madd-bar-after {
   fill: var(--text);
+  direction: ltr;
 }
 
 /* The caret under a madd's cause (MaddBarProps.cause): plain text color, outlined, so it never
