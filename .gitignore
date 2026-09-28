@@ -29,3 +29,6 @@ dev-dist
 # Playwright
 test-results
 playwright-report
+
+# npm run apk output (built locally; android/ has its own .gitignore for build outputs)
+apk

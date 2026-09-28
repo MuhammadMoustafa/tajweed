@@ -13,9 +13,11 @@
     "test:ui": "playwright test",
     "typecheck": "tsc -b",
     "fetch-quran": "tsx scripts/fetch-quran.ts",
+    "apk": "tsx scripts/build-apk.ts",
     "check": "npm run lint && npm test && npm run build"
   },
   "dependencies": {
+    "@capacitor/core": "^8.5.2",
     "@fontsource/amiri-quran": "^5.3.0",
     "@fontsource/noto-naskh-arabic": "^5.3.0",
     "@fontsource/noto-sans": "^5.3.0",
@@ -24,6 +26,8 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
     "@playwright/test": "^1.63.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

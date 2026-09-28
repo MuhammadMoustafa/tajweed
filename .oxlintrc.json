@@ -17,6 +17,8 @@
   "ignorePatterns": [
     ".claude/**",
     "dist/**",
-    "dev-dist/**"
+    "dev-dist/**",
+    "android/**",
+    "apk/**"
   ]
 }

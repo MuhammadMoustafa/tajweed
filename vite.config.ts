@@ -54,6 +54,7 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     // Task-board worktrees live inside the checkout; never pick up their tests.
     // e2e/** holds the Playwright UI suite, run separately via `npm run test:ui`.
-    exclude: [...configDefaults.exclude, '.claude/**', 'e2e/**'],
+    // android/** is the generated Capacitor project; apk/** holds `npm run apk` output.
+    exclude: [...configDefaults.exclude, '.claude/**', 'e2e/**', 'android/**', 'apk/**'],
   },
 })
