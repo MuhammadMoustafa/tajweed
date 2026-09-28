@@ -28,10 +28,10 @@ in brackets picks the agent.
 | T7 | #27 | [task] Tap quiz by letter: split verses into graphemes (one shared helper with T6's marks.ts) so each letter is tappable, not each rule run; tap questions may use custom rules (marks applied first). Found reviewing T2 (coordinator, 2026-09-28). | none | done |
 | T8 | #28 | [task] Classical poem lines in a collapsed panel: Tuhfat al-Atfal (61) and al-Jazariyyah (109) fetched verbatim from Alukah by `npm run fetch-mutoon` into src/data/mutoon.json; lessons reference line ranges with a bilingual meaning (maintainer, 2026-09-28: yes, any trusted edition). | none | done |
 | T9 | #29 | [task-hard] Quiz on its own page (#/lesson/<id>/quiz) with questions from the whole Quran: build-time pool by rule and difficulty, 'which rule is this letter' questions from a confusable-rules map, seeded draws (maintainer, 2026-09-28). | none | done |
-| T10 | #30 | [task-hard] AnimationPlayer: timeline clips with video-style controls (play/pause, seek, step, speed, replay; no autoplay), per-section clips via `LessonSection.animation`; existing animations migrate (maintainer, 2026-09-28: madd too fast and points at nothing; makharij needs a controllable clip per section). | none | in-progress |
+| T10 | #30 | [task-hard] AnimationPlayer: timeline clips with video-style controls (play/pause, seek, step, speed, replay; no autoplay), per-section clips via `LessonSection.animation`; existing animations migrate (maintainer, 2026-09-28: madd too fast and points at nothing; makharij needs a controllable clip per section). | none | done |
 | L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | ready |
 | L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | done |
-| L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | blocked |
+| L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | ready |
 | L3 | #9 | [task] Heavy and light letters (tafkhim/tarqiq basics, خص ضغط قظ), reusing MouthDiagram. | L2, T6, T10 | blocked |
 | L4 | #10 | [task] Noon sakinah/tanween 1: izhar halqi. | T2, T6 | ready |
 | L5 | #11 | [task] Noon sakinah/tanween 2: idgham with and without ghunnah (`idgham_ghunnah`, `idgham_wo_ghunnah`). Animation: the noon merging into the next letter. | T2 | ready |
@@ -43,7 +43,7 @@ in brackets picks the agent.
 | L11 | #17 | [task] Lam rules: lam shamsiyyah (`laam_shamsiyah`) and qamariyyah, lam in the name of Allah. | T2, T6 | ready |
 | L12 | #18 | [task] Ra: tafkhim and tarqiq. | L3, T6 | blocked |
 | L13 | #19 | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | done |
-| L13b | #32 | [task] Natural-madd clip redone: real syllables بَا بُو بِي, arrow at the madd letter, bar growing ~1 s per count under it, captions. | T10 | blocked |
+| L13b | #32 | [task] Natural-madd clip redone: real syllables بَا بُو بِي, arrow at the madd letter, bar growing ~1 s per count under it, captions. | T10 | ready |
 | L14 | #20 | [task] Madd muttasil and munfasil — the API marks both as `madda_obligatory` (4–5 counts in Hafs), reusing MaddBar. | L13b | blocked |
 | L15 | #21 | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13b | blocked |
 | L16 | #22 | [task] Other madd: ʿarid lis-sukun (`madda_permissible`), leen, badal, silah, reusing MaddBar. | L13b | blocked |
