@@ -70,12 +70,17 @@ describe('Quiz', () => {
     expect(screen.getByText('Correct!')).toBeInTheDocument()
   })
 
-  it('explains instead of checking while a question is unanswered', () => {
+  it('flags the unanswered questions instead of checking', () => {
     const { container, screen } = renderQuiz()
     tapTheQalqalahLetter(container)
     fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))
-    expect(screen.getByRole('status')).toHaveTextContent('Answer every question first.')
+    expect(screen.getByRole('status')).toHaveTextContent('Answer the highlighted questions first (1)')
     expect(screen.queryByText(/Your score/)).toBeNull()
+    // Only the unanswered (choice) question is flagged.
+    const flagged = container.querySelectorAll('.quiz-question.unanswered')
+    expect(flagged).toHaveLength(1)
+    expect(flagged[0]).toHaveTextContent('Pick B')
+    expect(flagged[0]).toHaveTextContent('Not answered yet')
 
     fireEvent.click(screen.getByRole('radio', { name: 'B' }))
     fireEvent.click(screen.getByRole('button', { name: 'Check answers' }))

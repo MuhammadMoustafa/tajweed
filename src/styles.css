@@ -376,6 +376,17 @@ main {
   margin: 0;
 }
 
+.quiz-question.unanswered {
+  border-color: var(--tj-quiz-wrong);
+  border-width: 2px;
+}
+
+.quiz-missing {
+  margin: 0;
+  color: var(--tj-quiz-wrong);
+  font-size: 0.9rem;
+}
+
 .quiz-feedback.correct {
   color: var(--tj-quiz-correct);
 }

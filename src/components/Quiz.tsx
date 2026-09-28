@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { getVerseMarkup } from '../data/quran'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
@@ -21,9 +21,11 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
   const { t, n } = useLocale()
   const [answers, setAnswers] = useState<Answer[]>(() => questions.map(initialAnswer))
   const [checked, setChecked] = useState(false)
-  // Set when Check is pressed with questions still unanswered; the button stays enabled so the
-  // press always gives feedback instead of looking broken.
-  const [unanswered, setUnanswered] = useState(0)
+  // Set when Check is pressed with questions still unanswered: those questions are flagged (until
+  // answered) and the first is scrolled into view, so the press always says what's missing.
+  const [showMissing, setShowMissing] = useState(false)
+  const cards = useRef<(HTMLDivElement | null)[]>([])
+  const missing = showMissing && !checked ? answers.filter((answer) => !isAnswered(answer)).length : 0
 
   const results = useMemo(() => {
     if (!checked) return undefined
@@ -61,13 +63,17 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
   const reset = () => {
     setAnswers(questions.map(initialAnswer))
     setChecked(false)
-    setUnanswered(0)
+    setShowMissing(false)
   }
 
   const check = () => {
-    const left = answers.filter((answer) => !isAnswered(answer)).length
-    setUnanswered(left)
-    if (left === 0) setChecked(true)
+    const firstMissing = answers.findIndex((answer) => !isAnswered(answer))
+    if (firstMissing === -1) {
+      setChecked(true)
+      return
+    }
+    setShowMissing(true)
+    cards.current[firstMissing]?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
   }
 
   return (
@@ -76,9 +82,17 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
       {questions.map((question, i) => {
         const answer = answers[i]
         const isCorrect = results?.[i]
+        const isMissing = missing > 0 && !isAnswered(answer)
         return (
-          <div className="card quiz-question" key={i}>
+          <div
+            className={`card quiz-question${isMissing ? ' unanswered' : ''}`}
+            key={i}
+            ref={(el) => {
+              cards.current[i] = el
+            }}
+          >
             <p className="quiz-prompt">{t(question.prompt)}</p>
+            {isMissing && <p className="quiz-missing">{t(ui.notAnsweredYet)}</p>}
             {question.kind === 'tap' && answer.kind === 'tap' && (
               <TapQuestion question={question} selected={answer.selected} checked={checked} onToggle={(seg) => toggleTap(i, seg)} />
             )}
@@ -105,9 +119,9 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
             <button type="button" onClick={check}>
               {t(ui.checkAnswers)}
             </button>
-            {unanswered > 0 && (
+            {missing > 0 && (
               <p className="quiz-feedback wrong" role="status">
-                {t(ui.answerAllFirst)}
+                {t(ui.answerAllFirst)} ({n(missing)})
               </p>
             )}
           </>
