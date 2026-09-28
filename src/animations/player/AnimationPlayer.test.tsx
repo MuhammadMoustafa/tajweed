@@ -13,6 +13,19 @@ const clip: Clip = {
   steps: [1000, 2000, 1000].map((duration, i) => ({
     duration,
     caption: { ar: `تعليق ${i + 1}`, en: `Caption ${i + 1}` },
+    // Only the first two steps carry a label, so the tests cover both a labeled and an
+    // unlabeled step.
+    label: i < 2 ? { ar: `قسم ${i + 1}`, en: `Section ${i + 1}` } : undefined,
+    render: (progress: number) => <span data-testid="frame">{`${i}:${progress}`}</span>,
+  })),
+}
+
+/** A clip with no step labels at all, to check AnimationPlayer skips the label row entirely. */
+const unlabeledClip: Clip = {
+  title: { ar: 'بلا تسميات', en: 'No labels' },
+  steps: [1000, 1000].map((duration, i) => ({
+    duration,
+    caption: { ar: `تعليق ${i + 1}`, en: `Caption ${i + 1}` },
     render: (progress: number) => <span data-testid="frame">{`${i}:${progress}`}</span>,
   })),
 }
@@ -35,16 +48,17 @@ function manualClock() {
   }
 }
 
-const renderPlayer = (locale: 'ar' | 'en' = 'en') => {
+const renderPlayer = (locale: 'ar' | 'en' = 'en', theClip: Clip = clip) => {
   localStorage.setItem('tajweed.locale', locale)
   const time = manualClock()
   const { container } = render(
     <LocaleProvider>
-      <AnimationPlayer clip={clip} clock={time.clock} />
+      <AnimationPlayer clip={theClip} clock={time.clock} />
     </LocaleProvider>,
   )
   const screen = within(container)
-  return { ...time, screen, player: screen.getByRole('group', { name: locale === 'ar' ? 'مقطع تجريبي' : 'Test clip' }) }
+  const groupName = theClip === clip ? (locale === 'ar' ? 'مقطع تجريبي' : 'Test clip') : locale === 'ar' ? 'بلا تسميات' : 'No labels'
+  return { ...time, screen, player: screen.getByRole('group', { name: groupName }) }
 }
 
 beforeEach(() => {
@@ -139,6 +153,33 @@ describe('AnimationPlayer', () => {
     expect(screen.getByText('تعليق 2')).toBeInTheDocument()
     fireEvent.keyDown(player, { key: 'ArrowRight' })
     expect(screen.getByText('الخطوة ١ من ٣')).toBeInTheDocument()
+  })
+
+  it('shows a label above the seek bar for each labeled step, the current one marked, and clicking seeks there', () => {
+    const { screen, player } = renderPlayer()
+    const label1 = screen.getByRole('button', { name: 'Section 1' })
+    const label2 = screen.getByRole('button', { name: 'Section 2' })
+    expect(screen.queryByRole('button', { name: 'Section 3' })).not.toBeInTheDocument()
+    expect(label1).toHaveAttribute('data-current')
+    expect(label1).toHaveAttribute('aria-current', 'step')
+    expect(label2).not.toHaveAttribute('data-current')
+
+    fireEvent.click(label2)
+    expect(player).toHaveAttribute('data-step', '1')
+    expect(screen.getByText('Caption 2')).toBeInTheDocument()
+    expect(label2).toHaveAttribute('data-current')
+    expect(label1).not.toHaveAttribute('data-current')
+  })
+
+  it('renders no label row when the clip has no step labels', () => {
+    const { player } = renderPlayer('en', unlabeledClip)
+    expect(player.querySelector('.player-labels')).toBeNull()
+  })
+
+  it('in Arabic, shows the localized labels', () => {
+    const { screen } = renderPlayer('ar')
+    expect(screen.getByRole('button', { name: 'قسم 1' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'قسم 2' })).toBeInTheDocument()
   })
 
   it('shows each step at its end state with reduced motion, controls still working', () => {

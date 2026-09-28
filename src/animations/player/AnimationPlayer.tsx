@@ -48,6 +48,7 @@ export function AnimationPlayer({ clip, clock = frameClock }: AnimationPlayerPro
   const stepLabel = formatTemplate(locale, ui.stepOf, { step: index + 1, total: clip.steps.length })
   const isRtl = dirOf(locale) === 'rtl'
   const atStart = time === 0 && !playing
+  const hasLabels = clip.steps.some((s) => s.label)
 
   const onKeyDown = (event: KeyboardEvent) => {
     const onButton = event.target instanceof HTMLButtonElement
@@ -93,6 +94,29 @@ export function AnimationPlayer({ clip, clock = frameClock }: AnimationPlayerPro
         <span className="player-step-count">{stepLabel}</span>
         {step.caption && <span className="player-caption-text">{t(step.caption)}</span>}
       </p>
+
+      {hasLabels && (
+        <div className="player-labels">
+          {clip.steps.map((clipStep, i) =>
+            clipStep.label ? (
+              <button
+                key={i}
+                type="button"
+                className="player-label"
+                data-current={i === index || undefined}
+                aria-current={i === index ? 'step' : undefined}
+                style={{
+                  insetInlineStart: `${(starts[i] / total) * 100}%`,
+                  inlineSize: `${(clipStep.duration / total) * 100}%`,
+                }}
+                onClick={() => dispatch({ type: 'seek', time: starts[i] })}
+              >
+                {t(clipStep.label)}
+              </button>
+            ) : null,
+          )}
+        </div>
+      )}
 
       <div className="player-seek">
         <input

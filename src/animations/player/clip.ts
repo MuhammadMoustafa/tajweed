@@ -15,6 +15,13 @@ export interface ClipStep {
   duration: number
   /** Shown under the frame while this step is current; Arabic-Indic digits belong in `ar`. */
   caption?: Bilingual
+  /**
+   * Short name for the section this step belongs to (e.g. "أقصى الحلق / Deepest throat"), shown by
+   * AnimationPlayer above the seek bar over the step's segment; clicking it seeks there. A clip
+   * whose steps have no labels gets no label row. Not every step needs one distinct from its
+   * neighbors' — repeat the same label across steps that share a section.
+   */
+  label?: Bilingual
   render: (progress: number) => ReactNode
 }
 

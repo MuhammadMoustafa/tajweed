@@ -46,7 +46,15 @@ const frame = (step: Step) => (
 
 const clipFrom = (title: Bilingual, steps: readonly Step[]): Clip => ({
   title,
-  steps: steps.map((step): ClipStep => ({ duration: step.ms, caption: step.note, render: () => frame(step) })),
+  steps: steps.map(
+    (step): ClipStep => ({
+      duration: step.ms,
+      caption: step.note,
+      // Same short name as the frame's own heading, so the timeline label matches what's on screen.
+      label: step.areaTitle,
+      render: () => frame(step),
+    }),
+  ),
 })
 
 const JAWF_STEPS: Step[] = [

@@ -58,4 +58,11 @@ describe.each([
       expect(step.caption?.en.trim()).not.toBe('')
     }
   })
+
+  it('has a bilingual timeline label naming the area at every step', () => {
+    for (const step of clip.steps) {
+      expect(step.label?.ar.trim()).not.toBe('')
+      expect(step.label?.en.trim()).not.toBe('')
+    }
+  })
 })

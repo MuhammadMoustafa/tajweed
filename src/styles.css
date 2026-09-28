@@ -365,6 +365,47 @@ main {
   color: var(--muted);
 }
 
+/* Step labels above the seek bar (ClipStep.label), one per labeled step, placed and sized over
+   that step's segment; inset-inline-start mirrors automatically in RTL, where the timeline runs
+   right to left. Below player-labels-breakpoint a segment is too narrow for its own label, so only
+   the current step's shows, centered above the bar next to its marker. */
+.player-labels {
+  position: relative;
+  block-size: 1.3rem;
+  font-size: 0.8rem;
+}
+
+.player-label {
+  position: absolute;
+  inset-block-start: 0;
+  max-inline-size: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: 0 0.15rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.player-label[data-current] {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@media (max-width: 26rem) {
+  .player-label:not([data-current]) {
+    display: none;
+  }
+
+  .player-label[data-current] {
+    position: static;
+    inline-size: 100%;
+  }
+}
+
 .player-seek {
   position: relative;
 }

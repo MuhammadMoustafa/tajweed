@@ -1,13 +1,35 @@
 import type { Bilingual } from '../i18n/bilingual'
 import type { Clip, ClipStep } from './player/clip'
 
-// Single letters (not Quran text), right to left in reading order.
-const LETTERS: { letter: string; caption: Bilingual }[] = [
-  { letter: 'ق', caption: { ar: 'القاف: يرتدّ صوتها إذا سكنت', en: 'Qaf: its sound bounces when it has a sukun' } },
-  { letter: 'ط', caption: { ar: 'الطاء: يرتدّ صوتها إذا سكنت', en: 'Ta (the heavy t): its sound bounces when it has a sukun' } },
-  { letter: 'ب', caption: { ar: 'الباء: يرتدّ صوتها إذا سكنت', en: 'Ba: its sound bounces when it has a sukun' } },
-  { letter: 'ج', caption: { ar: 'الجيم: يرتدّ صوتها إذا سكنت', en: 'Jeem: its sound bounces when it has a sukun' } },
-  { letter: 'د', caption: { ar: 'الدال: يرتدّ صوتها إذا سكنت', en: 'Dal: its sound bounces when it has a sukun' } },
+// Single letters (not Quran text), right to left in reading order. `label` is the letter's bare
+// name, shown above the seek bar (AnimationPlayer); `caption` is the fuller sentence under the
+// stage.
+const LETTERS: { letter: string; label: Bilingual; caption: Bilingual }[] = [
+  {
+    letter: 'ق',
+    label: { ar: 'القاف', en: 'Qaf' },
+    caption: { ar: 'القاف: يرتدّ صوتها إذا سكنت', en: 'Qaf: its sound bounces when it has a sukun' },
+  },
+  {
+    letter: 'ط',
+    label: { ar: 'الطاء', en: 'Ta' },
+    caption: { ar: 'الطاء: يرتدّ صوتها إذا سكنت', en: 'Ta (the heavy t): its sound bounces when it has a sukun' },
+  },
+  {
+    letter: 'ب',
+    label: { ar: 'الباء', en: 'Ba' },
+    caption: { ar: 'الباء: يرتدّ صوتها إذا سكنت', en: 'Ba: its sound bounces when it has a sukun' },
+  },
+  {
+    letter: 'ج',
+    label: { ar: 'الجيم', en: 'Jeem' },
+    caption: { ar: 'الجيم: يرتدّ صوتها إذا سكنت', en: 'Jeem: its sound bounces when it has a sukun' },
+  },
+  {
+    letter: 'د',
+    label: { ar: 'الدال', en: 'Dal' },
+    caption: { ar: 'الدال: يرتدّ صوتها إذا سكنت', en: 'Dal: its sound bounces when it has a sukun' },
+  },
 ]
 
 const STEP_MS = 2000
@@ -66,6 +88,11 @@ function frame(current: number, progress: number) {
 export const qalqalahBounce: Clip = {
   title: { ar: 'حروف القلقلة الخمسة', en: 'The five qalqalah letters' },
   steps: LETTERS.map(
-    ({ caption }, i): ClipStep => ({ duration: STEP_MS, caption, render: (progress) => frame(i, progress) }),
+    ({ label, caption }, i): ClipStep => ({
+      duration: STEP_MS,
+      caption,
+      label,
+      render: (progress) => frame(i, progress),
+    }),
   ),
 }
