@@ -21,6 +21,12 @@
   --tj-qalqalah: #0a7fc2;
   --tj-silent: #878e97;
 
+  /* Quiz segment states (src/components/Quiz.tsx) — never the rule colors above, so tapping
+     doesn't give the answer away before checking. */
+  --tj-quiz-selected: #6b46c1;
+  --tj-quiz-correct: #1b8a3a;
+  --tj-quiz-wrong: #c81e3a;
+
   --font-quran: 'Amiri Quran', serif;
   --font-ui-ar: 'Noto Naskh Arabic', 'Noto Sans', serif;
   --font-ui-en: 'Noto Sans', 'Noto Naskh Arabic', system-ui, sans-serif;
@@ -46,6 +52,10 @@
     --tj-ghunnah: #4ccf73;
     --tj-qalqalah: #4fb8f0;
     --tj-silent: #7d848d;
+
+    --tj-quiz-selected: #b794f4;
+    --tj-quiz-correct: #4ccf73;
+    --tj-quiz-wrong: #ff6b81;
   }
 }
 
@@ -254,4 +264,72 @@ main {
   border-radius: 50%;
   margin-inline-end: 0.4rem;
   vertical-align: middle;
+}
+
+/* Tap targets live inside .quran, so only `color` changes here too (see TajweedText). */
+.tap {
+  cursor: pointer;
+}
+
+.quiz {
+  margin-block-start: 1.5rem;
+}
+
+.quiz-question {
+  display: grid;
+  gap: 0.5rem;
+  margin-block-end: 0.75rem;
+}
+
+.quiz-prompt {
+  font-weight: 600;
+  margin: 0;
+}
+
+.quiz-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.quiz-option.selected {
+  border-color: var(--accent);
+}
+
+.quiz-option.correct {
+  border-color: var(--tj-quiz-correct);
+  color: var(--tj-quiz-correct);
+}
+
+.quiz-option.wrong {
+  border-color: var(--tj-quiz-wrong);
+  color: var(--tj-quiz-wrong);
+}
+
+.quiz-feedback {
+  margin: 0;
+}
+
+.quiz-feedback.correct {
+  color: var(--tj-quiz-correct);
+}
+
+.quiz-feedback.wrong {
+  color: var(--tj-quiz-wrong);
+}
+
+.quiz-summary {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.quiz-score {
+  font-weight: 600;
+}
+
+.quiz-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

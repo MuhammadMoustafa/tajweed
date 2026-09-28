@@ -4,6 +4,7 @@ import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import type { Lesson } from '../lessons/types'
 import { AyahExample } from './AyahExample'
+import { Quiz } from './Quiz'
 import { RuleLegend } from './RuleLegend'
 
 export function LessonView({ lesson }: { lesson: Lesson }) {
@@ -45,6 +46,8 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
       {lesson.examples.map((example) => (
         <AyahExample key={example.verseKey} example={example} highlight={lesson.focusRules} />
       ))}
+
+      {lesson.quiz && lesson.quiz.length > 0 && <Quiz questions={lesson.quiz} />}
     </article>
   )
 }

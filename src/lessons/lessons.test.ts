@@ -6,6 +6,7 @@ import { ui } from '../i18n/ui'
 import { parseTajweed } from '../tajweed/parse'
 import { TAJWEED_RULES } from '../tajweed/rules'
 import { LESSONS } from '.'
+import type { QuizChoiceQuestion, QuizTapQuestion } from './types'
 
 const expectBothLanguages = (text: Bilingual, where: string) => {
   for (const locale of LOCALES) expect(text[locale].trim(), `${where} [${locale}]`).not.toBe('')
@@ -35,6 +36,34 @@ describe('lessons', () => {
         expect(markup).toBeDefined()
         const rules = parseTajweed(markup!).segments.map((s) => s.rule)
         expect(lesson.focusRules.some((r) => rules.includes(r))).toBe(true)
+      },
+    )
+
+    it('quiz questions are written in both languages', () => {
+      lesson.quiz?.forEach((q, i) => {
+        expectBothLanguages(q.prompt, `${id} quiz[${i}].prompt`)
+        if (q.kind === 'choice') {
+          q.options.forEach((o, oi) => expectBothLanguages(o, `${id} quiz[${i}].options[${oi}]`))
+          if (q.explanation) expectBothLanguages(q.explanation, `${id} quiz[${i}].explanation`)
+        }
+      })
+    })
+
+    it.each((lesson.quiz ?? []).filter((q): q is QuizTapQuestion => q.kind === 'tap'))(
+      'tap question verse is in quran.json and contains its rule',
+      (q) => {
+        const markup = getVerseMarkup(q.verseKey)
+        expect(markup).toBeDefined()
+        const rules = parseTajweed(markup!).segments.map((s) => s.rule)
+        expect(rules).toContain(q.rule)
+      },
+    )
+
+    it.each((lesson.quiz ?? []).filter((q): q is QuizChoiceQuestion => q.kind === 'choice'))(
+      'choice question correct index is in range',
+      (q) => {
+        expect(q.correctIndex).toBeGreaterThanOrEqual(0)
+        expect(q.correctIndex).toBeLessThan(q.options.length)
       },
     )
   })

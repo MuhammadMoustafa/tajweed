@@ -55,5 +55,70 @@ export const qalqalah: Lesson = {
       },
     },
   ],
+  quiz: [
+    {
+      kind: 'tap',
+      prompt: {
+        ar: 'اضغط على الحروف التي فيها قلقلة في هذه الآية.',
+        en: 'Tap the letters in this ayah that have qalqalah.',
+      },
+      verseKey: '112:3',
+      rule: 'qalaqah',
+    },
+    {
+      kind: 'choice',
+      prompt: { ar: 'كم عدد حروف القلقلة؟', en: 'How many qalqalah letters are there?' },
+      options: [
+        { ar: '٣', en: '3' },
+        { ar: '٥', en: '5' },
+        { ar: '٧', en: '7' },
+        { ar: '١٠', en: '10' },
+      ],
+      correctIndex: 1,
+      explanation: {
+        ar: 'حروف القلقلة خمسة، يجمعها قولك: «قُطْبُ جَدٍّ».',
+        en: 'There are five: ق ط ب ج د, gathered in the phrase "قُطْبُ جَدٍّ" (qutbu jadd).',
+      },
+    },
+    {
+      kind: 'choice',
+      prompt: {
+        ar: 'أي مجموعة من الحروف التالية هي حروف القلقلة؟',
+        en: 'Which of these groups are the qalqalah letters?',
+      },
+      options: [
+        { ar: 'ق ط ب ج د', en: 'ق ط ب ج د' },
+        { ar: 'ب ج د ذ ز', en: 'ب ج د ذ ز' },
+        { ar: 'ء ه ع ح غ خ', en: 'ء ه ع ح غ خ' },
+        { ar: 'م ن و ي', en: 'م ن و ي' },
+      ],
+      correctIndex: 0,
+      explanation: {
+        ar: 'حروف القلقلة خمسة فقط: ق ط ب ج د.',
+        en: 'The qalqalah letters are exactly these five: ق ط ب ج د.',
+      },
+    },
+    {
+      kind: 'choice',
+      prompt: { ar: 'متى تكون القلقلة كبرى؟', en: 'When is qalqalah major (kubra)?' },
+      options: [
+        {
+          ar: 'عندما يكون الحرف ساكنًا في وسط الكلمة',
+          en: 'When the letter has a sukun in the middle of a word',
+        },
+        {
+          ar: 'عندما نقف على حرف القلقلة في آخر الكلمة',
+          en: 'When we stop on a qalqalah letter at the end of a word',
+        },
+        { ar: 'عندما يكون الحرف متحركًا', en: 'When the letter carries a vowel' },
+        { ar: 'عندما يكون الحرف في أول الكلمة', en: 'When the letter is at the start of a word' },
+      ],
+      correctIndex: 1,
+      explanation: {
+        ar: 'القلقلة الكبرى تكون عند الوقف على حرف القلقلة في آخر الكلمة، فتكون النبرة أوضح من القلقلة الصغرى.',
+        en: 'Major qalqalah happens when we stop on a qalqalah letter at the end of a word — the echo is clearer than the minor (sughra) kind.',
+      },
+    },
+  ],
   reviewed: false,
 }

@@ -15,6 +15,29 @@ export interface LessonSection {
   body: Bilingual
 }
 
+/**
+ * "Tap the letters that have `rule` in `verseKey`." The correct answers are never listed here —
+ * they are derived from `parseTajweed(getVerseMarkup(verseKey))`, so the verse text itself stays
+ * out of lesson data (see src/lessons/quiz.ts).
+ */
+export interface QuizTapQuestion {
+  kind: 'tap'
+  prompt: Bilingual
+  verseKey: VerseKey
+  rule: TajweedRuleId
+}
+
+export interface QuizChoiceQuestion {
+  kind: 'choice'
+  prompt: Bilingual
+  options: Bilingual[]
+  /** Index into `options`. */
+  correctIndex: number
+  explanation?: Bilingual
+}
+
+export type QuizQuestion = QuizTapQuestion | QuizChoiceQuestion
+
 export interface Lesson {
   /** URL slug: #/lesson/<id> */
   id: string
@@ -29,4 +52,6 @@ export interface Lesson {
   examples: LessonExample[]
   /** Set true only after a qualified teacher has checked both languages. */
   reviewed: boolean
+  /** Practice quiz shown after the examples. */
+  quiz?: QuizQuestion[]
 }
