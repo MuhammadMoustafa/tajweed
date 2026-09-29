@@ -11,6 +11,7 @@ export type UnitId =
   | "madd"
   | "heavy-light"
   | "stopping"
+  | "practice"
   | "deeper";
 
 /** `core` units are the course proper; `advanced` ones are extra depth, shown after it on the home page. */
@@ -67,6 +68,11 @@ export const UNITS: Record<UnitId, Unit> = {
     level: "core",
     title: { ar: "الوقف والابتداء", en: "Stopping and starting" },
     order: 8,
+  },
+  practice: {
+    level: "core",
+    title: { ar: 'التطبيق والمراجعة', en: 'Practice & review' },
+    order: 9,
   },
   deeper: {
     level: "advanced",
