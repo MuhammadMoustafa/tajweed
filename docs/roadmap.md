@@ -68,4 +68,4 @@ in brackets picks the agent.
 | L21 | #47 | [task] Split Foundations into four lessons (letters; harakat and sukun; shaddah and tanween; istiʿadha and basmala), content moved, id `foundations` kept for the first (maintainer, 2026-09-28). | L1 | done |
 | L22 | #48 | [task-hard] Unit 9 Practice & review: whole short surahs with every rule colored, full legend, mixed quiz on all taught rules (maintainer, 2026-09-28). | T18 | done |
 | L23 | #49 | [task-hard] Unit 11 (advanced) Hafs special words: saktat, imalah, tas-hil, ishmam/rawm, sad/seen words, naql (maintainer, 2026-09-28). | T20 | in-progress |
-| L24 | #50 | [task] Unit 12 (advanced) Finer levels: tafkhim levels, ghunnah levels, complete/incomplete idgham (maintainer, 2026-09-28). | T20 | in-progress |
+| L24 | #50 | [task] Unit 12 (advanced) Finer levels: tafkhim levels, ghunnah levels, complete/incomplete idgham (maintainer, 2026-09-28). | T20 | done |
