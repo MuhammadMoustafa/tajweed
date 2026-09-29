@@ -52,6 +52,7 @@ in brackets picks the agent.
 | L8 | #14 | [task] Meem sakinah: ikhfa, idgham and izhar shafawi (`ikhafa_shafawi`, `idgham_shafawi`), lips on MouthDiagram. | L2, T6, T10 | done |
 | L9 | #15 | [task] Ghunnah on mushaddad noon/meem (`ghunnah`), nose on MouthDiagram, 2 counts. | L2, T10 | done |
 | L10 | #16 | Qalqalah — sample lesson from the scaffold. Quiz added by T2. | — | done |
+| L10b | #51 | [task] Qalqalah clip: an al-Husary word for ط ب ج too (Juz ʿAmma/Fatiha, else surahs 58–77), and the player stops after each letter's step (a per-step option; other clips unchanged) (maintainer, 2026-09-29). | none | in-progress |
 | L11 | #17 | [task] Lam rules: lam shamsiyyah (`laam_shamsiyah`) and qamariyyah, lam in the name of Allah. | T2, T6 | done |
 | L12 | #18 | [task] Ra: tafkhim and tarqiq. | L3, T6 | done |
 | L13 | #19 | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | done |
@@ -69,3 +70,4 @@ in brackets picks the agent.
 | L22 | #48 | [task-hard] Unit 9 Practice & review: whole short surahs with every rule colored, full legend, mixed quiz on all taught rules (maintainer, 2026-09-28). | T18 | done |
 | L23 | #49 | [task-hard] Unit 11 (advanced) Hafs special words: saktat, imalah, tas-hil, ishmam/rawm, sad/seen words, naql (maintainer, 2026-09-28). | T20 | done |
 | L24 | #50 | [task] Unit 12 (advanced) Finer levels: tafkhim levels, ghunnah levels, complete/incomplete idgham (maintainer, 2026-09-28). | T20 | done |
+| L25 | #52 | [task-hard] Letters page: a card per letter (28) with its makhraj animation (contact point, L2d) and sifat, and its sound as an al-Husary word where the letter is clearly heard, pointer on the letter (maintainer, 2026-09-29: Husary word per letter; ayat from Tabarak/Qad Samiʿa allowed). | none | in-progress |
