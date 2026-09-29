@@ -52,7 +52,7 @@ in brackets picks the agent.
 | L8 | #14 | [task] Meem sakinah: ikhfa, idgham and izhar shafawi (`ikhafa_shafawi`, `idgham_shafawi`), lips on MouthDiagram. | L2, T6, T10 | done |
 | L9 | #15 | [task] Ghunnah on mushaddad noon/meem (`ghunnah`), nose on MouthDiagram, 2 counts. | L2, T10 | done |
 | L10 | #16 | Qalqalah — sample lesson from the scaffold. Quiz added by T2. | — | done |
-| L10b | #51 | [task] Qalqalah clip: an al-Husary word for ط ب ج too (Juz ʿAmma/Fatiha, else surahs 58–77), and the player stops after each letter's step (a per-step option; other clips unchanged) (maintainer, 2026-09-29). | none | in-progress |
+| L10b | #51 | [task] Qalqalah clip: an al-Husary word for ط ب ج too (Juz ʿAmma/Fatiha, else surahs 58–77), and the player stops after each letter's step (a per-step option; other clips unchanged) (maintainer, 2026-09-29). | none | done |
 | L11 | #17 | [task] Lam rules: lam shamsiyyah (`laam_shamsiyah`) and qamariyyah, lam in the name of Allah. | T2, T6 | done |
 | L12 | #18 | [task] Ra: tafkhim and tarqiq. | L3, T6 | done |
 | L13 | #19 | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | done |
