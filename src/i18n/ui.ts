@@ -126,6 +126,27 @@ export const ui = {
   // Lesson-card quiz side panel (src/components/LessonCard.tsx).
   takeQuizButton: { ar: 'ابدأ الاختبار', en: 'Take the quiz' },
   retryQuizButton: { ar: 'إعادة الاختبار', en: 'Retry quiz' },
+  // The letters page (#/letters, src/components/LettersPage.tsx) and a letter's card (LetterView.tsx).
+  lettersTitle: { ar: 'الحروف', en: 'Letters' },
+  lettersIntro: {
+    ar: 'لكل حرف بطاقة: مخرجه مرسومًا على الفم، وصفاته، وكلمة من القرآن تسمعه فيها بصوت الشيخ الحصري. والهمزة والألف مختلفتان في المخرج، فلكلٍّ منهما بطاقة.',
+    en: 'Each letter has a card: its makhraj drawn on the mouth, its qualities, and a Quran word to hear it in, recited by Sheikh al-Husary. Hamzah and alif come from different makharij, so each has its own card.',
+  },
+  openLetterAction: { ar: 'تعلّم نطقه', en: 'Learn to say it' },
+  backToLetters: { ar: 'العودة إلى الحروف', en: 'Back to the letters' },
+  letterNotFound: { ar: 'الحرف غير موجود.', en: 'Letter not found.' },
+  lettersNotReviewed: {
+    ar: 'بطاقات الحروف لم تُراجَع بعد من معلّم مُجاز.',
+    en: 'These letter cards have not yet been reviewed by a qualified teacher.',
+  },
+  letterMakhraj: { ar: 'المخرج', en: 'Makhraj: where it comes from' },
+  letterArea: { ar: 'الموضع', en: 'Area' },
+  letterPoint: { ar: 'المخرج بالتحديد', en: 'Exact point' },
+  letterSifat: { ar: 'الصفات', en: 'Qualities (sifat)' },
+  letterPairedSifat: { ar: 'صفة من كل زوج من الصفات المتضادة', en: 'One quality from each pair of opposites' },
+  letterSingleSifat: { ar: 'صفات خاصة ببعض الحروف', en: 'Qualities only some letters have' },
+  /** Followed by the lesson's title. */
+  moreInLesson: { ar: 'المزيد في درس', en: 'More in the lesson' },
   cardStateLegend: {
     ar: 'أخضر: تم التعلّم · كهرماني: بدأ التعلّم · حدّ ملوّن: الدرس التالي المقترح',
     en: 'Green: learned · Amber: started · Accent border: suggested next lesson',

@@ -46,6 +46,11 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
             <section key={i}>
               {section.heading && <h3>{t(section.heading)}</h3>}
               <p>{t(section.body)}</p>
+              {section.link && (
+                <a href={section.link.href} className="section-link">
+                  {t(section.link.label)} {nextArrow}
+                </a>
+              )}
               {section.animation && (
                 <figure className="card section-animation">
                   <AnimationPlayer key={section.animation} clip={ANIMATIONS[section.animation]} />

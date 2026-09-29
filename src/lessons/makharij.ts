@@ -22,6 +22,10 @@ export const makharij: Lesson = {
         ar: 'ضع قبل الحرف همزة متحركة، وانطقه ساكنًا أو مشدّدًا، مثل: «أَبْ»، «أَقْ»، «أَعْ». الموضع الذي ينقطع عنده الصوت هو مخرج الحرف.',
         en: 'Put a hamzah with a vowel before the letter and say the letter with a sukun (or a shaddah), like "أَبْ" (ab), "أَقْ" (aq) or "أَعْ" (aʿ). The spot where the sound stops is the makhraj of that letter.',
       },
+      link: {
+        href: '#/letters',
+        label: { ar: 'بطاقات الحروف: مخرج كل حرف وصفاته وصوته', en: 'The letter cards: each letter’s makhraj, qualities and sound' },
+      },
     },
     {
       heading: { ar: 'المواضع الخمسة', en: 'The five areas' },

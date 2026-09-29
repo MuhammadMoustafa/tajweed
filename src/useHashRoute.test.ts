@@ -16,3 +16,11 @@ describe('parseHash', () => {
     expect(parseHash('#/lesson/qalqalah/other')).toEqual({ page: 'home' })
   })
 })
+
+describe('parseHash: letters', () => {
+  it('routes the letters page and a letter card', () => {
+    expect(parseHash('#/letters')).toEqual({ page: 'letters' })
+    expect(parseHash('#/letters/qaf')).toEqual({ page: 'letter', id: 'qaf' })
+    expect(parseHash('#/letters/qaf/other')).toEqual({ page: 'home' })
+  })
+})

@@ -26,6 +26,8 @@ export interface LessonSection {
   body: Bilingual
   /** A clip played under this section, e.g. one makharij area per section. */
   animation?: AnimationId
+  /** A link shown under the section's text, to another page of the app (a hash route, e.g. `#/letters`). */
+  link?: { href: `#/${string}`; label: Bilingual }
 }
 
 /**

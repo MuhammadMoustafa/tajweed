@@ -107,7 +107,7 @@ export const AREA_TITLES: Record<MakharijArea, Bilingual> = {
 }
 
 /** What the overview says under each area: how many makharij it holds and what comes from it. */
-const AREA_CAPTIONS: Record<MakharijArea, Bilingual> = {
+export const AREA_CAPTIONS: Record<MakharijArea, Bilingual> = {
   jawf: {
     ar: 'الجوف: فراغ الحلق والفم. مخرج واحد لحروف المد الثلاثة.',
     en: 'The jawf: the empty space of the throat and mouth. One makhraj, for the three madd letters.',

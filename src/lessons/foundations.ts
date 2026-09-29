@@ -16,6 +16,10 @@ export const foundations: Lesson = {
         ar: 'الحروف الهجائية ثمانية وعشرون حرفًا. يحتاج الحرف إلى علامة تبيّن كيف يُنطق: بفتح أم بضم أم بكسر أم بلا حركة (سكون). وتتّصل الحروف في الكلمة الواحدة، فيتغيّر شكل الحرف بحسب موقعه في أول الكلمة أو وسطها أو آخرها.',
         en: 'The Arabic alphabet has 28 letters. A letter needs a mark to show how it is said: with a fatha, a damma, a kasra, or with no vowel at all (a sukun). Letters join inside a word, so a letter changes shape depending on whether it comes at the start, the middle or the end.',
       },
+      link: {
+        href: '#/letters',
+        label: { ar: 'بطاقات الحروف: مخرج كل حرف وصفاته وصوته', en: 'The letter cards: each letter’s makhraj, qualities and sound' },
+      },
     },
   ],
   focusRules: [],

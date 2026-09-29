@@ -1,4 +1,5 @@
 import type { WordKey } from '../lessons/types'
+import type { ArabicLetter } from '../tajweed/letters'
 
 /**
  * The Quran words the clips play, recited by the reciter in src/data/quran.ts (`WORD_RECITATION`),
@@ -40,3 +41,21 @@ export const CLIP_WORDS = {
   /** Hafs special words (L23): a sad read as seen (2:245), a sad read as sad (88:22), the kasra lam of 49:11 read on. */
   readSeen: '2:245:14', readSad: '88:22:3', ismJoined: '49:11:30',
 } as const satisfies Record<string, WordKey>
+
+/**
+ * One word per letter for the letters page (#/letters/<id>, src/letters/): a word where al-Husary
+ * says that letter clearly, with a sukun where one exists (the usual makhraj test), from al-Fatiha
+ * or Juz ʿAmma, else Tabarak / Qad Samiʿa (surahs 58–77). Alif is the madd alif after a fatha;
+ * waw and ya are the lin (sakin after a fatha) forms, said from the lips and the middle of the
+ * tongue. Fetched by `npm run fetch-quran` like CLIP_WORDS; letters.test.ts checks each word holds
+ * its letter.
+ */
+export const LETTER_WORDS = {
+  'ء': '89:19:1', 'ا': '1:5:1', 'ب': '108:3:4', 'ت': '110:1:5', 'ث': '99:7:3', 'ج': '105:2:2', 'ح': '1:1:3', 'خ': '104:3:4',
+  'د': '97:1:5', 'ذ': '97:4:5', 'ر': '105:4:1', 'ز': '94:2:3', 'س': '1:1:1', 'ش': '94:1:2', 'ص': '110:1:3', 'ض': '83:24:4',
+  'ط': '106:4:2', 'ظ': '61:7:2', 'ع': '1:5:2', 'غ': '1:7:6', 'ف': '91:9:2', 'ق': '96:1:1', 'ك': '94:4:3', 'ل': '1:2:1',
+  'م': '110:3:2', 'ن': '1:7:3', 'ه': '1:6:1', 'و': '1:4:2', 'ي': '1:7:5',
+} as const satisfies Record<ArabicLetter, WordKey>
+
+/** Every word `npm run fetch-quran` fetches: the clips' and the letters page's. */
+export const FETCHED_WORDS: readonly WordKey[] = [...Object.values(CLIP_WORDS), ...Object.values(LETTER_WORDS)]

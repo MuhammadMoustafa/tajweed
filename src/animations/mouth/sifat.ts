@@ -47,6 +47,8 @@ export const SINGLE_SIFAT: readonly SifahId[] = ['safir', 'qalqalah', 'lin', 'in
 export interface Sifah {
   /** Short name: a clip step's timeline label and its frame's heading. */
   name: Bilingual
+  /** One short line for a beginner, e.g. on the letters page's list of a letter's qualities. */
+  brief: Bilingual
   /** What it is and how it sounds, shown under the stage while the step plays. */
   meaning: Bilingual
   /**
@@ -61,6 +63,7 @@ export interface Sifah {
 export const SIFAT: Record<SifahId, Sifah> = {
   hams: {
     name: { ar: 'الهمس', en: 'Hams (whisper)' },
+    brief: { ar: 'يجري معه النَّفَس، فيُسمع معه هواء خفيف', en: 'The breath flows with it, so a little air is heard' },
     meaning: {
       ar: 'جريان النَّفَس مع الحرف لضعف اعتماده على مخرجه، فيُسمع معه هواء خفيف. حروفه عشرة: «فَحَثَّهُ شَخْصٌ سَكَتْ».',
       en: 'The breath keeps flowing with the letter, because it presses only lightly on its makhraj, so a little air is heard with it. Its ten letters are gathered in the phrase "faḥaththahu shakhṣun sakat".',
@@ -69,6 +72,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   jahr: {
     name: { ar: 'الجهر', en: 'Jahr (voiced)' },
+    brief: { ar: 'ينحبس معه النَّفَس، فيقوى الصوت', en: 'The breath is held back, so the voice is strong' },
     meaning: {
       ar: 'انحباس النَّفَس مع الحرف لقوة اعتماده على مخرجه، فيخرج الصوت قويًّا واضحًا. حروفه التسعة عشر الباقية.',
       en: 'The breath is held back with the letter, because it presses firmly on its makhraj, so the voice comes out strong and clear. It has the other nineteen letters.',
@@ -76,6 +80,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   shiddah: {
     name: { ar: 'الشدة', en: 'Shiddah (strength)' },
+    brief: { ar: 'ينحبس الصوت عند مخرجه إذا سكن', en: 'The sound stops at its makhraj when it has a sukun' },
     meaning: {
       ar: 'انحباس الصوت عند مخرج الحرف إذا سكن، فلا يجري معه. حروفها ثمانية: «أَجِدْ قَطٍ بَكَتْ».',
       en: 'The sound stops at the letter’s makhraj when it has a sukun and does not flow on. Its eight letters are gathered in the phrase "ajid qaṭin bakat".',
@@ -84,6 +89,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   tawassut: {
     name: { ar: 'التوسط', en: 'Tawassut (in between)' },
+    brief: { ar: 'الصوت بين الانحباس والجريان', en: 'The sound is between stopping and flowing' },
     meaning: {
       ar: 'بين الشدة والرخاوة: لا ينحبس الصوت كله ولا يجري كله. حروفه خمسة: «لِنْ عُمَرْ».',
       en: 'Between shiddah and rakhawah: the sound neither stops completely nor flows completely. Its five letters are gathered in the phrase "lin ʿumar".',
@@ -92,6 +98,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   rakhawah: {
     name: { ar: 'الرخاوة', en: 'Rakhawah (softness)' },
+    brief: { ar: 'يجري الصوت معه إذا سكن', en: 'The sound keeps flowing when it has a sukun' },
     meaning: {
       ar: 'جريان الصوت مع الحرف إذا سكن، فيمكن مدّه. حروفها الستة عشر الباقية.',
       en: 'The sound keeps flowing with the letter when it has a sukun, so it can be drawn out. It has the other sixteen letters.',
@@ -99,6 +106,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   istila: {
     name: { ar: 'الاستعلاء', en: 'Istiʿla (raising)' },
+    brief: { ar: 'يرتفع أقصى اللسان إلى الحنك، فيُفخَّم', en: 'The back of the tongue rises to the palate: a heavy letter' },
     meaning: {
       ar: 'ارتفاع أقصى اللسان إلى الحنك الأعلى عند النطق بالحرف، فيخرج مفخَّمًا ممتلئًا. حروفه سبعة: «خُصَّ ضَغْطٍ قِظْ».',
       en: 'The back of the tongue rises toward the palate as the letter is said, so it comes out heavy and full. Its seven letters are gathered in the phrase "khuṣṣa ḍaghṭin qiẓ".',
@@ -108,6 +116,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   istifal: {
     name: { ar: 'الاستفال', en: 'Istifal (lowering)' },
+    brief: { ar: 'ينخفض أقصى اللسان عن الحنك، فيُرقَّق', en: 'The back of the tongue stays low: a light letter' },
     meaning: {
       ar: 'انخفاض أقصى اللسان عن الحنك عند النطق بالحرف، فيخرج مرقَّقًا. حروفه الاثنان والعشرون الباقية.',
       en: 'The back of the tongue stays low, away from the palate, as the letter is said, so it comes out light. It has the other twenty-two letters.',
@@ -116,6 +125,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   itbaq: {
     name: { ar: 'الإطباق', en: 'Itbaq (sealing)' },
+    brief: { ar: 'ينطبق اللسان على الحنك الأعلى', en: 'The tongue seals against the palate' },
     meaning: {
       ar: 'انطباق اللسان على الحنك الأعلى وانحصار الصوت بينهما، فتكون أقوى الحروف تفخيمًا. حروفه أربعة: ص ض ط ظ.',
       en: 'The tongue presses up against the palate and the sound is enclosed between them. Its four letters, ص ض ط ظ, are the heaviest of all.',
@@ -125,6 +135,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   infitah: {
     name: { ar: 'الانفتاح', en: 'Infitah (opening)' },
+    brief: { ar: 'ينفتح ما بين اللسان والحنك', en: 'The space between the tongue and the palate stays open' },
     meaning: {
       ar: 'انفتاح ما بين اللسان والحنك، فيخرج الهواء من بينهما. حروفه الخمسة والعشرون الباقية.',
       en: 'The space between the tongue and the palate stays open, so the air passes between them. It has the other twenty-five letters.',
@@ -132,6 +143,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   idhlaq: {
     name: { ar: 'الإذلاق', en: 'Idhlaq (fluency)' },
+    brief: { ar: 'خفيف سريع النطق، من طرف اللسان أو الشفتين', en: 'Light and quick, from the tip of the tongue or the lips' },
     meaning: {
       ar: 'خفة الحرف وسرعة النطق به، لخروجه من طرف اللسان أو من الشفتين. حروفه ستة: «فِرَّ مِنْ لُبٍّ».',
       en: 'The letter is light and quick to say, because it comes from the tip of the tongue or from the lips. Its six letters are gathered in the phrase "firra min lubb".',
@@ -141,6 +153,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   ismat: {
     name: { ar: 'الإصمات', en: 'Ismat (restraint)' },
+    brief: { ar: 'أثقل نطقًا، لخروجه بعيدًا عن طرف اللسان والشفتين', en: 'Heavier to say, from away from the tongue’s tip and the lips' },
     meaning: {
       ar: 'ثقل الحرف لخروجه بعيدًا عن طرف اللسان والشفتين؛ ولذلك لا تكاد تُبنى كلمة عربية من أربعة أصول أو خمسة من هذه الحروف وحدها. حروفه الثلاثة والعشرون الباقية.',
       en: 'The letter is heavier to say, as it comes from away from the tip of the tongue and the lips; that is why an Arabic root of four or five letters is hardly ever built from these letters alone. It has the other twenty-three letters.',
@@ -148,6 +161,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   safir: {
     name: { ar: 'الصفير', en: 'Safir (whistle)' },
+    brief: { ar: 'يصحبه صوت زائد يشبه الصفير', en: 'An extra whistling sound comes with it' },
     meaning: {
       ar: 'صوت زائد يشبه صفير الطائر يخرج مع الحرف من بين طرف اللسان والثنايا. حروفه ثلاثة: ص ز س.',
       en: 'An extra sound like a bird’s whistle that comes with the letter, between the tip of the tongue and the front teeth. Its three letters, ص ز س, share one makhraj.',
@@ -156,6 +170,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   qalqalah: {
     name: { ar: 'القلقلة', en: 'Qalqalah (echo)' },
+    brief: { ar: 'يضطرب مخرجه إذا سكن، فيُسمع له نبرة', en: 'Its makhraj shakes when it has a sukun: a little bounce' },
     meaning: {
       ar: 'اضطراب المخرج عند النطق بالحرف ساكنًا حتى يُسمع له نبرة قوية. حروفها خمسة: «قُطْبُ جَدٍّ».',
       en: 'The makhraj is shaken as the letter is said with a sukun, so it is heard with a strong little bounce. Its five letters are gathered in the phrase "quṭbu jadd".',
@@ -164,6 +179,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   lin: {
     name: { ar: 'اللين', en: 'Lin (ease)' },
+    brief: { ar: 'يخرج بلين وسهولة إذا سكن بعد فتح', en: 'Soft and easy when it has a sukun after a fatha' },
     meaning: {
       ar: 'خروج الحرف في لين وسهولة بلا كلفة. حرفاه الواو والياء إذا سكنتا وقبلهما فتح.',
       en: 'The letter comes out softly and easily, without effort. Its two letters are waw and ya, when they have a sukun after a fatha.',
@@ -172,6 +188,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   inhiraf: {
     name: { ar: 'الانحراف', en: 'Inhiraf (leaning)' },
+    brief: { ar: 'يميل بعد خروجه نحو مخرج غيره', en: 'After leaving its makhraj, it leans toward another' },
     meaning: {
       ar: 'ميل الحرف بعد خروجه من مخرجه نحو مخرج غيره: اللام تميل إلى طرف اللسان، والراء إلى ظهره وقليلًا نحو اللام. حرفاه اللام والراء.',
       en: 'After leaving its makhraj, the letter leans toward another: lam toward the tip of the tongue, ra toward its top and a little toward lam. Its two letters are lam and ra.',
@@ -180,6 +197,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   takrir: {
     name: { ar: 'التكرير', en: 'Takrir (repetition)' },
+    brief: { ar: 'يرتعد به طرف اللسان: فاكتفِ بطرقة واحدة', en: 'The tongue’s tip tends to trill: keep it to one tap' },
     meaning: {
       ar: 'ارتعاد طرف اللسان عند النطق بالراء. يُعرف ليُجتنب: تُنطق الراء بطرقة واحدة، وخاصة إذا كانت مشددة.',
       en: 'The tip of the tongue tends to trill on ra. It is learned in order to avoid it: say ra with a single tap, especially when it has a shaddah.',
@@ -189,6 +207,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   tafashshi: {
     name: { ar: 'التفشي', en: 'Tafashshi (spreading)' },
+    brief: { ar: 'ينتشر الهواء في الفم عند نطقه', en: 'The air spreads through the mouth as it is said' },
     meaning: {
       ar: 'انتشار الهواء في الفم عند النطق بالشين حتى يملأه. حرفه الشين.',
       en: 'The air spreads through the mouth, filling it, as sheen is said. Its letter is sheen.',
@@ -198,6 +217,7 @@ export const SIFAT: Record<SifahId, Sifah> = {
   },
   istitalah: {
     name: { ar: 'الاستطالة', en: 'Istitalah (lengthening)' },
+    brief: { ar: 'يمتد صوته على حافة اللسان', en: 'Its sound stretches along the side of the tongue' },
     meaning: {
       ar: 'امتداد الصوت على حافة اللسان من أولها إلى آخرها عند النطق بالضاد. حرفها الضاد.',
       en: 'The sound stretches along the side of the tongue, from its back to its front, as ḍad is said. Its letter is ḍad.',
@@ -259,4 +279,16 @@ export const lettersOfPhrase = (phrase: string): ArabicLetter[] =>
 export function lettersWith(id: SifahId): ArabicLetter[] {
   const { mnemonic } = SIFAT[id]
   return mnemonic ? lettersOfPhrase(mnemonic) : ALL_LETTERS.filter((l) => LETTER_SIFAT[l].includes(id))
+}
+
+/**
+ * A letter's qualities as the letters page lists them: its side of each group of opposites (in
+ * `OPPOSITE_SIFAT` order), then the single qualities it has (in `SINGLE_SIFAT` order).
+ */
+export function sifatOfLetter(letter: ArabicLetter): { opposites: SifahId[]; singles: SifahId[] } {
+  const has = LETTER_SIFAT[letter]
+  return {
+    opposites: OPPOSITE_SIFAT.map((group) => group.find((id) => has.includes(id))!),
+    singles: SINGLE_SIFAT.filter((id) => has.includes(id)),
+  }
 }

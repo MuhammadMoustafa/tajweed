@@ -2,12 +2,15 @@
  * Downloads the tajweed-annotated Uthmani text (Hafs) for every verse referenced by a lesson (and every clip word's ayah)
  * and writes it to src/data/quran.json; and, for every Quran word a clip plays
  * (src/animations/words.ts), its text and where the reciter (WORD_RECITATION) says it in the ayah's
+ * Downloads the tajweed-annotated Uthmani text (Hafs) for every verse referenced by a lesson, or
+ * holding a fetched word, and writes it to src/data/quran.json; and, for every Quran word a clip
+ * or the letters page plays (src/animations/words.ts), its text and where the reciter (WORD_RECITATION) says it in the ayah's
  * audio, written to src/data/quran-words.json. The JSON is committed so the app builds and runs
  * offline.
  *
  * Run after adding or changing lesson examples or clip words:  npm run fetch-quran
  */
-import { CLIP_WORDS } from '../src/animations/words.ts'
+import { FETCHED_WORDS } from '../src/animations/words.ts'
 import { compareVerseKeys, splitWordKey, WORD_RECITATION, type QuranWord } from '../src/data/quran.ts'
 import { LESSONS } from '../src/lessons/index.ts'
 import { writeJsonFile } from './lib/fetch.ts'
@@ -23,6 +26,11 @@ const keys = [
     ...LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)),
     ...Object.values(CLIP_WORDS).map((key) => splitWordKey(key).verseKey),
   ]),
+const wordKeys = [...new Set(FETCHED_WORDS)].sort(compareVerseKeys)
+// The lesson examples' verses, plus each fetched word's own verse (words.test.ts checks every word
+// against its verse's text).
+const keys = [
+  ...new Set([...LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)), ...wordKeys.map((k) => splitWordKey(k).verseKey)]),
 ].sort(compareVerseKeys)
 
 const verses: Record<string, string> = {}
@@ -33,7 +41,6 @@ const data = { source: tajweedSource(), verses }
 await writeJsonFile(OUT, data)
 console.log(`Wrote ${keys.length} verses to src/data/quran.json`)
 
-const wordKeys = [...new Set(Object.values(CLIP_WORDS))].sort(compareVerseKeys)
 const verseWords = new Map<string, Record<number, QuranWord>>()
 const words: Record<string, QuranWord> = {}
 for (const key of wordKeys) {

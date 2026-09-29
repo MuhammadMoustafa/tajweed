@@ -38,3 +38,10 @@ export const LETTER_NAMES = {
 } as const satisfies Record<string, Bilingual>
 
 export type ArabicLetter = keyof typeof LETTER_NAMES
+
+/** Characters that write a letter besides itself: the hamzah on its seats, and the combining hamzah above/below. */
+const ALSO_WRITTEN_AS: Partial<Record<ArabicLetter, string>> = { 'ء': 'أإؤئ\u0654\u0655' }
+
+/** Whether `grapheme` (a letter with its marks, see src/tajweed/graphemes.ts) writes `letter`. */
+export const writesLetter = (grapheme: string, letter: ArabicLetter): boolean =>
+  [...letter, ...(ALSO_WRITTEN_AS[letter] ?? '')].some((ch) => grapheme.includes(ch))
