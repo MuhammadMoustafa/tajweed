@@ -4,6 +4,8 @@ import { hasQuiz } from '../src/lessons/quiz'
 
 /** Taps the first letter of every tap question and picks the first option of every other one. */
 async function answerAll(page: Page) {
+  // The quiz page is loaded on demand: wait for its questions before listing them.
+  await expect(page.locator('.quiz-question').first()).toBeVisible()
   for (const question of await page.locator('.quiz-question').all()) {
     const kind = await question.getAttribute('data-kind')
     await question.locator(kind === 'tap' ? '.tap' : '.quiz-option').first().click()

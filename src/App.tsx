@@ -1,13 +1,17 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { LessonList } from './components/LessonList'
-import { LessonView } from './components/LessonView'
 import { ProgressPage } from './components/ProgressPage'
-import { QuizPage } from './components/QuizPage'
 import { useLocale } from './i18n/LocaleProvider'
 import { ui } from './i18n/ui'
 import { findLesson } from './lessons'
 import { hasQuiz } from './lessons/quiz'
 import { useHashRoute } from './useHashRoute'
+
+// The lesson and quiz pages carry the animations, the verse data and the matn: loaded on demand as
+// their own chunks (the service worker precaches them, so this still works offline), which keeps
+// the first download to the home page and the chunk under the build's 500 kB warning as lessons grow.
+const LessonView = lazy(() => import('./components/LessonView').then((m) => ({ default: m.LessonView })))
+const QuizPage = lazy(() => import('./components/QuizPage').then((m) => ({ default: m.QuizPage })))
 
 export function App() {
   const { locale, setLocale, t } = useLocale()
@@ -43,11 +47,13 @@ export function App() {
         </div>
       </header>
       <main>
+        <Suspense fallback={null}>
         {route.page === 'home' && <LessonList />}
         {route.page === 'progress' && <ProgressPage />}
         {route.page === 'lesson' && (lesson ? <LessonView key={lesson.id} lesson={lesson} /> : <p>{t(ui.lessonNotFound)}</p>)}
         {route.page === 'quiz' &&
           (lesson && hasQuiz(lesson) ? <QuizPage key={lesson.id} lesson={lesson} /> : <p>{t(ui.lessonNotFound)}</p>)}
+        </Suspense>
       </main>
     </>
   )
