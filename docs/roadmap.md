@@ -55,6 +55,6 @@ in brackets picks the agent.
 | L15 | #21 | [task] Madd lazim (`madda_necessary`), reusing MaddBar. | L13c | done |
 | L16 | #22 | [task] Other madd: ʿarid lis-sukun (`madda_permissible`), leen, badal, silah, reusing MaddBar. | L13c | done |
 | L17 | #23 | [task] Hamzat al-wasl and silent letters (`ham_wasl`, `slnt`). | T2 | done |
-| L18 | #24 | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | in-progress |
+| L18 | #24 | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | done |
 | L19 | #25 | [task] Waqf and ibtida: the stop signs in the mushaf. | T2, T6 | in-progress |
 | L20 | #26 | [task-hard] Sifat al-huruf in depth, reusing MouthDiagram. | L2, T10 | in-progress |
