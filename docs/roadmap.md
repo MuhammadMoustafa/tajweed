@@ -47,7 +47,7 @@ in brackets picks the agent.
 | L9 | #15 | [task] Ghunnah on mushaddad noon/meem (`ghunnah`), nose on MouthDiagram, 2 counts. | L2, T10 | in-progress |
 | L10 | #16 | Qalqalah — sample lesson from the scaffold. Quiz added by T2. | — | done |
 | L11 | #17 | [task] Lam rules: lam shamsiyyah (`laam_shamsiyah`) and qamariyyah, lam in the name of Allah. | T2, T6 | done |
-| L12 | #18 | [task] Ra: tafkhim and tarqiq. | L3, T6 | blocked |
+| L12 | #18 | [task] Ra: tafkhim and tarqiq. | L3, T6 | in-progress |
 | L13 | #19 | [task] Natural madd (`madda_normal`): a reusable MaddBar animation (2/4/5/6 counts) used by L14–L16. | T2 | done |
 | L13b | #32 | [task] Natural-madd clip redone: real syllables بَا بُو بِي, arrow at the madd letter, bar growing ~1 s per count under it, captions. | T10 | done |
 | L13c | #34 | [task] Natural madd as one counting demo: say-it-with-me, marker at the first count and at the end of the second, one syllable (the three take the same time) (maintainer, 2026-09-28). | none | done |
