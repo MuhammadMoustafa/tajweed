@@ -101,6 +101,10 @@ export default defineConfig({
           pool: 'vmThreads',
           setupFiles: ['./src/test/setup.ts'],
           include: ['src/**/*.test.tsx'],
+          // Timeouts here only catch a hang; they must not turn a busy machine into a failure. A
+          // render of the whole home list or a full lesson takes 0.2-0.7 s alone but passed 5 s
+          // with eight workers busy, and a CI runner is slower still. (findBy* waits: setup.ts.)
+          testTimeout: 60_000,
         },
       },
     ],

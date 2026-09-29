@@ -50,7 +50,7 @@ describe('sifat lesson (L20)', () => {
 
   // A full render of the course's largest lesson (nine sections, eight clip players): allow more
   // than the 5 s default, which it missed when several worktrees ran their checks at once.
-  it.each(['ar', 'en'] as const)('renders in %s: page direction, every section and clip, uncolored Arabic examples', { timeout: 15_000 }, (locale) => {
+  it.each(['ar', 'en'] as const)('renders in %s: page direction, every section and clip, uncolored Arabic examples', (locale) => {
     const container = renderLesson(locale)
     expect(document.documentElement).toHaveAttribute('lang', locale)
     expect(document.documentElement).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
