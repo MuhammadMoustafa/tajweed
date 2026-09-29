@@ -100,12 +100,12 @@ export const waqf: Lesson = {
       ],
     },
     {
-      verseKey: '112:1',
+      verseKey: '83:9',
       note: {
         ar: 'الحرف الملوَّن في آخر الآية عليه تنوين ضم: عند الوقف يسقط التنوين ويسكن الحرف.',
         en: 'The colored letter at the end of the ayah has tanween damma: stopping drops it and leaves a sukun.',
       },
-      marks: [{ word: 4, letter: 3, rule: 'waqf_sign' }],
+      marks: [{ word: 2, letter: 5, rule: 'waqf_sign' }],
     },
     {
       verseKey: '78:6',

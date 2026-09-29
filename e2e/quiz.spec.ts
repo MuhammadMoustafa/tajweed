@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { LESSONS } from '../src/lessons'
 import { hasQuiz } from '../src/lessons/quiz'
+import { CUSTOM_RULE_IDS } from '../src/tajweed/rules'
 
 // Iterates LESSONS so a newly added lesson's quiz page is covered automatically.
 test.describe('quiz page', () => {
@@ -41,7 +42,9 @@ test.describe('quiz page', () => {
   })
 
   test('the difficulty selector changes the drawn questions', async ({ page }) => {
-    const lesson = LESSONS.find((l) => l.focusRules.length > 0)!
+    // The pool is per API rule: the lesson needs one (custom rules like tafkheem have no pool verses).
+    const custom: readonly string[] = CUSTOM_RULE_IDS
+    const lesson = LESSONS.find((l) => l.focusRules.some((r) => !custom.includes(r)))!
     await page.goto(`/#/lesson/${lesson.id}/quiz`)
     const verses = () =>
       page.locator('.quiz-question[data-verse]').evaluateAll((els) => els.map((el) => el.getAttribute('data-verse')))

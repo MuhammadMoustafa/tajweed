@@ -5,6 +5,8 @@ import { LESSONS } from '../src/lessons'
 // doesn't have a section on the rule); iterating LESSONS keeps this test covering a newly added
 // lesson automatically.
 const lessonsWithMutoon = LESSONS.filter((l) => l.mutoon)
+/** Lessons where at least one poem cites lines (foundations cites none: neither poem teaches harakat). */
+const citesLines = (l: (typeof LESSONS)[number]) => Object.values(l.mutoon ?? {}).some((c) => c !== 'not-covered')
 
 test.describe('matn panel', () => {
   for (const lesson of lessonsWithMutoon) {
@@ -23,8 +25,11 @@ test.describe('matn panel', () => {
       await expect(poems.nth(0)).toHaveClass(/matn-poem-tuhfa/)
       await expect(poems.nth(1)).toHaveClass(/matn-poem-jazariyya/)
 
-      // At least one poem cites lines (a lesson whose rule neither poem covers would be a data
-      // bug); wherever lines are shown, both halves of the bayt are non-empty.
+      // Wherever lines are shown, both halves of the bayt are non-empty.
+      if (!citesLines(lesson)) {
+        await expect(panel.locator('.matn-line')).toHaveCount(0)
+        return
+      }
       await expect(panel.locator('.matn-line').first()).toBeVisible()
       await expect(panel.locator('.matn-sadr').first()).not.toBeEmpty()
       await expect(panel.locator('.matn-ajuz').first()).not.toBeEmpty()
@@ -36,7 +41,7 @@ test.describe('matn panel', () => {
   for (const lang of ['ar', 'en'] as const) {
     test(`sadr and ajuz share a row at 375px in ${lang}`, async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 800 })
-      const lesson = lessonsWithMutoon[0]
+      const lesson = lessonsWithMutoon.find(citesLines)!
       await page.goto(`/#/lesson/${lesson.id}`)
 
       const html = page.locator('html')
