@@ -6,6 +6,15 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   // Relative asset paths: works on any static host subfolder and inside the Capacitor WebView.
   base: './',
+  build: {
+    rolldownOptions: {
+      output: {
+        // Libraries (React, Motion) change rarely: their own chunk keeps the app
+        // chunk under the 500 kB warning as lessons are added, and lets the SW re-fetch only the app.
+        codeSplitting: { groups: [{ name: 'vendor', test: /node_modules/ }] },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({
