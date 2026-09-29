@@ -57,4 +57,4 @@ in brackets picks the agent.
 | L17 | #23 | [task] Hamzat al-wasl and silent letters (`ham_wasl`, `slnt`). | T2 | done |
 | L18 | #24 | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | done |
 | L19 | #25 | [task] Waqf and ibtida: the stop signs in the mushaf. | T2, T6 | done |
-| L20 | #26 | [task-hard] Sifat al-huruf in depth, reusing MouthDiagram. | L2, T10 | in-progress |
+| L20 | #26 | [task-hard] Sifat al-huruf in depth, reusing MouthDiagram. | L2, T10 | done |
