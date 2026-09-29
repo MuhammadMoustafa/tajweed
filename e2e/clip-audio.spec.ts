@@ -19,13 +19,22 @@ test.beforeEach(async ({ page }) => {
   audioRequests = await blockReciterAudio(page)
 })
 
-test('pressing play on a step with audio requests that ayah file (blocked here), then moves on', async ({ page }) => {
+test('pressing play on a step with audio requests that ayah file (blocked here), stops after it, then goes on', async ({
+  page,
+}) => {
   await page.goto(`/#/lesson/${lessonWith('qalqalah-bounce').id}`)
   const player = page.locator('.animation .player')
   await player.getByRole('button', { name: 'Play', exact: true }).click()
-  // The blocked file fails to load, which ends the word, so the step runs its own 2 s.
-  await expect(player).toHaveAttribute('data-step', '1', { timeout: 5000 })
+  await expect(player).toHaveAttribute('data-playing', 'true')
+  // The blocked file fails to load, which ends the word, so the step runs its own 2 s; each
+  // qalqalah letter then waits (pauseAfter) on its own step until the learner goes on.
+  await expect(player).toHaveAttribute('data-playing', 'false', { timeout: 5000 })
+  await expect(player).toHaveAttribute('data-step', '0')
   expect(audioRequests.map((url) => url.split('#')[0])).toContain(getWord(CLIP_WORDS.qalqalahQaf)!.audio.url)
+
+  await player.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(player).toHaveAttribute('data-step', '1')
+  await expect(player).toHaveAttribute('data-playing', 'true')
 })
 
 test('the natural madd clip ends on a recited Quran word, with its source, credit and a mute toggle', async ({
@@ -52,19 +61,17 @@ test('the natural madd clip ends on a recited Quran word, with its source, credi
   expect(audioRequests, 'no audio is fetched without pressing play').toEqual([])
 })
 
-test('the qalqalah clip plays a word only on the letters that have one', async ({ page }) => {
+test('the qalqalah clip plays a word on each of its five letters', async ({ page }) => {
   await page.goto(`/#/lesson/${lessonWith('qalqalah-bounce').id}`)
   const player = page.locator('.animation .player')
-  await expect(player).toHaveAttribute('data-audio-src', spanUrl('qalqalahQaf'))
-  await expect(player.locator('.anim-word')).toHaveText(getWord(CLIP_WORDS.qalqalahQaf)!.text)
   await expect(player.getByRole('button', { name: 'Mute the reciter' })).toBeVisible()
 
-  await player.getByRole('button', { name: 'Next step' }).click()
-  await expect(player).toHaveAttribute('data-step', '1')
-  await expect(player).not.toHaveAttribute('data-audio-src')
-  await expect(player.locator('.anim-word')).toHaveCount(0)
-
-  await player.getByRole('button', { name: 'Dal', exact: true }).click()
-  await expect(player).toHaveAttribute('data-audio-src', spanUrl('qalqalahDal'))
+  const words = ['qalqalahQaf', 'qalqalahTa', 'qalqalahBa', 'qalqalahJeem', 'qalqalahDal'] as const
+  for (const [i, key] of words.entries()) {
+    if (i > 0) await player.getByRole('button', { name: 'Next step' }).click()
+    await expect(player).toHaveAttribute('data-step', String(i))
+    await expect(player).toHaveAttribute('data-audio-src', spanUrl(key))
+    await expect(player.locator('.anim-word')).toHaveText(getWord(CLIP_WORDS[key])!.text)
+  }
   expect(audioRequests, 'no audio is fetched without pressing play').toEqual([])
 })

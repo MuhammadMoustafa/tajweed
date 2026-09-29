@@ -3,7 +3,7 @@ import { LESSONS } from '../src/lessons'
 import { blockReciterAudio } from './reciter-audio'
 
 // The player itself (src/animations/player/AnimationPlayer.tsx), on the qalqalah clip: five steps
-// of 2 s each. Per-clip frame checks live in reduced-motion.spec.ts.
+// of 2 s each, each stopping when done (pauseAfter). Per-clip frame checks live in reduced-motion.spec.ts.
 const lesson = LESSONS.find((l) => l.animation === 'qalqalah-bounce')!
 
 test.describe('animation player', () => {
@@ -22,7 +22,11 @@ test.describe('animation player', () => {
     await player.getByRole('button', { name: 'Play', exact: true }).click()
     await expect(player).toHaveAttribute('data-playing', 'true')
     await expect(player.locator('.player-big-play')).toHaveCount(0)
-    await expect(player).toHaveAttribute('data-step', '1', { timeout: 5000 })
+    // The first letter stops when done; Play goes on to the next.
+    await expect(player).toHaveAttribute('data-playing', 'false', { timeout: 5000 })
+    await expect(player).toHaveAttribute('data-step', '0')
+    await player.getByRole('button', { name: 'Play', exact: true }).click()
+    await expect(player).toHaveAttribute('data-step', '1')
 
     await player.getByRole('button', { name: 'Pause' }).click()
     await expect(player).toHaveAttribute('data-playing', 'false')

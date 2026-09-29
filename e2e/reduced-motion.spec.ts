@@ -30,7 +30,12 @@ test.describe('qalqalah clip and reduced motion', () => {
       await expect(player).toHaveAttribute('data-step', '1')
       await expect(player.locator('.qalqalah-frame [data-current]')).toHaveCount(1)
       await player.getByRole('button', { name: 'Play', exact: true }).click()
-      await expect(player).toHaveAttribute('data-step', '2', { timeout: 5000 })
+      // Each letter stops when done (pauseAfter); Play then goes on to the next.
+      await expect(player).toHaveAttribute('data-playing', 'false', { timeout: 5000 })
+      await expect(player).toHaveAttribute('data-step', '1')
+      await expect(player.locator('.qalqalah-frame circle')).toHaveCount(0)
+      await player.getByRole('button', { name: 'Play', exact: true }).click()
+      await expect(player).toHaveAttribute('data-step', '2')
       await expect(player.locator('.qalqalah-frame circle')).toHaveCount(0)
     })
   }
