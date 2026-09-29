@@ -1,6 +1,6 @@
 import type { Bilingual } from '../../i18n/bilingual'
 import { LETTER_NAMES, type ArabicLetter } from '../../tajweed/letters'
-import type { MakhrajRegion } from './regions'
+import type { ContactMarker, MakhrajRegion } from './regions'
 
 /**
  * The seventeen makharij on Ibn al-Jazari's count (al-Muqaddimah al-Jazariyyah, lines 9–19), each
@@ -31,6 +31,8 @@ export interface Makhraj {
   description: Bilingual
   /** What MouthDiagram lights (and labels) for this point. */
   regions: MakhrajRegion[]
+  /** Where exactly the articulators meet, drawn over the lit regions (see ContactMarker). */
+  contact: ContactMarker
   /** In the order the step shows them. */
   letters: MakhrajLetter[]
 }
@@ -46,6 +48,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The empty space of the throat and mouth. The three madd letters come from it; they have no fixed spot where the sound stops: they end when the breath ends.',
     },
     regions: ['jawf'],
+    contact: { kind: 'flow', path: [[201, 296], [201, 176], [190, 154], [150, 153], [100, 153], [66, 167], [24, 169]] },
     letters: [
       { letter: 'ا', text: 'بَا', name: { ar: 'الألف بعد فتح', en: 'Alif, after a fatha' } },
       { letter: 'و', text: 'بُو', name: { ar: 'الواو الساكنة بعد ضم', en: 'Waw sakinah, after a damma' } },
@@ -60,6 +63,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The part of the throat farthest from the mouth, next to the chest.',
     },
     regions: ['halq-deepest'],
+    contact: { kind: 'point', at: [201, 290] },
     letters: [plain('ء'), plain('ه')],
   },
   {
@@ -67,6 +71,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
     name: { ar: 'وسط الحلق', en: 'Middle of the throat' },
     description: { ar: 'وسط الحلق، بين أقصاه وأدناه.', en: 'The middle of the throat, between its deepest and nearest parts.' },
     regions: ['halq-middle'],
+    contact: { kind: 'point', at: [201, 236] },
     letters: [plain('ع'), plain('ح')],
   },
   {
@@ -74,6 +79,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
     name: { ar: 'أدنى الحلق', en: 'Nearest part of the throat' },
     description: { ar: 'أقرب الحلق إلى الفم.', en: 'The part of the throat nearest to the mouth.' },
     regions: ['halq-closest'],
+    contact: { kind: 'point', at: [201, 188] },
     letters: [plain('غ'), plain('خ')],
   },
   {
@@ -84,6 +90,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The back of the tongue, next to the throat, against the palate above it.',
     },
     regions: ['tongue-back', 'palate'],
+    contact: { kind: 'point', at: [175, 166] },
     letters: [plain('ق')],
   },
   {
@@ -94,6 +101,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: "Also the back of the tongue, a little lower than qaf's point, toward the mouth, against the palate above it.",
     },
     regions: ['tongue-back', 'palate'],
+    contact: { kind: 'point', at: [160, 156] },
     letters: [plain('ك')],
   },
   {
@@ -104,6 +112,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The middle of the tongue against the middle of the palate above it. The ya here is one that is not a madd letter.',
     },
     regions: ['tongue-middle', 'palate'],
+    contact: { kind: 'point', at: [128, 150] },
     letters: [plain('ج'), plain('ش'), { letter: 'ي', text: 'ي', name: { ar: 'الياء غير المدية', en: 'Ya (not a madd letter)' } }],
   },
   {
@@ -114,6 +123,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'One side of the tongue, or both, against the upper molars next to it; the left side is the easier and more common.',
     },
     regions: ['tongue-sides', 'molars-upper'],
+    contact: { kind: 'edge', from: [88, 157], to: [122, 155] },
     letters: [plain('ض')],
   },
   {
@@ -124,6 +134,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The front of the side of the tongue, up to its very tip, against the gums of the upper teeth.',
     },
     regions: ['tongue-sides', 'tongue-tip', 'gums'],
+    contact: { kind: 'edge', from: [66, 154], to: [86, 150] },
     letters: [plain('ل')],
   },
   {
@@ -134,6 +145,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: "The tip of the tongue against the gums of the upper front teeth, a little below lam's point.",
     },
     regions: ['tongue-tip', 'gums'],
+    contact: { kind: 'point', at: [70, 151] },
     letters: [plain('ن')],
   },
   {
@@ -144,6 +156,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: "Close to noon's point, but a little further in, onto the top of the tongue, against the gums of the upper front teeth.",
     },
     regions: ['tongue-tip', 'gums'],
+    contact: { kind: 'point', at: [76, 148] },
     letters: [plain('ر')],
   },
   {
@@ -154,6 +167,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The tip of the tongue against the roots of the upper front teeth, where they meet the gums.',
     },
     regions: ['tongue-tip', 'teeth-upper'],
+    contact: { kind: 'point', at: [65, 156] },
     letters: [plain('ط'), plain('د'), plain('ت')],
   },
   {
@@ -164,6 +178,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The tip of the tongue just above the lower front teeth, with a small gap under the upper ones for the whistle of these letters.',
     },
     regions: ['tongue-tip', 'teeth-lower'],
+    contact: { kind: 'point', at: [64, 171] },
     letters: [plain('ص'), plain('ز'), plain('س')],
   },
   {
@@ -174,6 +189,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The tip of the tongue against the edges of the upper front teeth.',
     },
     regions: ['tongue-tip', 'teeth-upper'],
+    contact: { kind: 'point', at: [60, 167] },
     letters: [plain('ظ'), plain('ذ'), plain('ث')],
   },
   {
@@ -184,6 +200,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The inside of the lower lip against the tips of the upper front teeth.',
     },
     regions: ['lip-lower', 'teeth-upper'],
+    contact: { kind: 'point', at: [55, 170] },
     letters: [plain('ف')],
   },
   {
@@ -194,6 +211,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'Both lips: they close for ba and meem, and round without closing for a waw that is not a madd letter.',
     },
     regions: ['shafatan'],
+    contact: { kind: 'edge', from: [37, 169], to: [56, 169] },
     letters: [plain('ب'), plain('م'), { letter: 'و', text: 'و', name: { ar: 'الواو غير المدية', en: 'Waw (not a madd letter)' } }],
   },
   {
@@ -204,6 +222,7 @@ export const MAKHARIJ: readonly Makhraj[] = [
       en: 'The inner top of the nose: the ghunnah (nasal hum) of noon and meem comes from it, clearest when they carry a shaddah.',
     },
     regions: ['khayshum'],
+    contact: { kind: 'point', at: [96, 126] },
     letters: [
       { letter: 'ن', text: 'نّ', name: { ar: 'غنة النون المشددة', en: 'Ghunnah of a noon with shaddah' } },
       { letter: 'م', text: 'مّ', name: { ar: 'غنة الميم المشددة', en: 'Ghunnah of a meem with shaddah' } },

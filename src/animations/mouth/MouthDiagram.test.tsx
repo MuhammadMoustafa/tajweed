@@ -2,6 +2,7 @@ import { render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { LocaleProvider } from '../../i18n/LocaleProvider'
 import { MouthDiagram, type MouthDiagramProps } from './MouthDiagram'
+import { inDiagramView } from './regions'
 
 const renderDiagram = (props: MouthDiagramProps, locale: 'ar' | 'en' = 'en') => {
   localStorage.setItem('tajweed.locale', locale)
@@ -85,5 +86,33 @@ describe('MouthDiagram', () => {
     const x = (c: HTMLElement) => Number(c.querySelector('.anat-pointer')!.getAttribute('cx'))
     const end = renderDiagram({ pointer: { from: 'gums', to: 'tongue-back', progress: 1 } })
     expect(x(end)).toBeGreaterThan(x(start))
+  })
+
+  it('draws the exact contact only when asked, above everything else', () => {
+    expect(renderDiagram({ highlight: ['gums'] }).querySelector('.anat-contact')).toBeNull()
+
+    const point = renderDiagram({ highlight: ['gums', 'tongue-tip'], labels: ['gums'], contact: { kind: 'point', at: [70, 151] } })
+    const mark = point.querySelector('.anat-contact')!
+    expect(mark).toHaveAttribute('data-contact', 'point')
+    expect(mark.querySelector('.anat-contact-dot')).toHaveAttribute('cx', '70')
+    expect(mark.querySelector('.anat-contact-ring')).toHaveAttribute('cy', '151')
+    // The last thing drawn, so no part or label covers it.
+    expect(mark.parentElement!.lastElementChild).toBe(mark)
+
+    const edge = renderDiagram({ contact: { kind: 'edge', from: [88, 157], to: [122, 155] } })
+    expect(edge.querySelector('[data-contact="edge"] .anat-contact-line')).toHaveAttribute('d', 'M88 157 L122 155')
+
+    const flow = renderDiagram({ contact: { kind: 'flow', path: [[201, 296], [201, 176], [24, 169]] } })
+    expect(flow.querySelector('[data-contact="flow"] .anat-contact-line')).toHaveAttribute('d', 'M201 296 L201 176 L24 169')
+    // The breath leaves through the lips: an arrowhead at the end of the path.
+    expect(flow.querySelector('[data-contact="flow"] .anat-contact-dot')?.getAttribute('d')).toMatch(/^M24 169 /)
+  })
+
+  it('knows which points fall inside its viewBox', () => {
+    expect(inDiagramView([0, 150])).toBe(true)
+    expect(inDiagramView([-110, 150])).toBe(false)
+    expect(inDiagramView([380, 150])).toBe(false)
+    expect(inDiagramView([100, 5])).toBe(false)
+    expect(inDiagramView([100, 330])).toBe(false)
   })
 })

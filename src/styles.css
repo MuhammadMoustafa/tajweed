@@ -62,6 +62,8 @@
   --anat-breath: #2566a8;
   --anat-sound: #1a2b52;
   --anat-halo: #ffffff;
+  /* The exact contact point of a makhraj (MouthDiagram `contact`), distinct from the region highlight. */
+  --anat-contact: #3a1fd1;
 
   --font-quran: 'Amiri Quran', serif;
   --font-ui-ar: 'Noto Naskh Arabic', 'Noto Sans', serif;
@@ -116,6 +118,7 @@
     --anat-breath: #9cc9ff;
     --anat-sound: #f2f5ff;
     --anat-halo: #141414;
+    --anat-contact: #7fe3ff;
   }
 }
 
@@ -1003,6 +1006,48 @@ main {
   fill: var(--accent);
   stroke: var(--surface);
   stroke-width: 2;
+}
+
+/* A makhraj's exact contact (MouthDiagram `contact`): over everything, on a halo. */
+.anat-contact .anat-contact-halo {
+  fill: none;
+  stroke: var(--anat-halo);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.anat-contact circle.anat-contact-halo {
+  stroke-width: 4.5;
+}
+
+.anat-contact-ring {
+  fill: none;
+  stroke: var(--anat-contact);
+  stroke-width: 1.6;
+}
+
+.anat-contact-dot {
+  fill: var(--anat-contact);
+  stroke: var(--anat-halo);
+  stroke-width: 1;
+}
+
+.anat-contact-line {
+  fill: none;
+  stroke: var(--anat-contact);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+[data-contact='flow'] .anat-contact-line {
+  stroke-width: 2.5;
+  stroke-dasharray: 6 4;
+}
+
+[data-contact='flow'] .anat-contact-halo {
+  stroke-width: 5.5;
 }
 
 .anat-label text {

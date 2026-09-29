@@ -12,6 +12,7 @@ import {
   makharijShafatan,
 } from './MakharijClips'
 import { MAKHARIJ, MAKHARIJ_AREAS, makharijOf, type MakharijArea } from './mouth/makharij'
+import { contactPoints, inDiagramView } from './mouth/regions'
 import { labelSpans, type Clip } from './player/clip'
 
 afterEach(() => localStorage.clear())
@@ -93,6 +94,26 @@ describe('the seventeen makharij', () => {
       }
     }
   })
+
+  it('each have an exact contact inside the diagram: the breath path for the jawf, a line for ض, ل and the lips, else a point', () => {
+    const edges: string[] = ['ض', 'ل', 'ب']
+    for (const m of MAKHARIJ) {
+      const kind = m.area === 'jawf' ? 'flow' : edges.includes(m.letters[0].letter) ? 'edge' : 'point'
+      expect(m.contact?.kind, m.name.en).toBe(kind)
+      for (const point of contactPoints(m.contact)) expect(inDiagramView(point), `${m.name.en}: ${point.join(',')}`).toBe(true)
+    }
+    // No two makharij share a spot.
+    expect(new Set(MAKHARIJ.map((m) => contactPoints(m.contact).join(' '))).size).toBe(17)
+  })
+
+  it('place the back-of-tongue points in order: qaf deepest, then kaf, then the middle of the tongue', () => {
+    const x = (letter: string) => {
+      const { contact } = MAKHARIJ.find((m) => m.area === 'lisan' && m.letters[0].letter === letter)!
+      return contactPoints(contact)[0][0]
+    }
+    expect(x('ق')).toBeGreaterThan(x('ك'))
+    expect(x('ك')).toBeGreaterThan(x('ج'))
+  })
 })
 
 describe.each(MAKHARIJ_AREAS)('the %s clip', (area) => {
@@ -114,6 +135,8 @@ describe.each(MAKHARIJ_AREAS)('the %s clip', (area) => {
     )
     expect(container.querySelector('.makharij-caption strong')).toHaveTextContent(makharijOf(area)[i].name.en)
     expect(clip.steps[i].caption).toEqual(makharijOf(area)[i].description)
+    // The exact contact, in the end frame (also the reduced-motion frame).
+    expect(container.querySelector('.anat-contact')).toHaveAttribute('data-contact', makharijOf(area)[i].contact.kind)
   })
 
   it.each(expected.map((e, i) => [i, e] as const))(
@@ -155,6 +178,8 @@ describe('the five-areas overview clip', () => {
     MAKHARIJ_AREAS.forEach((area, i) => {
       const container = renderFrame(makharijAreas, i, 1)
       expect(litRegions(container)).toEqual(lit[i])
+      // A whole area has no single contact point.
+      expect(container.querySelector('.anat-contact')).toBeNull()
       expect(shownLetters(container)).toEqual(makharijOf(area).flatMap((m) => m.letters.map((l) => l.text)))
       expect(makharijAreas.steps[i].label?.en.trim()).not.toBe('')
       expect(makharijAreas.steps[i].caption?.ar.trim()).not.toBe('')

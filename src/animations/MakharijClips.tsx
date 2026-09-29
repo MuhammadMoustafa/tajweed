@@ -35,6 +35,8 @@ export interface LetterTourFrameProps {
   /** Passed on to MouthDiagram (see its props). */
   tongue?: MouthDiagramProps['tongue']
   overlay?: MouthDiagramProps['overlay']
+  /** The makhraj's exact contact, over the lit regions. */
+  contact?: MouthDiagramProps['contact']
   /** Texts in the letters row; `current` (when set) is the one marked as shown now. */
   letters: readonly string[]
   current?: number
@@ -46,9 +48,9 @@ export interface LetterTourFrameProps {
  * A step's frame: the lit point on the diagram, with its name, its letters and their names. Also
  * the sifat clips' frame (SifatClips.tsx), which add the tongue's position and an overlay.
  */
-export const letterTourFrame = ({ heading, highlight, tongue, overlay, letters, current, names }: LetterTourFrameProps) => (
+export const letterTourFrame = ({ heading, highlight, tongue, overlay, contact, letters, current, names }: LetterTourFrameProps) => (
   <div className="makharij-tour">
-    <MouthDiagram highlight={highlight} labels={highlight} tongue={tongue} overlay={overlay} />
+    <MouthDiagram highlight={highlight} labels={highlight} tongue={tongue} overlay={overlay} contact={contact} />
     <div className="makharij-caption">
       <strong>
         <Localized text={heading} />
@@ -83,6 +85,7 @@ const makhrajStep = (makhraj: Makhraj): ClipStep => ({
     return letterTourFrame({
       heading: makhraj.name,
       highlight: makhraj.regions,
+      contact: makhraj.contact,
       letters: makhraj.letters.map((l) => l.text),
       current,
       names: current === undefined ? joinBilingual(makhraj.letters.map((l) => l.name)) : makhraj.letters[current].name,

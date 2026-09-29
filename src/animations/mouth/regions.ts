@@ -78,3 +78,31 @@ export const LABELS: Record<MakhrajRegion, { side: 'left' | 'right'; y: number; 
 
 /** Where a region is on the diagram, in the head coordinates an `overlay` draws in. */
 export const regionPoint = (region: MakhrajRegion): readonly [number, number] => LABELS[region].to
+
+/** A point in the head's own coordinates (as `LABELS`' `to` and an `overlay` use). */
+export type HeadPoint = readonly [number, number]
+
+/** MouthDiagram's viewBox, and how far right the head's own coordinates are shifted inside it. */
+export const DIAGRAM_VIEW = { offsetX: 104, y: 10, width: 474, height: 310 } as const
+
+/** Whether a head-coordinate point falls inside MouthDiagram's viewBox. */
+export const inDiagramView = ([x, y]: HeadPoint): boolean =>
+  x + DIAGRAM_VIEW.offsetX >= 0 &&
+  x + DIAGRAM_VIEW.offsetX <= DIAGRAM_VIEW.width &&
+  y >= DIAGRAM_VIEW.y &&
+  y <= DIAGRAM_VIEW.y + DIAGRAM_VIEW.height
+
+/**
+ * Where exactly the articulators meet for a makhraj, finer than the lit regions: a `point`, or an
+ * `edge` for a contact along a line (the side of the tongue against the molars, the lips closing).
+ * A `flow` is for the jawf, which has no contact at all: the path the breath takes, drawn as an
+ * open arrow ending outside the lips.
+ */
+export type ContactMarker =
+  | { kind: 'point'; at: HeadPoint }
+  | { kind: 'edge'; from: HeadPoint; to: HeadPoint }
+  | { kind: 'flow'; path: readonly HeadPoint[] }
+
+/** Every point a marker is drawn through. */
+export const contactPoints = (contact: ContactMarker): readonly HeadPoint[] =>
+  contact.kind === 'point' ? [contact.at] : contact.kind === 'edge' ? [contact.from, contact.to] : contact.path

@@ -1,9 +1,9 @@
 import { useId, type ReactNode } from 'react'
 import { joinBilingual, type Bilingual } from '../../i18n/bilingual'
 import { useLocale } from '../../i18n/LocaleProvider'
-import { LABELS, MAKHRAJ_REGION_NAMES, type MakhrajRegion } from './regions'
+import { DIAGRAM_VIEW, LABELS, MAKHRAJ_REGION_NAMES, type ContactMarker, type MakhrajRegion } from './regions'
 
-export type { MakhrajRegion } from './regions'
+export type { ContactMarker, MakhrajRegion } from './regions'
 
 const PARENT: Partial<Record<MakhrajRegion, MakhrajRegion>> = {
   'halq-deepest': 'halq',
@@ -26,10 +26,7 @@ const HIGHLIGHTED: Bilingual = { ar: 'المواضع المضيئة: ', en: 'Hig
  * Geometry, in the head's own coordinates (the face looks left, the throat is on the right; the
  * group is shifted right to leave room for labels on both sides).
  */
-const OFFSET_X = 104
-const VIEW_W = 474
-const VIEW_Y = 10
-const VIEW_H = 310
+const { offsetX: OFFSET_X, width: VIEW_W, y: VIEW_Y, height: VIEW_H } = DIAGRAM_VIEW
 
 const HEAD =
   'M150 18 C98 18 62 46 58 88 L52 108 L30 136 L46 144 L50 150 C60 190 62 214 78 222 ' +
@@ -89,7 +86,45 @@ export interface MouthDiagramProps {
   /** Extra drawing (e.g. breath or sound flowing) over the anatomy, in the head's coordinates
    *  (see `regionPoint`), under the labels. */
   overlay?: ReactNode
+  /** The exact spot where the articulators meet (a dot with a ring, a line, or the jawf's breath
+   *  path), drawn above everything else in its own color. */
+  contact?: ContactMarker
   className?: string
+}
+
+const pathThrough = (points: readonly (readonly [number, number])[]) =>
+  points.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x} ${y}`).join(' ')
+
+/** An arrowhead at the end of a path, pointing along its last segment. */
+function arrowHead(points: readonly (readonly [number, number])[]): string {
+  const [[x0, y0], [x1, y1]] = points.slice(-2)
+  const length = Math.hypot(x1 - x0, y1 - y0)
+  const [dx, dy] = [(x1 - x0) / length, (y1 - y0) / length]
+  const [bx, by] = [x1 - 8 * dx, y1 - 8 * dy]
+  return `M${x1} ${y1} L${bx - 5 * dy} ${by + 5 * dx} L${bx + 5 * dy} ${by - 5 * dx} Z`
+}
+
+/** Each shape twice: a wide halo underneath so the marker reads on any part it crosses. */
+function ContactMark({ contact }: { contact: ContactMarker }) {
+  if (contact.kind === 'point') {
+    const [cx, cy] = contact.at
+    return (
+      <g className="anat-contact" data-contact="point" data-at={contact.at.join(' ')}>
+        <circle cx={cx} cy={cy} r={6} className="anat-contact-halo" />
+        <circle cx={cx} cy={cy} r={6} className="anat-contact-ring" />
+        <circle cx={cx} cy={cy} r={2.6} className="anat-contact-dot" />
+      </g>
+    )
+  }
+  const points = contact.kind === 'edge' ? [contact.from, contact.to] : contact.path
+  const d = pathThrough(points)
+  return (
+    <g className="anat-contact" data-contact={contact.kind}>
+      <path d={d} className="anat-contact-halo" />
+      <path d={d} className="anat-contact-line" />
+      {contact.kind === 'flow' && <path d={arrowHead(points)} className="anat-contact-dot" />}
+    </g>
+  )
 }
 /** Centre of the nose passage, where the nasal cloud sits (diagram coordinates). */
 const NASAL_CLOUD: [number, number][] = [
@@ -103,7 +138,7 @@ const NASAL_CLOUD: [number, number][] = [
  * A friendly side view (sagittal section) of the head showing where letters are articulated.
  * Shapes are deliberately simple; colors come from the `--anat-*` tokens in src/styles.css.
  */
-export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', nasal, pointer, overlay, className }: MouthDiagramProps) {
+export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', nasal, pointer, overlay, contact, className }: MouthDiagramProps) {
   const { t } = useLocale()
   const id = useId().replace(/[^\w-]/g, '')
   const lit = (region: MakhrajRegion) => {
@@ -215,6 +250,7 @@ export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', nas
             </g>
           )
         })}
+        {contact && <ContactMark contact={contact} />}
       </g>
     </svg>
   )
