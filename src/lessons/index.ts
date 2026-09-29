@@ -30,7 +30,7 @@ import { sifat } from './sifat'
 import type { Lesson } from './types'
 
 /** Register new lessons here; they are shown in `order`. */
-export const LESSONS: Lesson[] = [foundations, makharij, makharijJawf, makharijHalq, makharijLisan, makharijShafatan, makharijKhayshum, qalqalah, naturalMadd, muttasilMunfasil, maddLazim, maddWhenStopping, maddBadalSilah, lamRules, izhar, idgham, iqlab, ikhfa, heavyLight, ghunnahLesson, ra, hamzatWasl, idghamLetters, waqf, sifat, meemSakinah, foundationsHarakat, foundationsShaddahTanween, foundationsBasmala, otherMadd].sort(
+export const LESSONS: Lesson[] = [foundations, makharij, makharijJawf, makharijHalq, makharijLisan, makharijShafatan, makharijKhayshum, qalqalah, naturalMadd, muttasilMunfasil, maddLazim, maddWhenStopping, maddBadalSilah, lamRules, izhar, idgham, iqlab, ikhfa, heavyLight, ghunnahLesson, ra, hamzatWasl, idghamLetters, waqf, sifat, meemSakinah, foundationsHarakat, foundationsShaddahTanween, foundationsBasmala].sort(
   (a, b) => a.order - b.order,
 )
 
