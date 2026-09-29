@@ -34,7 +34,7 @@ function frame(mark: MarkName, sound: string, extra?: string) {
     return (
       <svg viewBox="0 0 500 230" aria-hidden="true" className="anim-svg foundations-frame" data-mark={mark}>
         {landed ? (
-          <text x={250} y={110} textAnchor="middle" dominantBaseline="central" className="anim-letter" fill="var(--tj-qalqalah)" data-landed>
+          <text x={250} y={110} textAnchor="middle" dominantBaseline="central" className="anim-letter" fill="var(--accent)" data-landed>
             {LETTER + MARKS[mark]}
           </text>
         ) : (
@@ -48,7 +48,7 @@ function frame(mark: MarkName, sound: string, extra?: string) {
               textAnchor="middle"
               dominantBaseline="central"
               className="anim-letter"
-              fill="var(--tj-qalqalah)"
+              fill="var(--accent)"
               opacity={0.4 + 0.6 * t}
             >
               {'\u25CC' + MARKS[mark]}
