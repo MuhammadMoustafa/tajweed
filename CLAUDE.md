@@ -64,7 +64,7 @@ Data flows one way: **lesson data → verse markup → parsed segments → color
 
 ## Learning path (lesson order)
 
-Nine units in the conventional beginner order (Tuhfat al-Atfal's sequence), each lesson in one; unit N's lessons are N, N.1, N.2 … (src/lessons/units.ts), shown on the home page as collapsible groups. Each step only depends on earlier ones; examples come from short, familiar surahs (Juz 'Amma, Al-Fatiha).
+Units in the conventional beginner order (Tuhfat al-Atfal's sequence), each lesson in one; unit N's lessons are N, N.1, N.2 … (src/lessons/units.ts). Every unit has a `level`: `core` units (1-8) come first on the home page, `advanced` ones (10-12) sit under an "Advanced" heading after them; the summary counts them separately and "next" never points into Advanced while a core lesson is unlearned (`nextLesson`). Each step only depends on earlier ones; examples come from short, familiar surahs (Juz 'Amma, Al-Fatiha).
 
 1. Getting started: foundations (letters, harakat, sukun, shadda, tanween; istiʿadha and basmala)
 2. Makharij: intro, then the five areas
@@ -74,7 +74,10 @@ Nine units in the conventional beginner order (Tuhfat al-Atfal's sequence), each
 6. Madd: natural, muttasil/munfasil, lazim, other madd (ʿarid, leen, badal, silah)
 7. Heavy & light letters: heavy/light, ra, qalqalah
 8. Stopping & starting: waqf, hamzat al-wasl
-9. Going deeper: sifat al-huruf
+9. Practice & review (core, coming)
+10. Going deeper: sifat al-huruf (advanced)
+11. Hafs special words (advanced, coming)
+12. Finer levels (advanced, coming)
 
 Each lesson: short explanation → animation → highlighted Quran examples with audio → a link to its quiz page.
 

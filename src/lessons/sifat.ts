@@ -4,7 +4,7 @@ import type { Lesson } from './types'
 // this file holds the lesson's prose. Mnemonic phrases are the classical ones, not Quran text.
 export const sifat: Lesson = {
   id: 'sifat',
-  order: 9,
+  order: 10,
   unit: 'deeper',
   title: { ar: 'صفات الحروف', en: 'Sifat al-huruf (the letters’ qualities)' },
   summary: {

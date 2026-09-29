@@ -67,6 +67,11 @@ export const ui = {
   markedAsLearned: { ar: 'تم التعلّم', en: 'Learned' },
   /** Template for the lesson-list progress summary; `{learned}`/`{total}` are filled by formatLearnedCount. */
   learnedCount: { ar: '{learned} من {total} تم تعلّمها', en: '{learned} of {total} learned' },
+  advancedHeading: { ar: 'متقدّم', en: 'Advanced' },
+  advancedNote: {
+    ar: 'تعمّق اختياري بعد أن تُتقن الدروس الأساسية.',
+    en: 'Optional extra depth, best after the core lessons.',
+  },
   /** Template for a unit header's number on the home list; `{n}` is filled by formatTemplate. */
   unitNumber: { ar: 'الوحدة {n}', en: 'Unit {n}' },
   /** MatnPanel's <summary>: shown identically in both locales, so either reader recognizes it. */
