@@ -58,15 +58,17 @@ describe('LessonView', () => {
     expect(last.queryAllByText(/Previous lesson/).length).toBe(LESSONS.length > 1 ? 1 : 0)
   })
 
-  it('links every lesson with a quiz to its quiz page instead of showing the quiz inline', () => {
-    for (const shown of LESSONS) {
+  // One test per lesson: rendering all of them in one test outgrew the 5 s timeout as lessons were added.
+  it.each(LESSONS.map((l) => [l.id, l] as const))(
+    'links lesson %s to its quiz page (if it has a quiz) instead of showing the quiz inline',
+    (_id, shown) => {
       const { container, screen } = renderLesson(shown)
       expect(container.querySelector('.quiz')).toBeNull()
       const link = screen.queryByRole('link', { name: /Test yourself/ })
       if (hasQuiz(shown)) expect(link).toHaveAttribute('href', `#/lesson/${shown.id}/quiz`)
       else expect(link).toBeNull()
-    }
-  })
+    },
+  )
 
   it('plays the lesson clip beside the text and a section clip under its own section', () => {
     localStorage.setItem('tajweed.locale', 'ar')
