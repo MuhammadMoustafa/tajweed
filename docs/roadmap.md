@@ -43,7 +43,7 @@ in brackets picks the agent.
 | L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | done |
 | L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | done |
 | L2c | #37 | [task-hard] Makharij as a unit: intro + five chapters (jawf, halq, lisan, shafatan, khayshum), one clip step per makhraj (17, ن/ل/ر separate) and each letter shown in turn; lesson list groups units (maintainer, 2026-09-28). | T13 | done |
-| L2d | #45 | [task-hard] Exact contact markers per makhraj (17): a dot or edge line where the articulators meet, data beside the makharij table, drawn by MouthDiagram in the makharij clips (maintainer, 2026-09-28). | L2c | in-progress |
+| L2d | #45 | [task-hard] Exact contact markers per makhraj (17): a dot or edge line where the articulators meet, data beside the makharij table, drawn by MouthDiagram in the makharij clips (maintainer, 2026-09-28). | L2c | done |
 | L3 | #9 | [task] Heavy and light letters (tafkhim/tarqiq basics, خص ضغط قظ), reusing MouthDiagram. | L2, T6, T10 | done |
 | L4 | #10 | [task] Noon sakinah/tanween 1: izhar halqi. | T2, T6 | done |
 | L5 | #11 | [task] Noon sakinah/tanween 2: idgham with and without ghunnah (`idgham_ghunnah`, `idgham_wo_ghunnah`). Animation: the noon merging into the next letter. | T2 | done |
