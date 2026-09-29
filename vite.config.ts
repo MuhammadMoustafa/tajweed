@@ -68,18 +68,41 @@ export default defineConfig({
     }),
   ],
   test: {
-    environment: 'jsdom',
-    // Worker threads, not the default child-process forks: forks timed out on startup in the
-    // sandboxed shell while other builds ran, failing the run with "no tests" (seen by T2, T3, T6).
+    // Start-up cost is the environment, not the tests. A vitest worker must report "started"
+    // within 60 s, and for jsdom that means importing jsdom: ~960 CommonJS files, ~1.5 s alone but
+    // bound by file-system calls (stat/lstat/read, where Windows' real-time scanning sits), so
+    // parallel imports queue: 8 at once take ~3 s each, 16 ~6 s, and the first run after `npm ci`
+    // in a fresh worktree took 31 s for one. With every file on jsdom and a new worker per file,
+    // a run loaded jsdom 59 times, 8 at a time, and under a second run or a build some workers
+    // missed the 60 s ('Timeout waiting for worker to respond', 'no tests'). So:
+    // - pure-logic tests (*.test.ts) run in node and load neither jsdom nor jest-dom; the few that
+    //   need a DOM say so with a `// @vitest-environment jsdom` docblock;
+    // - component tests (*.test.tsx) use vmThreads: each worker imports jsdom once and runs every
+    //   file in a fresh VM context with its own window, so files stay isolated.
+    // Measured (full suite alone): 25-34 s before, 8-10 s after.
+    // Worker threads, not child-process forks: forks timed out on startup in the sandboxed shell
+    // while other builds ran (seen by T2, T3, T6). 8 workers leave room for a second run or a build.
     pool: 'threads',
-    // On this 32-core machine vitest started ~31 jsdom workers at once; under load from builds some
-    // missed the start-up timeout ('Timeout waiting for worker to respond', 'no tests'). Measured:
-    // uncapped 25-76 s and flaky, 8 workers ~38 s and steady, 4 workers 43-86 s.
     maxWorkers: 8,
-    setupFiles: ['./src/test/setup.ts'],
     // Task-board worktrees live inside the checkout; never pick up their tests.
     // e2e/** holds the Playwright UI suite, run separately via `npm run test:ui`.
     // android/** is the generated Capacitor project; apk/** holds `npm run apk` output.
     exclude: [...configDefaults.exclude, '.claude/**', 'e2e/**', 'android/**', 'apk/**'],
+    projects: [
+      {
+        extends: true,
+        test: { name: 'logic', environment: 'node', include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'] },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'dom',
+          environment: 'jsdom',
+          pool: 'vmThreads',
+          setupFiles: ['./src/test/setup.ts'],
+          include: ['src/**/*.test.tsx'],
+        },
+      },
+    ],
   },
 })

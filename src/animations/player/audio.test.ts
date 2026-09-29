@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getWord } from '../../data/quran'
 import { AUDIO_GIVE_UP_MS, clipAudioRef, clipAudioSpan, createHtmlAudioDriver, mediaFragmentUrl } from './audio'
