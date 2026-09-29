@@ -54,6 +54,8 @@ test.describe('matn panel', () => {
       await panel.locator('summary').click()
       const firstLine = panel.locator('.matn-line').first()
       await expect(firstLine).toBeVisible()
+      // Measure after the web fonts have loaded: a fallback font's wider glyphs can wrap a half-line.
+      await page.evaluate(() => document.fonts.ready)
 
       const sadrBox = await firstLine.locator('.matn-sadr').boundingBox()
       const ajuzBox = await firstLine.locator('.matn-ajuz').boundingBox()

@@ -50,7 +50,7 @@ describe.each(PRACTICE.map((l) => [l.id, l] as const))('practice lesson %s (L22)
     expect(cards).toHaveLength(lesson.examples.length)
     lesson.examples.forEach((example, i) => {
       const card = cards[i]
-      expect(card.querySelector('.verse-key')).toHaveTextContent(example.verseKey)
+      expect(card.querySelector('.verse-key')).toHaveAttribute('data-verse-key', example.verseKey)
       expect(within(card).getByText(example.note[locale])).toBeInTheDocument()
       const quran = card.querySelector('.quran')!
       expect(quran).toHaveAttribute('lang', 'ar')

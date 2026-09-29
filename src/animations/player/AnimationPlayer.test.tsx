@@ -1,5 +1,6 @@
 import { act, fireEvent, render, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { surahName } from '../../data/quran'
 import { LocaleProvider } from '../../i18n/LocaleProvider'
 import { AnimationPlayer } from './AnimationPlayer'
 import { mediaFragmentUrl, type AudioDriver, type AudioSpan } from './audio'
@@ -276,7 +277,7 @@ describe('AnimationPlayer step audio', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
     expect(player.getAttribute('data-audio-src')).toMatch(/^https:\/\/.+\.mp3#t=\d+(\.\d+)?,\d+(\.\d+)?$/)
     expect(player.querySelector('.player-audio-credit')).toHaveTextContent(
-      'Recited by Sheikh Mahmoud Khalil al-Husary · surah 1, ayah 1, word 3',
+      'Recited by Sheikh Mahmoud Khalil al-Husary · Al-Fatihah (1), ayah 1, word 3',
     )
   })
 
@@ -284,7 +285,7 @@ describe('AnimationPlayer step audio', () => {
     const { screen, player } = setup('ar')
     fireEvent.click(screen.getByRole('button', { name: 'الخطوة التالية' }))
     expect(player.querySelector('.player-audio-credit')).toHaveTextContent(
-      'بصوت الشيخ محمود خليل الحصري · سورة ١، الآية ١، الكلمة ٣',
+      `بصوت الشيخ محمود خليل الحصري · سورة ${surahName(1).ar} (١)، الآية ١، الكلمة ٣`,
     )
     expect(screen.getByRole('button', { name: 'كتم صوت القارئ' })).toBeInTheDocument()
   })

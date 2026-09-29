@@ -1,6 +1,6 @@
 import { useReducedMotion } from 'motion/react'
 import { useEffect, useMemo, useReducer, useState, type CSSProperties, type KeyboardEvent } from 'react'
-import { WORD_RECITATION } from '../../data/quran'
+import { surahName, WORD_RECITATION } from '../../data/quran'
 import { dirOf } from '../../i18n/bilingual'
 import { useLocale } from '../../i18n/LocaleProvider'
 import { formatTemplate, ui } from '../../i18n/ui'
@@ -81,6 +81,8 @@ export function AnimationPlayer({ clip, clock = frameClock, audio }: AnimationPl
   const spans = useMemo(() => labelSpans(clip), [clip])
   const hasLabels = spans.length > 0
   const stepSpan = step.audio && clipAudioSpan(step.audio)
+  // Where the step's word is, for the credit line: the surah by name, ayah and word by number.
+  const stepRef = step.audio && clipAudioRef(step.audio)
 
   const onKeyDown = (event: KeyboardEvent) => {
     const onButton = event.target instanceof HTMLButtonElement
@@ -132,7 +134,7 @@ export function AnimationPlayer({ clip, clock = frameClock, audio }: AnimationPl
         {step.caption && <span className="player-caption-text">{t(step.caption)}</span>}
         {step.audio && (
           <span className="player-audio-credit">
-            {t(ui.recitedBy)} {t(WORD_RECITATION.reciter)} · {formatTemplate(locale, ui.wordRef, clipAudioRef(step.audio))}
+            {t(ui.recitedBy)} {t(WORD_RECITATION.reciter)} · {stepRef && formatTemplate(locale, ui.wordRef, { ...stepRef, surah: t(surahName(stepRef.surah)), number: stepRef.surah })}
           </span>
         )}
       </p>

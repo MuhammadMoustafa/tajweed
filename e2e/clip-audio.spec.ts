@@ -53,7 +53,7 @@ test('the natural madd clip ends on a recited Quran word, with its source, credi
   await expect(player).toHaveAttribute('data-audio-src', spanUrl('naturalMadd'))
   await expect(player.locator('.anim-word')).toHaveText(getWord(CLIP_WORDS.naturalMadd)!.text)
   await expect(player.locator('.player-audio-credit')).toHaveText(
-    'Recited by Sheikh Mahmoud Khalil al-Husary · surah 1, ayah 1, word 3',
+    'Recited by Sheikh Mahmoud Khalil al-Husary · Al-Fatihah (1), ayah 1, word 3',
   )
 
   await mute.click()

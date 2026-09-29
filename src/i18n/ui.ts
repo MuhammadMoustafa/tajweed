@@ -27,8 +27,13 @@ export const ui = {
   muteReciter: { ar: 'كتم صوت القارئ', en: 'Mute the reciter' },
   /** Followed by the reciter's name (WORD_RECITATION in src/data/quran.ts). */
   recitedBy: { ar: 'بصوت', en: 'Recited by' },
-  /** Template filled by formatTemplate with `{surah}`/`{ayah}`/`{word}`: where a clip's word is. */
-  wordRef: { ar: 'سورة {surah}، الآية {ayah}، الكلمة {word}', en: 'surah {surah}, ayah {ayah}, word {word}' },
+  /**
+   * Template filled by formatTemplate with `{surah}` (its name), `{number}` (the surah's), `{ayah}`
+   * and `{word}`: where a clip's word is. The name is for learners, the number for finding it.
+   */
+  wordRef: { ar: 'سورة {surah} ({number})، الآية {ayah}، الكلمة {word}', en: '{surah} ({number}), ayah {ayah}, word {word}' },
+  /** Template filled by formatTemplate with `{surah}` (its name), `{number}` and `{ayah}`: an example's ayah. */
+  verseRef: { ar: 'سورة {surah} ({number})، الآية {ayah}', en: '{surah} ({number}), ayah {ayah}' },
   notReviewed: {
     ar: 'هذا الدرس لم يُراجَع بعد من معلّم مُجاز.',
     en: 'This lesson has not yet been reviewed by a qualified teacher.',
@@ -160,13 +165,16 @@ export const withRuleName = (template: Bilingual, name: Bilingual): Bilingual =>
 })
 
 /**
- * Fills a template's `{name}` slots with numbers in the locale's own digits (via formatNumber,
- * so Arabic renders Arabic-Indic numerals), e.g. `ui.stepOf` → "Step 2 of 5" / "الخطوة ٢ من ٥".
+ * Fills a template's `{name}` slots: numbers in the locale's own digits (via formatNumber, so
+ * Arabic renders Arabic-Indic numerals), e.g. `ui.stepOf` → "Step 2 of 5" / "الخطوة ٢ من ٥";
+ * strings (already in the locale, e.g. a surah's name) as they are.
  */
-export function formatTemplate(locale: Locale, template: Bilingual, values: Record<string, number>): string {
-  return template[locale].replace(/\{(\w+)\}/g, (slot, name: string) =>
-    name in values ? formatNumber(locale, values[name]) : slot,
-  )
+export function formatTemplate(locale: Locale, template: Bilingual, values: Record<string, number | string>): string {
+  return template[locale].replace(/\{(\w+)\}/g, (slot, name: string) => {
+    if (!(name in values)) return slot
+    const value = values[name]
+    return typeof value === 'number' ? formatNumber(locale, value) : value
+  })
 }
 
 /** "3 of 20 learned" / "٣ من ٢٠ تم تعلّمها". */

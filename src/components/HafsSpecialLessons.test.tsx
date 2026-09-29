@@ -25,7 +25,7 @@ const renderLesson = (lesson: Lesson, locale: 'ar' | 'en') => {
 /** The example card for `verseKey`, found by its visible verse key. */
 const example = (container: HTMLElement, verseKey: string) =>
   [...container.querySelectorAll<HTMLElement>('.example')].find(
-    (card) => card.querySelector('.verse-key')?.textContent === verseKey,
+    (card) => card.querySelector('.verse-key')?.getAttribute('data-verse-key') === verseKey,
   )!
 
 /**

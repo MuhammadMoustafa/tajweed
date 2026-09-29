@@ -22,7 +22,7 @@ const renderLesson = (locale: 'ar' | 'en', lesson: Lesson = maddWhenStopping) =>
 /** The example card for `verseKey`, found by its visible verse key. */
 const example = (container: HTMLElement, verseKey: string) =>
   [...container.querySelectorAll<HTMLElement>('.example')].find(
-    (card) => card.querySelector('.verse-key')?.textContent === verseKey,
+    (card) => card.querySelector('.verse-key')?.getAttribute('data-verse-key') === verseKey,
   )!
 
 /** Colored rule spans in an example's Quran text, as `title` (the rule's name) per span. */

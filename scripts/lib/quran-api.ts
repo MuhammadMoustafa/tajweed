@@ -1,7 +1,7 @@
 /**
  * The one place scripts call the Quran Foundation API: tajweed markup (Hafs), shared by
  * fetch-quran (lesson examples) and build-quiz-pool (the whole Quran), and the words clips play
- * (their text and a recitation's per-word timings), for fetch-quran.
+ * (their text and a recitation's per-word timings) and the surah names, for fetch-quran.
  */
 import type { QuranWord } from '../../src/data/quran.ts'
 import { fetchJson } from './fetch.ts'
@@ -98,4 +98,25 @@ export function parseVerseWords(body: VerseWordsResponse): Record<number, QuranW
 /** Word position → text and audio span for every word of `verseKey`, in `recitationId`'s recitation. */
 export async function fetchVerseWords(verseKey: string, recitationId: number): Promise<Record<number, QuranWord>> {
   return parseVerseWords(await fetchJson<VerseWordsResponse>(verseWordsUrl(verseKey, recitationId)))
+}
+
+/** Every surah's name, in Arabic and in the API's English transliteration (`name_simple`). */
+export const CHAPTERS_API = 'https://api.quran.com/api/v4/chapters?language=en'
+
+/** Attribution for src/data/surahs.json. */
+export const chaptersSource = () => ({
+  name: 'Quran Foundation API (quran.com) — chapters: name_arabic and name_simple',
+  url: CHAPTERS_API,
+  fetchedAt: new Date().toISOString().slice(0, 10),
+})
+
+interface ChaptersResponse {
+  chapters: { id: number; name_arabic: string; name_simple: string }[]
+}
+
+/** Surah number → its name in both languages, for all 114 (throws if the API returns fewer). */
+export async function fetchSurahNames(): Promise<Record<number, { ar: string; en: string }>> {
+  const { chapters } = await fetchJson<ChaptersResponse>(CHAPTERS_API)
+  if (chapters.length !== 114) throw new Error(`${chapters.length} chapters in API response, expected 114`)
+  return Object.fromEntries(chapters.map((c) => [c.id, { ar: c.name_arabic, en: c.name_simple }]))
 }

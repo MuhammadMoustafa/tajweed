@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
-import { getVerseMarkup, verseAudioUrl } from '../data/quran'
+import { getVerseMarkup, surahName, verseAudioUrl } from '../data/quran'
 import { useLocale } from '../i18n/LocaleProvider'
-import { ui } from '../i18n/ui'
+import { formatTemplate, ui } from '../i18n/ui'
 import type { LessonExample } from '../lessons/types'
 import type { RuleId } from '../tajweed/rules'
 import { TajweedText } from './TajweedText'
@@ -12,11 +12,12 @@ interface Props {
 }
 
 export function AyahExample({ example, highlight }: Props) {
-  const { t } = useLocale()
+  const { locale, t } = useLocale()
   const audio = useRef<HTMLAudioElement>(null)
   const [playing, setPlaying] = useState(false)
   const markup = getVerseMarkup(example.verseKey)
 
+  const [surah, ayah] = example.verseKey.split(':').map(Number)
   // A missing verse means `npm run fetch-quran` wasn't run after editing a lesson.
   if (!markup) return null
 
@@ -34,7 +35,9 @@ export function AyahExample({ example, highlight }: Props) {
         <button type="button" className="play" onClick={toggle} aria-pressed={playing}>
           {playing ? '⏸ ' + t(ui.pause) : '▶ ' + t(ui.listen)}
         </button>
-        <span className="verse-key">{example.verseKey}</span>
+        <span className="verse-key" data-verse-key={example.verseKey}>
+          {formatTemplate(locale, ui.verseRef, { surah: t(surahName(surah)), number: surah, ayah })}
+        </span>
         <span>{t(example.note)}</span>
       </figcaption>
       <audio
