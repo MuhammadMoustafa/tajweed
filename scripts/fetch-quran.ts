@@ -1,5 +1,5 @@
 /**
- * Downloads the tajweed-annotated Uthmani text (Hafs) for every verse referenced by a lesson
+ * Downloads the tajweed-annotated Uthmani text (Hafs) for every verse referenced by a lesson (and every clip word's ayah)
  * and writes it to src/data/quran.json; and, for every Quran word a clip plays
  * (src/animations/words.ts), its text and where the reciter (WORD_RECITATION) says it in the ayah's
  * audio, written to src/data/quran-words.json. The JSON is committed so the app builds and runs
@@ -16,7 +16,14 @@ import { fetchTajweedVerses, fetchVerseWords, tajweedSource, wordsSource } from 
 const OUT = new URL('../src/data/quran.json', import.meta.url)
 const WORDS_OUT = new URL('../src/data/quran-words.json', import.meta.url)
 
-const keys = [...new Set(LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)))].sort(compareVerseKeys)
+// Lesson examples, plus the ayah of every clip word (so a word's position can be checked against
+// its ayah, and its rule against the markup, without the word being a lesson example).
+const keys = [
+  ...new Set([
+    ...LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)),
+    ...Object.values(CLIP_WORDS).map((key) => splitWordKey(key).verseKey),
+  ]),
+].sort(compareVerseKeys)
 
 const verses: Record<string, string> = {}
 for (const key of keys) verses[key] = (await fetchTajweedVerses(key))[key]

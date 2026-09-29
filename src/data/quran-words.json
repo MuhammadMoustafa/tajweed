@@ -78,6 +78,14 @@
         "end": 6090
       }
     },
+    "89:1:1": {
+      "text": "وَٱلْفَجْرِ",
+      "audio": {
+        "url": "https://mirrors.quranicaudio.com/everyayah/Husary_64kbps/089001.mp3",
+        "start": 950,
+        "end": 2000
+      }
+    },
     "96:1:1": {
       "text": "ٱقْرَأْ",
       "audio": {
@@ -92,6 +100,22 @@
         "url": "https://mirrors.quranicaudio.com/everyayah/Husary_64kbps/096001.mp3",
         "start": 1350,
         "end": 2380
+      }
+    },
+    "96:6:4": {
+      "text": "لَيَطْغَىٰٓ",
+      "audio": {
+        "url": "https://mirrors.quranicaudio.com/everyayah/Husary_64kbps/096006.mp3",
+        "start": 7050,
+        "end": 8980
+      }
+    },
+    "111:1:5": {
+      "text": "وَتَبَّ",
+      "audio": {
+        "url": "https://mirrors.quranicaudio.com/everyayah/Husary_64kbps/111001.mp3",
+        "start": 7270,
+        "end": 8710
       }
     },
     "112:1:3": {

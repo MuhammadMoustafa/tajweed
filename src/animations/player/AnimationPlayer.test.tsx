@@ -399,3 +399,73 @@ describe('AnimationPlayer step audio', () => {
     expect(player.querySelector('.player-audio-credit')).toBeNull()
   })
 })
+
+// Steps 0 and 1 pause when done (step 0 with audio, step 1 without); step 2 is last.
+const pausingClip: Clip = {
+  title: { ar: 'مقطع بتوقف', en: 'Pausing clip' },
+  steps: [1000, 1000, 1000].map((duration, i) => ({
+    duration,
+    caption: { ar: `تعليق ${i + 1}`, en: `Caption ${i + 1}` },
+    audio: i === 0 ? { word: WORD } : undefined,
+    pauseAfter: i < 2 || undefined,
+    render: (progress: number) => <span data-testid="frame">{`${i}:${progress}`}</span>,
+  })),
+}
+
+describe('AnimationPlayer pauseAfter', () => {
+  const setup = () => {
+    const audio = fakeAudio()
+    return { ...audio, ...renderPlayer('en', pausingClip, audio.driver) }
+  }
+
+  it('stops after the step (and its audio) with its end frame, then play goes on to the next step', () => {
+    const { screen, player, plays, advance } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    advance(1500)
+    expect(plays).toHaveLength(1)
+    expect(player).toHaveAttribute('data-playing', 'true') // duration done, audio still sounding
+    expect(player).toHaveAttribute('data-step', '0')
+    plays[0].finish()
+    advance(100)
+    expect(player).toHaveAttribute('data-playing', 'false')
+    expect(player).toHaveAttribute('data-step', '0')
+    expect(screen.getByText('Caption 1')).toBeInTheDocument()
+    expect(Number(screen.getByTestId('frame').textContent!.split(':')[1])).toBeGreaterThan(0.99)
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    expect(player).toHaveAttribute('data-step', '1')
+    expect(player).toHaveAttribute('data-playing', 'true')
+    advance(1000)
+    expect(player).toHaveAttribute('data-playing', 'false') // step 1 pauses too, with no audio
+    expect(player).toHaveAttribute('data-step', '1')
+  })
+
+  it('ends the clip after the last step as usual', () => {
+    const { screen, player, advance } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    advance(1000)
+    expect(player).toHaveAttribute('data-playing', 'false')
+    expect(screen.getByTestId('frame')).toHaveTextContent('2:1')
+  })
+
+  it('steps back to the start of the step just heard, paused', () => {
+    const { screen, player, plays, advance } = setup()
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    advance(1000)
+    plays[0].finish()
+    advance(10)
+    fireEvent.click(screen.getByRole('button', { name: 'Previous step' }))
+    expect(player).toHaveAttribute('data-step', '0')
+    expect(player).toHaveAttribute('data-playing', 'false')
+    expect(screen.getByTestId('frame')).toHaveTextContent('0:0')
+  })
+
+  it('leaves other clips playing straight through', () => {
+    const { player, screen, advance } = renderPlayer()
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }))
+    advance(1500)
+    expect(player).toHaveAttribute('data-playing', 'true')
+    expect(player).toHaveAttribute('data-step', '1')
+  })
+})

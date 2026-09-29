@@ -21,17 +21,29 @@ const LETTERS: { letter: string; label: Bilingual; caption: Bilingual; word?: Wo
   {
     letter: 'ط',
     label: { ar: 'الطاء', en: 'Ta' },
-    caption: { ar: 'الطاء: يرتدّ صوتها إذا سكنت', en: 'Ta (the heavy t): its sound bounces when it has a sukun' },
+    caption: {
+      ar: 'الطاء: يرتدّ صوتها إذا سكنت. استمع إليها ساكنةً في آخر الآية السادسة من سورة العلق.',
+      en: 'Ta (the heavy t): its sound bounces when it has a sukun. Hear it, with its sukun, at the end of 96:6.',
+    },
+    word: CLIP_WORDS.qalqalahTa,
   },
   {
     letter: 'ب',
     label: { ar: 'الباء', en: 'Ba' },
-    caption: { ar: 'الباء: يرتدّ صوتها إذا سكنت', en: 'Ba: its sound bounces when it has a sukun' },
+    caption: {
+      ar: 'الباء: يرتدّ صوتها إذا سكنت. استمع إليها في آخر الآية الأولى من سورة المسد، حيث يسكّنها الوقف.',
+      en: 'Ba: its sound bounces when it has a sukun. Hear it at the end of 111:1, where stopping gives it one.',
+    },
+    word: CLIP_WORDS.qalqalahBa,
   },
   {
     letter: 'ج',
     label: { ar: 'الجيم', en: 'Jeem' },
-    caption: { ar: 'الجيم: يرتدّ صوتها إذا سكنت', en: 'Jeem: its sound bounces when it has a sukun' },
+    caption: {
+      ar: 'الجيم: يرتدّ صوتها إذا سكنت. استمع إليها ساكنةً في أول كلمة من سورة الفجر، الآية الأولى.',
+      en: 'Jeem: its sound bounces when it has a sukun. Hear it, with its sukun, in the first word of 89:1.',
+    },
+    word: CLIP_WORDS.qalqalahJeem,
   },
   {
     letter: 'د',
@@ -117,6 +129,8 @@ export const qalqalahBounce: Clip = {
       caption,
       label,
       audio: word ? { word } : undefined,
+      // The learner hears each letter's word, then chooses when to go on to the next letter.
+      pauseAfter: true,
       render: (progress) => frame(i, progress, word),
     }),
   ),

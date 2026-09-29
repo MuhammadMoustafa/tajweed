@@ -14,6 +14,12 @@ export const CLIP_WORDS = {
   qalqalahQaf: '113:1:4',
   /** Qalqalah on dal with a sukun in the middle of 112:3 (a lesson example). */
   qalqalahDal: '112:3:2',
+  /** Qalqalah on ta (ط) with a sukun inside 96:6, the fourth word. */
+  qalqalahTa: '96:6:4',
+  /** Qalqalah on ba at the end of 111:1, the last word, where the reciter stops. */
+  qalqalahBa: '111:1:5',
+  /** Qalqalah on jeem with a sukun inside 89:1, its first word. */
+  qalqalahJeem: '89:1:1',
   /** Lam shamsiyyah: the basmala's al-Rahman (1:1, a lesson example), where the lam is silent. */
   lamShamsiyyah: '1:1:3',
   /** Lam qamariyyah: the first word of al-Fatiha's second ayah (1:2, a lesson example). */

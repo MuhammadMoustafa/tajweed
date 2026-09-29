@@ -122,3 +122,50 @@ describe('playerReducer step audio', () => {
     expect(ended.playing).toBe(false)
   })
 })
+
+describe('playerReducer pauseAfter', () => {
+  const pausing: Clip = {
+    title: { ar: 'مقطع', en: 'Clip' },
+    steps: [{ ...step(1000), pauseAfter: true }, { ...step(1000), audio: { word: '1:1:3' }, pauseAfter: true }, step(1000)],
+  }
+  const from = (...actions: PlayerAction[]): PlayerState => actions.reduce(playerReducer, initialPlayerState(pausing))
+  const tick = (elapsed: number) => ({ type: 'tick', elapsed }) as const
+
+  it('pauses at the end of the step, still on it', () => {
+    const state = from({ type: 'play' }, tick(600), tick(600))
+    expect(state.playing).toBe(false)
+    expect(currentStep(state)).toBe(0)
+    expect(stepProgress(pausing, state)).toBeGreaterThan(0.99)
+  })
+
+  it('goes on to the next step, with its audio, when played again or stepped', () => {
+    const paused = from({ type: 'play' }, tick(2000))
+    const played = playerReducer(paused, { type: 'play' })
+    expect(currentStep(played)).toBe(1)
+    expect(played.playing).toBe(true)
+    expect(played.audio).toEqual({ step: 1, run: 1 })
+    const stepped = playerReducer(paused, { type: 'step', by: 1 })
+    expect(currentStep(stepped)).toBe(1)
+    expect(stepped.audio).toBeUndefined()
+  })
+
+  it('waits for the step’s audio before pausing', () => {
+    const playing = from({ type: 'step', by: 1 }, { type: 'play' }, tick(5000))
+    expect(playing.playing).toBe(true)
+    expect(currentStep(playing)).toBe(1)
+    const done = [{ type: 'audioEnd', run: 1 } as const, tick(10)].reduce(playerReducer, playing)
+    expect(done.playing).toBe(false)
+    expect(currentStep(done)).toBe(1)
+  })
+
+  it('steps back to replay the step just heard, paused', () => {
+    const back = playerReducer(from({ type: 'play' }, tick(2000)), { type: 'step', by: -1 })
+    expect(back.time).toBe(0)
+    expect(back.playing).toBe(false)
+  })
+
+  it('does not pause the last step: the clip ends', () => {
+    const state = from({ type: 'step', by: 1 }, { type: 'step', by: 1 }, { type: 'play' }, tick(1000))
+    expect(isEnded(state)).toBe(true)
+  })
+})

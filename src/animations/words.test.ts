@@ -22,7 +22,7 @@ describe('clip words (src/animations/words.ts)', () => {
   it.each(Object.entries(CLIP_WORDS))('%s (%s) is that word of its ayah in quran.json', (_name, key) => {
     const { verseKey, position } = splitWordKey(key)
     const markup = getVerseMarkup(verseKey)
-    expect(markup, `${verseKey}: clip words come from lesson verses`).toBeDefined()
+    expect(markup, `${verseKey}: clip word verses are fetched with the lesson verses`).toBeDefined()
     const verseWords = parseTajweed(markup!)
       .segments.map((s) => s.text)
       .join('')

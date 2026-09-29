@@ -27,6 +27,8 @@ export interface PlayerState {
   speed: Speed
   /** Whether each step has audio (ClipStep.audio); fixed for the clip. */
   withAudio: readonly boolean[]
+  /** Whether each step pauses playback when done (ClipStep.pauseAfter); fixed for the clip. */
+  pauseAfter: readonly boolean[]
   /**
    * The step audio that should be sounding now: set when a step with audio starts playing, cleared
    * when it ends (`audioEnd`), on pause, and when playback moves to another step. While set,
@@ -60,6 +62,7 @@ export const initialPlayerState = (clip: Clip): PlayerState => ({
   speed: 1,
   withAudio: clip.steps.map((step) => step.audio !== undefined),
   audioRuns: 0,
+  pauseAfter: clip.steps.map((step) => step.pauseAfter === true),
 })
 
 export const isEnded = (state: PlayerState): boolean => state.time >= state.total
@@ -105,10 +108,20 @@ function audioHoldAt(state: PlayerState, step: number): number {
   return end - AUDIO_HOLD
 }
 
+/** Whether the clip is paused at the end of a `pauseAfter` step (not the last), waiting to go on. */
+function waitingAfterStep(state: PlayerState): boolean {
+  const step = currentStep(state)
+  return state.pauseAfter[step] && step < state.starts.length - 1 && state.time >= audioHoldAt(state, step)
+}
+
 export function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
   switch (action.type) {
     case 'play':
-      // Playing an ended clip starts it over. Resuming a step with audio replays it from its start.
+      // Playing an ended clip starts it over. Resuming a step with audio replays it from its start;
+      // playing after a `pauseAfter` step goes on to the next step.
+      if (waitingAfterStep(state)) {
+        return startAudio({ ...state, time: state.starts[currentStep(state) + 1], playing: true })
+      }
       return startAudio(isEnded(state) ? { ...state, time: 0, playing: true } : { ...state, playing: true })
     case 'pause':
       return { ...state, playing: false, audio: undefined }
@@ -120,6 +133,12 @@ export function playerReducer(state: PlayerState, action: PlayerAction): PlayerS
       if (!state.playing) return state
       let time = state.time + action.elapsed * state.speed
       if (state.audio) time = Math.min(time, Math.max(state.time, audioHoldAt(state, state.audio.step)))
+      // A `pauseAfter` step, once its audio is done too, stops playback at its end.
+      const step = currentStep(state)
+      const last = step === state.starts.length - 1
+      if (state.pauseAfter[step] && !last && !state.audio && time >= audioHoldAt(state, step)) {
+        return { ...state, time: Math.max(state.time, audioHoldAt(state, step)), playing: false }
+      }
       const next = at(state, time)
       // Reaching the next step (or the end) during playback starts that step.
       return currentStep(next) !== currentStep(state) || !next.playing ? afterJump(state, next) : next

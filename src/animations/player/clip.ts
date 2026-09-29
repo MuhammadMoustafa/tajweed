@@ -41,6 +41,14 @@ export interface ClipStep {
    * is heard (e.g. the word's text from src/data/quran-words.json). Muted by the player's toggle.
    */
   audio?: ClipAudio
+  /**
+   * Playback pauses when the step has finished (its duration and its audio both done), still
+   * showing the step's end frame, caption and label; playing again (or the next-step button) goes
+   * on to the next step and plays it. Stepping back replays the step just heard. Ignored on the
+   * last step, which ends the clip as usual. For clips that teach one item per step and want the
+   * learner to choose when to hear the next (e.g. the five qalqalah letters).
+   */
+  pauseAfter?: boolean
 }
 
 /**
