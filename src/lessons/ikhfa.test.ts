@@ -22,7 +22,7 @@ describe('ikhfa lesson', () => {
 
   it('colors ikhafa in every example', () => {
     for (const { verseKey } of lesson.examples) {
-      const segments = parseTajweed(getVerseMarkup(verseKey))
+      const { segments } = parseTajweed(getVerseMarkup(verseKey)!)
       expect(segments.some((s) => s.rule === 'ikhafa'), verseKey).toBe(true)
     }
   })
