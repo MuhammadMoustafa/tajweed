@@ -18,6 +18,7 @@ import { raSakinah, raVowel, raWaqf } from './RaClips'
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { izharClip } from './IzharClip'
+import { hamzatWasl, hamzatWaslVowel, silentLetters } from './HamzatWasl'
 import { naturalMadd } from './NaturalMadd'
 import { maddArid, maddBadal, maddIwad, maddLeen, maddSilah } from './OtherMadd'
 import type { Clip } from './player/clip'
@@ -47,4 +48,5 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'iqlab-meem': iqlabMeem,
   'madd-arid': maddArid, 'madd-leen': maddLeen, 'madd-badal': maddBadal, 'madd-iwad': maddIwad, 'madd-silah': maddSilah,
   'lam-shamsiyyah': lamShamsiyyah, 'lam-qamariyyah': lamQamariyyah, 'lam-allah': lamAllah,
+  'hamzat-wasl': hamzatWasl, 'hamzat-wasl-vowel': hamzatWaslVowel, 'silent-letters': silentLetters,
 }

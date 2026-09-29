@@ -1252,3 +1252,13 @@ main {
   gap: 0.5rem;
   inline-size: 100%;
 }
+
+/* HamzatWasl clips (src/animations/HamzatWasl.tsx): plain-colored syllables, and the sound line under them. */
+.hw-plain {
+  fill: var(--text);
+}
+
+.hw-sound {
+  font-size: 20px;
+  fill: var(--muted);
+}

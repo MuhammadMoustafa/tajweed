@@ -28,4 +28,7 @@ export const CLIP_WORDS = {
   iqlabAnbatna: '80:27:1',
   /** Ghunnah: the meem with a shaddah in the first word of 78:1 (a lesson example). */
   ghunnah: '78:1:1',
+  /** Hamzat al-wasl: the first word of 96:1 (started with) and the next word (joined to the one before). */
+  waslStart: '96:1:1',
+  waslJoined: '96:1:2',
 } as const satisfies Record<string, WordKey>

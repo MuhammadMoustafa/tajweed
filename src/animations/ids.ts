@@ -22,3 +22,4 @@ export type AnimationId =
   | 'heavy-light'
   | 'ghunnah'
   | 'ra-vowel' | 'ra-sakinah' | 'ra-waqf'
+  | 'hamzat-wasl' | 'hamzat-wasl-vowel' | 'silent-letters'

@@ -129,3 +129,26 @@ describe('tajweed colors', () => {
     expect(css.split(`--tj-${color}:`).length - 1).toBe(2)
   })
 })
+
+describe('hamzat-wasl lesson (L17)', () => {
+  const lesson = LESSONS.find((l) => l.id === 'hamzat-wasl')!
+  const rulesOf = (key: `${number}:${number}`) =>
+    new Set(parseTajweed(getVerseMarkup(key)!).segments.map((s) => s.rule))
+
+  it('is lesson 17, outside any unit, with a clip per teaching section', () => {
+    expect(lesson.order).toBe(17)
+    expect(lesson.unit).toBeUndefined()
+    expect(lesson.animation).toBe('hamzat-wasl')
+    expect(lesson.sections.map((s) => s.animation)).toEqual([undefined, 'hamzat-wasl-vowel', 'silent-letters'])
+  })
+
+  it('colors the wasl hamza and the silent alif in its examples', () => {
+    expect(rulesOf('96:1').has('ham_wasl')).toBe(true)
+    for (const key of ['2:208', '72:20', '83:30'] as const) expect(rulesOf(key).has('slnt')).toBe(true)
+  })
+
+  it('cites the Jazariyyah chapter on hamzat al-wasl and says Tuhfa has none', () => {
+    expect(lesson.mutoon?.tuhfa).toBe('not-covered')
+    expect(lesson.mutoon?.jazariyya).toMatchObject([{ from: 101, to: 103 }])
+  })
+})
