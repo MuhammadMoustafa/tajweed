@@ -101,14 +101,25 @@ export interface MouthDiagramProps {
   labels?: readonly MakhrajRegion[]
   /** `raised-back` lifts the back of the tongue toward the soft palate (heavy letters). */
   tongue?: keyof typeof TONGUE
+  /** A cloud of nasal sound in the nose passage, 0 (none) to 1 (full): the ghunnah. */
+  nasal?: number
+  /** A pointer sliding from one region's label point to another's, `progress` 0–1: where the tongue is heading. */
+  pointer?: { from: MakhrajRegion; to: MakhrajRegion; progress: number }
   className?: string
 }
+/** Centre of the nose passage, where the nasal cloud sits (diagram coordinates). */
+const NASAL_CLOUD: [number, number][] = [
+  [80, 129],
+  [118, 125],
+  [156, 126],
+  [190, 130],
+]
 
 /**
  * A friendly side view (sagittal section) of the head showing where letters are articulated.
  * Shapes are deliberately simple; colors come from the `--anat-*` tokens in src/styles.css.
  */
-export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', className }: MouthDiagramProps) {
+export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', nasal, pointer, className }: MouthDiagramProps) {
   const { t } = useLocale()
   const id = useId().replace(/[^\w-]/g, '')
   const lit = (region: MakhrajRegion) => {
@@ -188,6 +199,22 @@ export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', cla
         <path d={TEETH_LOWER} className="anat-teeth" {...state('teeth-lower')} />
         <path d={LIP_UPPER} className="anat-lip" {...state('lip-upper')} />
         <path d={LIP_LOWER} className="anat-lip" {...state('lip-lower')} />
+
+        {nasal !== undefined && nasal > 0 && (
+          <g className="anat-nasal-cloud" data-nasal={nasal} opacity={nasal}>
+            {NASAL_CLOUD.map(([cx, cy], i) => (
+              <ellipse key={i} cx={cx} cy={cy} rx={12 + 8 * nasal} ry={5 + 4 * nasal} />
+            ))}
+          </g>
+        )}
+        {pointer && (
+          <circle
+            className="anat-pointer"
+            r={6}
+            cx={LABELS[pointer.from].to[0] + (LABELS[pointer.to].to[0] - LABELS[pointer.from].to[0]) * pointer.progress}
+            cy={LABELS[pointer.from].to[1] + (LABELS[pointer.to].to[1] - LABELS[pointer.from].to[1]) * pointer.progress}
+          />
+        )}
 
         {labels.map((region) => {
           const { side, y, to } = LABELS[region]

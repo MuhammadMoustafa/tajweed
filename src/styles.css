@@ -867,6 +867,16 @@ main {
   stroke-dasharray: none;
 }
 
+.anat-nasal-cloud ellipse {
+  fill: var(--tj-ghunnah);
+}
+
+.anat-pointer {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
 .anat-label text {
   font-family: var(--font-ui-en);
   font-size: 17px;

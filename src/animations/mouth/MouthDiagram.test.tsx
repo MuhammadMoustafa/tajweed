@@ -77,4 +77,13 @@ describe('MouthDiagram', () => {
     expect(ar.querySelector('[data-label="halq-deepest"] text')).toHaveTextContent('أقصى الحلق')
     expect(ar.querySelector('title')).toHaveTextContent('رسم جانبي للفم والحلق والأنف')
   })
+
+  it('draws the nasal cloud and the tongue pointer only when asked, moving with progress', () => {
+    expect(renderDiagram({}).querySelector('.anat-nasal-cloud, .anat-pointer')).toBeNull()
+    const start = renderDiagram({ nasal: 0.5, pointer: { from: 'gums', to: 'tongue-back', progress: 0 } })
+    expect(start.querySelector('.anat-nasal-cloud')).toHaveAttribute('data-nasal', '0.5')
+    const x = (c: HTMLElement) => Number(c.querySelector('.anat-pointer')!.getAttribute('cx'))
+    const end = renderDiagram({ pointer: { from: 'gums', to: 'tongue-back', progress: 1 } })
+    expect(x(end)).toBeGreaterThan(x(start))
+  })
 })

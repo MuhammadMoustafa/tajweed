@@ -1,6 +1,7 @@
 /** Kept separate from the component registry so lesson data stays React-free. */
 export type AnimationId =
   | 'qalqalah-bounce'
+  | 'ikhfa-hidden'
   | 'makharij-areas'
   | 'makharij-jawf'
   | 'makharij-halq'

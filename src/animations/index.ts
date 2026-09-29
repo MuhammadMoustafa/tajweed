@@ -11,6 +11,7 @@ import { foundationsHarakat, foundationsSukunShadda, foundationsTanween } from '
 import { lamAllah, lamQamariyyah, lamShamsiyyah } from './LamClips'
 import { idghamGhunnah, idghamWoGhunnah } from './IdghamClips'
 import { iqlabMeem } from './IqlabMeem'
+import { ikhfaHidden } from './IkhfaClip'
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { izharClip } from './IzharClip'
@@ -22,6 +23,7 @@ import { qalqalahBounce } from './QalqalahBounce'
 /** Clips by id, played by AnimationPlayer (src/animations/player) for a lesson or one of its sections. */
 export const ANIMATIONS: Record<AnimationId, Clip> = {
   'qalqalah-bounce': qalqalahBounce,
+  'ikhfa-hidden': ikhfaHidden,
   'makharij-areas': makharijAreas,
   'makharij-jawf': makharijJawf,
   'makharij-halq': makharijHalq,
