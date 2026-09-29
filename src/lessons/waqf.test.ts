@@ -17,7 +17,7 @@ const SIGNS_AT: Record<string, string[]> = {
   '2:2': [WAQF_SIGNS.muanaqah, WAQF_SIGNS.muanaqah],
 }
 const ENDINGS_AT: Record<string, RegExp> = {
-  '112:1': /\u064C$/, // tanween damma
+  '83:9': /\u064C$/, // tanween damma
   '78:6': /^\u0627$/, // the alif that tanween fatha becomes
   '101:1': /^\u0629\u064F$/, // ta marbuta with its damma
 }
