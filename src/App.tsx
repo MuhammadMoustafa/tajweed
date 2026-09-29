@@ -6,15 +6,25 @@ import { ui } from './i18n/ui'
 import { findLesson } from './lessons'
 import { hasQuiz } from './lessons/quiz'
 import { letterNameOf, letterOfId } from './letters/ids'
+import { reloadOnFailedImport } from './reloadOnFailedImport'
 import { useHashRoute } from './useHashRoute'
 
 // The lesson and quiz pages carry the animations, the verse data and the matn: loaded on demand as
 // their own chunks (the service worker precaches them, so this still works offline), which keeps
 // the first download to the home page and the chunk under the build's 500 kB warning as lessons grow.
-const LessonView = lazy(() => import('./components/LessonView').then((m) => ({ default: m.LessonView })))
-const QuizPage = lazy(() => import('./components/QuizPage').then((m) => ({ default: m.QuizPage })))
-const LettersPage = lazy(() => import('./components/LettersPage').then((m) => ({ default: m.LettersPage })))
-const LetterView = lazy(() => import('./components/LetterView').then((m) => ({ default: m.LetterView })))
+// A page open since before a deploy can no longer find its old chunks: reloadOnFailedImport.
+const LessonView = lazy(() =>
+  reloadOnFailedImport(() => import('./components/LessonView')).then((m) => ({ default: m.LessonView })),
+)
+const QuizPage = lazy(() =>
+  reloadOnFailedImport(() => import('./components/QuizPage')).then((m) => ({ default: m.QuizPage })),
+)
+const LettersPage = lazy(() =>
+  reloadOnFailedImport(() => import('./components/LettersPage')).then((m) => ({ default: m.LettersPage })),
+)
+const LetterView = lazy(() =>
+  reloadOnFailedImport(() => import('./components/LetterView')).then((m) => ({ default: m.LetterView })),
+)
 
 export function App() {
   const { locale, setLocale, t } = useLocale()
