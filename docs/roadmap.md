@@ -65,7 +65,7 @@ in brackets picks the agent.
 | L18 | #24 | [task] Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn (`idgham_mutajanisayn`, `idgham_mutaqaribayn`). | T2 | done |
 | L19 | #25 | [task] Waqf and ibtida: the stop signs in the mushaf. | T2, T6 | done |
 | L20 | #26 | [task-hard] Sifat al-huruf in depth, reusing MouthDiagram. | L2, T10 | done |
-| L21 | #47 | [task] Split Foundations into four lessons (letters; harakat and sukun; shaddah and tanween; istiʿadha and basmala), content moved, id `foundations` kept for the first (maintainer, 2026-09-28). | L1 | in-progress |
+| L21 | #47 | [task] Split Foundations into four lessons (letters; harakat and sukun; shaddah and tanween; istiʿadha and basmala), content moved, id `foundations` kept for the first (maintainer, 2026-09-28). | L1 | done |
 | L22 | #48 | [task-hard] Unit 9 Practice & review: whole short surahs with every rule colored, full legend, mixed quiz on all taught rules (maintainer, 2026-09-28). | T18 | in-progress |
 | L23 | #49 | [task-hard] Unit 11 (advanced) Hafs special words: saktat, imalah, tas-hil, ishmam/rawm, sad/seen words, naql (maintainer, 2026-09-28). | T20 | in-progress |
 | L24 | #50 | [task] Unit 12 (advanced) Finer levels: tafkhim levels, ghunnah levels, complete/incomplete idgham (maintainer, 2026-09-28). | T20 | in-progress |
