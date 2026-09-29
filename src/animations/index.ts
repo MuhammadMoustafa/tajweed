@@ -7,6 +7,7 @@ import {
   makharijLisan,
   makharijShafatan,
 } from './MakharijClips'
+import { foundationsHarakat, foundationsSukunShadda, foundationsTanween } from './FoundationsClips'
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { naturalMadd } from './NaturalMadd'
@@ -23,6 +24,7 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'makharij-lisan': makharijLisan,
   'makharij-shafatan': makharijShafatan,
   'makharij-khayshum': makharijKhayshum,
+  'foundations-harakat': foundationsHarakat, 'foundations-sukun-shadda': foundationsSukunShadda, 'foundations-tanween': foundationsTanween,
   'natural-madd': naturalMadd,
   'madd-muttasil': maddMuttasil,
   'madd-munfasil': maddMunfasil,

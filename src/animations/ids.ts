@@ -7,6 +7,7 @@ export type AnimationId =
   | 'makharij-lisan'
   | 'makharij-shafatan'
   | 'makharij-khayshum'
+  | 'foundations-harakat' | 'foundations-sukun-shadda' | 'foundations-tanween'
   | 'natural-madd'
   | 'madd-muttasil'
   | 'madd-munfasil'

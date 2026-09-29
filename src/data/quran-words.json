@@ -3,7 +3,7 @@
     "name": "Quran Foundation API (quran.com) — word text_uthmani, riwayat Hafs; audio: recitation 6 (Mahmoud Khalil al-Husary, murattal), per-ayah files with per-word timing segments",
     "url": "https://api.quran.com/api/v4/verses/by_key/{verse_key}?words=true&word_fields=text_uthmani&audio=6",
     "recitationId": 6,
-    "fetchedAt": "2026-09-28"
+    "fetchedAt": "2026-09-29"
   },
   "words": {
     "1:1:3": {
