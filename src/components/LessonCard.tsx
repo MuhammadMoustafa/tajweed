@@ -14,6 +14,7 @@ interface LessonCardProps {
 /**
  * One lesson's card on the home page (src/components/LessonList.tsx). Not itself a link: it's a
  * container with two separate interactive children, so no link ends up nested inside another.
+ * The lesson link's ::after covers the whole card (one tap target); the quiz panel sits above it.
  * - Main part (inline-start): the link to the lesson, its title, summary and state badge.
  * - Quiz side panel (inline-end, stacking under the main part on narrow phones): a "Take the quiz"
  *   link when there's no attempt yet, otherwise the best/last grade plus a "Retry quiz" link.
@@ -25,10 +26,12 @@ export function LessonCard({ lesson, state, isNext }: LessonCardProps) {
   const attempts = attemptsFor(lesson.id)
   const best = bestAttempt(attempts)
   const last = lastAttempt(attempts)
+  const action = t(state === 'learned' ? ui.reviewLessonAction : state === 'started' ? ui.continueLessonAction : ui.startLessonAction)
+  const arrow = locale === 'ar' ? '‹' : '›'
 
   return (
     <div className={`card lesson-card is-${state}${isNext ? ' is-next' : ''}`}>
-      <a href={`#/lesson/${lesson.id}`} className="lesson-card-main">
+      <a href={`#/lesson/${lesson.id}`} className="lesson-card-main" aria-label={`${action}: ${t(lesson.title)}`}>
         <strong>
           {t(lesson.title)}
           {state === 'learned' && (
@@ -41,6 +44,9 @@ export function LessonCard({ lesson, state, isNext }: LessonCardProps) {
           {isNext && <span className="card-badge next"> {t(ui.nextLessonBadge)}</span>}
         </strong>
         <span>{t(lesson.summary)}</span>
+        <span className="lesson-card-action">
+          {action} <span aria-hidden="true">{arrow}</span>
+        </span>
       </a>
       {hasQuiz(lesson) && (
         <div className="lesson-card-quiz">

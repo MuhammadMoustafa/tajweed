@@ -114,6 +114,10 @@ export const ui = {
   cardStateStarted: { ar: 'بدأ التعلّم', en: 'Started' },
   cardStateNotStarted: { ar: 'لم يبدأ', en: 'Not started' },
   nextLessonBadge: { ar: 'التالي', en: 'Next' },
+  // Lesson-card primary action (label follows the card's state).
+  startLessonAction: { ar: 'ابدأ الدرس', en: 'Start lesson' },
+  continueLessonAction: { ar: 'تابع', en: 'Continue' },
+  reviewLessonAction: { ar: 'مراجعة', en: 'Review' },
   // Lesson-card quiz side panel (src/components/LessonCard.tsx).
   takeQuizButton: { ar: 'ابدأ الاختبار', en: 'Take the quiz' },
   retryQuizButton: { ar: 'إعادة الاختبار', en: 'Retry quiz' },
