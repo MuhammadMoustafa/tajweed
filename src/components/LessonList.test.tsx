@@ -102,40 +102,26 @@ describe("LessonList", () => {
     }
   });
 
-  it("nests a unit's lessons under the unit's heading, in both languages", () => {
-    for (const [unitId, unit] of Object.entries(UNITS)) {
-      const members = LESSONS.filter((l) => l.unit === unitId);
-      if (members.length === 0) continue; // declared before its lessons land
-      for (const locale of ["en", "ar"] as const) {
-        localStorage.setItem("tajweed.locale", locale);
-        const { container, unmount } = render(
-          <LocaleProvider>
-            <LessonList />
-          </LocaleProvider>,
-        );
-        const group = container.querySelector(
-          `.lesson-unit[data-unit="${unitId}"]`,
-        )!;
-        expect(
-          group.querySelector("summary .lesson-unit-title"),
-        ).toHaveTextContent(unit.title[locale]);
-        expect(
-          group.querySelector("summary .lesson-unit-number"),
-        ).toHaveTextContent(formatNumber(locale, unit.order));
-        expect(
-          within(group as HTMLElement).getByRole("list", {
-            name: unit.title[locale],
-          }),
-        ).toBeInTheDocument();
-        const links = [
-          ...group.querySelectorAll(".lesson-unit-chapters .lesson-card-main"),
-        ];
-        expect(links.map((a) => a.getAttribute("href"))).toEqual(
-          members.map((l) => `#/lesson/${l.id}`),
-        );
-        unmount();
-      }
-    }
+  // One test per unit and language: rendering the whole list 2 × (number of units) times in one
+  // test outgrew the 5 s timeout under load as units were added.
+  const unitCases = Object.entries(UNITS).flatMap(([unitId, unit]) =>
+    (["en", "ar"] as const).map((locale) => [unitId, locale, unit] as const),
+  );
+  it.each(unitCases)("nests unit %s's lessons under its heading (%s)", (unitId, locale, unit) => {
+    const members = LESSONS.filter((l) => l.unit === unitId);
+    if (members.length === 0) return; // declared before its lessons land
+    localStorage.setItem("tajweed.locale", locale);
+    const { container } = render(
+      <LocaleProvider>
+        <LessonList />
+      </LocaleProvider>,
+    );
+    const group = container.querySelector(`.lesson-unit[data-unit="${unitId}"]`)!;
+    expect(group.querySelector("summary .lesson-unit-title")).toHaveTextContent(unit.title[locale]);
+    expect(group.querySelector("summary .lesson-unit-number")).toHaveTextContent(formatNumber(locale, unit.order));
+    expect(within(group as HTMLElement).getByRole("list", { name: unit.title[locale] })).toBeInTheDocument();
+    const links = [...group.querySelectorAll(".lesson-unit-chapters .lesson-card-main")];
+    expect(links.map((a) => a.getAttribute("href"))).toEqual(members.map((l) => `#/lesson/${l.id}`));
   });
 
   it("opens only the unit holding the next lesson, and keeps that choice when progress changes", () => {
