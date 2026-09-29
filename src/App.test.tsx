@@ -1,5 +1,5 @@
 import { act, render, within } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { App } from './App'
 import { LocaleProvider } from './i18n/LocaleProvider'
 import { ui } from './i18n/ui'
@@ -30,6 +30,10 @@ describe('letter ids (src/letters/ids.ts)', () => {
 })
 
 describe('letters page routes', () => {
+  // The pages are lazy chunks: load them first, so the first render finds them in the module cache
+  // and no assertion races the import (a slow CI runner took over findBy's 1 s).
+  beforeAll(() => Promise.all([import('./components/LettersPage'), import('./components/LetterView')]))
+
   it('links the letters page from the header, next to progress', () => {
     const screen = within(render(<LocaleProvider><App /></LocaleProvider>).container)
     const header = screen.getByRole('banner')
