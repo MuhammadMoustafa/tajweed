@@ -14,7 +14,7 @@ npm run build          # tsc -b (all tsconfig projects) + vite build + PWA servi
 npm run preview        # serve dist/ (use this to test offline/PWA behavior; the SW is not active in dev)
 npm run lint           # oxlint
 npm run typecheck      # tsc -b only
-npm test               # vitest run (jsdom)
+npm test               # vitest run: *.test.ts in node, *.test.tsx in jsdom (vmThreads); a .test.ts needing a DOM starts with `// @vitest-environment jsdom`
 npx vitest run src/tajweed/parse.test.ts   # single file; add -t "<name>" for a single test
 npm run test:ui         # Playwright UI suite (Chromium only) against a production build; PW_PORT=<port> when another worktree's suite is running
 npx playwright test e2e/home.spec.ts   # single file; add -g "<name>" for a single test
