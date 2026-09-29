@@ -3,7 +3,7 @@ import { MaddBar, type MaddCount } from './MaddBar'
 import { maddCountingSteps, type MaddPassBar } from './maddCounting'
 import type { Clip, ClipStep } from './player/clip'
 
-// The other-madd lesson (L16): one clip per section — ʿarid lis-sukun, leen, badal, ʿiwad, silah.
+// The madd-when-stopping and badal-silah lessons (L16, L16b): one clip per section.
 // Every clip shows practice syllables (a consonant + harakah, never Quran text) on MaddBar, starts
 // by pointing at the madd's cause where it has one, then counts one "say it with me" pass per
 // allowed length (maddCountingSteps), each pass under one timeline label.

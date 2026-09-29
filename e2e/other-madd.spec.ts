@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-// L16 (src/lessons/other-madd.ts, src/animations/OtherMadd.tsx): one clip per section on MaddBar.
+// L16 (src/lessons/other-madd.ts, badal-silah.ts, src/animations/OtherMadd.tsx): one clip per section on MaddBar.
 // The ʿarid lis-sukun clip points at its cause, then offers 2, 4 and 6 counts as labeled choices;
 // clicking a choice's label jumps to that pass, whose end marker sits at its length.
 test.describe('other madd clips', () => {
@@ -22,11 +22,11 @@ test.describe('other madd clips', () => {
     }
   })
 
-  test('every section plays its own clip, in Arabic too', async ({ page }) => {
+  test('the silah lesson plays its clips, in Arabic too', async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('tajweed.locale', 'ar'))
-    await page.goto('/#/lesson/other-madd')
+    await page.goto('/#/lesson/badal-silah')
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
-    await expect(page.locator('.section-animation .player')).toHaveCount(5)
+    await expect(page.locator('.section-animation .player')).toHaveCount(2)
     const silah = page.getByRole('group', { name: 'مد الصلة: الصغرى والكبرى' })
     await silah.getByRole('button', { name: 'الكبرى: ٥ حركات' }).click()
     await expect(silah.locator('[data-marker="end"]')).toHaveAttribute('data-beat', '5')

@@ -5,23 +5,23 @@ import type { Lesson } from './types'
 // source assumes a stop at every ayah end); silah sughra is `madda_normal` and silah kubra
 // `madda_obligatory` on the small waw/ya (untagged at an ayah's end, where stopping drops it);
 // badal and ʿiwad are never tagged, and no custom rule id exists for them, so notes point at them.
-export const otherMadd: Lesson = {
+export const maddWhenStopping: Lesson = {
   id: 'other-madd',
   order: 6.3,
   unit: 'madd',
   title: {
-    ar: 'مدود أخرى: العارض للسكون واللين والبدل والعوض والصلة',
-    en: 'Other madd: ʿarid lis-sukun, leen, badal, ʿiwad and silah',
+    ar: 'المدّ عند الوقف: العارض للسكون واللين والعوض',
+    en: 'Madd when stopping: ʿarid lis-sukun, leen and ʿiwad',
   },
   summary: {
-    ar: 'خمسة مدود يكثر ورودها: ثلاثة تظهر عند الوقف (العارض للسكون، واللين، والعوض)، واثنان سببهما الهمزة قبل حرف المدّ أو هاء الضمير (البدل، والصلة).',
-    en: 'Five more madds you meet often: three that appear when you stop (ʿarid lis-sukun, leen and ʿiwad), and two that come from a hamza before the madd letter or from the pronoun ha (badal and silah).',
+    ar: 'ثلاثة مدود لا تظهر إلا عند الوقف على الكلمة: العارض للسكون، واللين، والعوض.',
+    en: 'Three madds that only appear when you stop on a word: ʿarid lis-sukun, leen and ʿiwad.',
   },
   sections: [
     {
       body: {
-        ar: 'تعلّمتَ أن المدّ الطبيعي حركتان، وأن الهمزة أو السكون بعد حرف المدّ يطيلانه. في هذا الدرس خمسة مدود أخرى: لكلٍّ منها سبب تتعرّف عليه أولًا، ثم مقدار تعدّه مع المقطع. ثلاثة منها لا تكون إلا عند الوقف على الكلمة، واثنان يتعلّقان بالهمزة قبل حرف المدّ وبهاء الضمير. وفي الأمثلة تدلّك الألوان على ما تلوّنه المصادر منها، وتدلّك الملاحظات على ما لا تلوّنه.',
-        en: 'You have learned that natural madd is 2 counts, and that a hamza or a sukun after a madd letter makes it longer. This lesson covers five more madds: for each one, first spot its cause, then count its length along with the clip. Three of them only happen when you stop on a word; two come from a hamza before the madd letter or from the pronoun ha. In the examples, color shows the ones our source marks, and the notes point out the ones it leaves uncolored.',
+        ar: 'تعلّمتَ أن المدّ الطبيعي حركتان، وأن الهمزة أو السكون بعد حرف المدّ يطيلانه. في هذا الدرس ثلاثة مدود لا تكون إلا عند الوقف على الكلمة: لكلٍّ منها سبب تتعرّف عليه أولًا، ثم مقدار تعدّه مع المقطع. وفي الأمثلة تدلّك الألوان على ما تلوّنه المصادر منها، وتدلّك الملاحظات على ما لا تلوّنه.',
+        en: 'You have learned that natural madd is 2 counts, and that a hamza or a sukun after a madd letter makes it longer. This lesson covers three madds that only happen when you stop on a word: for each one, first spot its cause, then count its length along with the clip. In the examples, color shows the ones our source marks, and the notes point out the ones it leaves uncolored.',
       },
     },
     {
@@ -41,15 +41,7 @@ export const otherMadd: Lesson = {
       animation: 'madd-leen',
     },
     {
-      heading: { ar: '٣. مدّ البدل', en: '3. Madd al-badal' },
-      body: {
-        ar: 'إذا تقدّمت الهمزة على حرف المدّ، وليس بعده همزة ولا سكون، فهو مدّ البدل. سُمّي بذلك لأن حرف المدّ فيه في الغالب مُبدَل من همزة ثانية ساكنة. ومقداره في رواية حفص حركتان فقط كالمدّ الطبيعي، وإنما عدّه ناظم التحفة من المدّ الجائز لأن بعض القرّاء، كورش، يمدّونه أكثر من ذلك. لا تلوّنه المصادر، فابحث عن همزة قبل حرف المدّ مباشرة.',
-        en: 'When a hamza comes before a madd letter, with no hamza or sukun after it, the madd is madd al-badal. It is named "substitution" because its madd letter usually stands in for a second, sakin hamza. In Hafs it is only 2 counts, like natural madd; the Tuhfa lists it among the permissible madds because some readers, such as Warsh, stretch it longer. Our source does not color it, so look for a hamza right before the madd letter.',
-      },
-      animation: 'madd-badal',
-    },
-    {
-      heading: { ar: '٤. مدّ العوض', en: '4. Madd al-ʿiwad' },
+      heading: { ar: '٣. مدّ العوض', en: '3. Madd al-ʿiwad' },
       body: {
         ar: 'إذا وقفتَ على كلمة آخرها تنوين فتح، حذفتَ التنوين ونطقتَ مكانه ألفًا تمدّها حركتين، ولذلك سُمّي مدّ العوض: الألف عوض عن التنوين. وفي المصحف تُكتب بعد تنوين الفتح في الغالب ألف لا تُنطق في الوصل، إذ يُنطق التنوين حينئذ نونًا ساكنة. ويُستثنى ما آخره تاء مربوطة، فيُوقف عليه بهاء ساكنة بلا ألف. لا تلوّنه المصادر، فانظر إلى آخر الآية إذا خُتمت بتنوين فتح.',
         en: 'When you stop on a word ending in tanween fath, drop the tanween and read an alif in its place, held 2 counts. It is called madd al-ʿiwad ("compensation") because the alif makes up for the dropped tanween. In the mushaf, tanween fath is usually followed by a written alif; while you read on, that alif is silent and the tanween sounds as a sakin noon. A word ending in ta marbutah is the exception: you stop on it with a sakin ha and no alif. Our source does not color it, so look at the last word of an ayah that ends in tanween fath.',
@@ -57,15 +49,14 @@ export const otherMadd: Lesson = {
       animation: 'madd-iwad',
     },
     {
-      heading: { ar: '٥. مدّ الصلة', en: '5. Madd al-silah' },
+      heading: { ar: 'الخلاصة', en: 'In short' },
       body: {
-        ar: 'هاء الضمير هي الهاء الزائدة الدالّة على المفرد المذكّر الغائب. إذا وقعت بين حرفين متحرّكين، وُصلت حركتها بحرف مدّ: الضمّة بواو، والكسرة بياء، وتُكتب في المصحف واوًا صغيرة أو ياءً صغيرة بعد الهاء. فإن لم يكن بعدها همزة فهي الصلة الصغرى، حركتان كالمدّ الطبيعي. وإن كان بعدها همزة فهي الصلة الكبرى، تُمدّ كالمنفصل أربع حركات أو خمسًا. ولا صلة إذا وقفتَ على الهاء، ولا إذا كان قبلها أو بعدها ساكن، إلا مواضع قرأها حفص على خلاف ذلك، كالهاء التي وُصلت مع سكون ما قبلها في سورة الفرقان (٢٥:٦٩)، والتي لم توصل مع تحرّك ما حولها في سورة الزمر (٣٩:٧). وتلوّن المصادر الصغرى بلون المدّ الطبيعي، والكبرى بلون المدّ المتصل والمنفصل.',
-        en: 'The pronoun ha is the ha added to a word to mean "him", "his" or "it". When it sits between two moving letters (the letter before it and the one after it both carry a harakah), its vowel is drawn out into a madd letter: a damma into a waw, a kasra into a ya, written in the mushaf as a small waw or small ya after the ha. If the next letter is not a hamza, this is silah sughra: 2 counts, like natural madd. If the next letter is a hamza, it is silah kubra, stretched like munfasil: 4 or 5 counts. There is no silah when you stop on the ha, or when the letter before or after it is sakin, apart from a few places Hafs reads differently, such as the ha lengthened after a sakin letter in Al-Furqan (25:69) and the one read short between moving letters in Az-Zumar (39:7). Our source colors sughra like natural madd, and kubra like muttasil and munfasil.',
+        ar: 'عند الوقف يسكن آخر الكلمة، فيجوز مدّ العارض للسكون واللين حركتين أو أربعًا أو ستًّا، ونلتزم الوجه الذي اخترناه في القراءة كلّها؛ وإذا وقفتَ على تنوين الفتح قرأتَ ألفًا حركتين، وهو مدّ العوض.',
+        en: 'When you stop, the last letter of the word becomes sakin, so ʿarid lis-sukun and leen may be held 2, 4 or 6 counts, and you keep the length you chose for your whole recitation; stopping on tanween fath, you read an alif for 2 counts: madd al-ʿiwad.',
       },
-      animation: 'madd-silah',
     },
   ],
-  // What the API actually tags for these kinds (see the comment above): ʿarid/leen, silah sughra, silah kubra.
+  // What the API tags for these kinds (see the comment above): ʿarid and leen as permissible; the natural madd shown beside them.
   focusRules: ['madda_permissible', 'madda_normal', 'madda_obligatory'],
   examples: [
     {
@@ -78,15 +69,15 @@ export const otherMadd: Lesson = {
     {
       verseKey: '106:1',
       note: {
-        ar: 'الياء الملوّنة في الكلمة الأخيرة حرف لين، ساكنة بعد فتحة، والوقف يُسكّن الحرف الذي بعدها، فيجوز مدّها حركتين أو أربعًا أو ستًّا. وفي الكلمة الأولى همزة بعدها ياء مدّية: مدّ بدل، حركتان، ولا تلوّنه المصادر؛ والألف الصغيرة بعدها مدّ طبيعي.',
-        en: 'The colored ya in the last word is a leen letter, sakin after a fatha. Stopping makes the letter after it sakin, so it may be held 2, 4 or 6 counts. In the first word, a hamza followed by a madd ya is madd al-badal, 2 counts, left uncolored by our source; the small alif after it is a natural madd.',
+        ar: 'الياء الملوّنة في الكلمة الأخيرة حرف لين، ساكنة بعد فتحة، والوقف يُسكّن الحرف الذي بعدها، فيجوز مدّها حركتين أو أربعًا أو ستًّا. والألف الصغيرة في الكلمة الأولى مدّ طبيعي.',
+        en: 'The colored ya in the last word is a leen letter, sakin after a fatha. Stopping makes the letter after it sakin, so it may be held 2, 4 or 6 counts. The small alif in the first word is a natural madd.',
       },
     },
     {
       verseKey: '106:4',
       note: {
-        ar: 'الواو الملوّنة في الكلمة الأخيرة حرف لين يُمدّ عند الوقف حركتين أو أربعًا أو ستًّا. وفي الكلمة الخامسة همزة بعدها ألف: مدّ بدل، حركتان في حفص، ولا تلوّنه المصادر. أما الياء الملوّنة في الكلمة الأولى فمدّ منفصل (درس سابق).',
-        en: 'The colored waw in the last word is a leen letter, held 2, 4 or 6 counts when you stop. The fifth word has a hamza followed by an alif: madd al-badal, 2 counts in Hafs, left uncolored by our source. The colored ya in the first word is a munfasil madd (an earlier lesson).',
+        ar: 'الواو الملوّنة في الكلمة الأخيرة حرف لين يُمدّ عند الوقف حركتين أو أربعًا أو ستًّا. أما الياء الملوّنة في الكلمة الأولى فمدّ منفصل (درس سابق).',
+        en: 'The colored waw in the last word is a leen letter, held 2, 4 or 6 counts when you stop. The colored ya in the first word is a munfasil madd (an earlier lesson).',
       },
     },
     {
@@ -96,22 +87,8 @@ export const otherMadd: Lesson = {
         en: 'The last word ends in tanween fath followed by an alif: when you stop on it, drop the tanween and read the alif for 2 counts. That is madd al-ʿiwad, left uncolored by our source. The small colored alif in the same word is a natural madd.',
       },
     },
-    {
-      verseKey: '110:3',
-      note: {
-        ar: 'الواو الصغيرة الملوّنة في الكلمة الخامسة صلة صغرى: هاء الضمير بين متحرّكين، والحرف بعدها ليس همزة، فتُمدّ حركتين. أما الهاء في الكلمة الرابعة فقبلها ساكن، فلا صلة فيها.',
-        en: 'The small colored waw in the fifth word is silah sughra: the pronoun ha sits between two moving letters and the next letter is not a hamza, so hold it 2 counts. The ha in the fourth word comes after a sakin letter, so it gets no silah.',
-      },
-    },
-    {
-      verseKey: '104:3',
-      note: {
-        ar: 'الواو الصغيرة الملوّنة في الكلمة الثالثة صلة كبرى: هاء الضمير بين متحرّكين، وأول الكلمة التالية همزة، فتُمدّ كالمنفصل أربع حركات أو خمسًا. أما الهاء في آخر الآية فلا صلة فيها عند الوقف، ولذلك لم تُلوَّن واوها الصغيرة.',
-        en: 'The small colored waw in the third word is silah kubra: the pronoun ha sits between two moving letters and the next word starts with a hamza, so hold it like munfasil, 4 or 5 counts. The ha at the end of the ayah gets no silah when you stop there, which is why its small waw is not colored.',
-      },
-    },
   ],
-  // Silah and ʿiwad are in neither poem.
+  // ʿiwad is in neither poem; the Tuhfa states the ʿarid, the Jazariyya the leen and the permissible lengths.
   mutoon: {
     tuhfa: [
       {
@@ -123,10 +100,9 @@ export const otherMadd: Lesson = {
       },
       {
         from: 45,
-        to: 46,
         note: {
-          ar: 'يضيف البيتان إلى المنفصل المذكور قبلهما نوعين آخرين من المدّ الجائز: العارض للسكون، إذا كان السكون للوقف فقط، والبدل، إذا تقدّمت الهمزة على حرف المدّ. والبدل في رواية حفص حركتان فقط، وإنما عُدّ جائزًا لأن غير حفص يمدّه أكثر.',
-          en: 'These two lines add two more permissible madds to the munfasil of the line before: ʿarid lis-sukun, when the sukun comes only from stopping, and badal, when the hamza comes before the madd letter. In Hafs, badal is still only 2 counts; the poem counts it as permissible because other readers stretch it longer.',
+          ar: 'يذكر البيت المدّ الذي يعرض سكون ما بعده للوقف فقط، وهو المدّ العارض للسكون.',
+          en: 'This line names the madd whose following sukun comes only from stopping: madd ʿarid lis-sukun.',
         },
       },
     ],
@@ -173,18 +149,6 @@ export const otherMadd: Lesson = {
       },
       verseKey: '106:1',
       rule: 'madda_permissible',
-    },
-    {
-      kind: 'tap',
-      prompt: { ar: 'اضغط على الصلة الصغرى في هذه الآية.', en: 'Tap the silah sughra in this ayah.' },
-      verseKey: '110:3',
-      rule: 'madda_normal',
-    },
-    {
-      kind: 'tap',
-      prompt: { ar: 'اضغط على الصلة الكبرى في هذه الآية.', en: 'Tap the silah kubra in this ayah.' },
-      verseKey: '104:3',
-      rule: 'madda_obligatory',
     },
     {
       kind: 'choice',
@@ -239,21 +203,6 @@ export const otherMadd: Lesson = {
     },
     {
       kind: 'choice',
-      prompt: { ar: 'كم حركة يُمدّ مدّ البدل في رواية حفص؟', en: 'How many counts is madd al-badal in Hafs?' },
-      options: [
-        { ar: '٢', en: '2' },
-        { ar: '٤', en: '4' },
-        { ar: '٥', en: '5' },
-        { ar: '٦', en: '6' },
-      ],
-      correctIndex: 0,
-      explanation: {
-        ar: 'البدل في رواية حفص حركتان فقط كالمدّ الطبيعي.',
-        en: 'In Hafs, badal is only 2 counts, like natural madd.',
-      },
-    },
-    {
-      kind: 'choice',
       prompt: {
         ar: 'وقفتَ على كلمة آخرها تنوين فتح، وليست تاءً مربوطة. ماذا تقرأ؟',
         en: 'You stop on a word ending in tanween fath, not a ta marbutah. What do you read?',
@@ -268,21 +217,6 @@ export const otherMadd: Lesson = {
       explanation: {
         ar: 'هذا مدّ العوض: يُحذف التنوين عند الوقف وتُقرأ الألف عوضًا عنه حركتين.',
         en: 'This is madd al-ʿiwad: the tanween drops when you stop, and the alif is read in its place for 2 counts.',
-      },
-    },
-    {
-      kind: 'choice',
-      prompt: { ar: 'متى تكون صلة هاء الضمير صلةً كبرى؟', en: 'When is the silah of the pronoun ha a silah kubra?' },
-      options: [
-        { ar: 'إذا جاء بعد الهاء همزة', en: 'When a hamza comes after the ha' },
-        { ar: 'إذا وقفتَ على الهاء', en: 'When you stop on the ha' },
-        { ar: 'إذا كان قبل الهاء حرف ساكن', en: 'When the letter before the ha is sakin' },
-        { ar: 'إذا كانت الهاء مكسورة', en: 'When the ha has a kasra' },
-      ],
-      correctIndex: 0,
-      explanation: {
-        ar: 'إذا جاء بعدها همزة فهي صلة كبرى تُمدّ كالمنفصل أربع حركات أو خمسًا؛ وعند الوقف أو مع سكون ما قبلها فلا صلة أصلًا.',
-        en: 'With a hamza after it, it is silah kubra, held like munfasil for 4 or 5 counts; when you stop on it, or the letter before it is sakin, there is no silah at all.',
       },
     },
   ],
