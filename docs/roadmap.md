@@ -41,6 +41,7 @@ in brackets picks the agent.
 | T20 | #46 | [task] Unit levels core/advanced; home page shows core units, then a headed Advanced section (sifat moves to unit 10; units 11–12 from L23/L24); summary counts each; 'next' never points into Advanced while core is unlearned (maintainer, 2026-09-28). | none | done |
 | T21 | #53 | [task-easy] Surah names instead of numbers in the clip audio credit and the examples' verse references; names from the API's chapters endpoint via fetch-quran (maintainer, 2026-09-29). | none | done |
 | T22 | #54 | [task-easy] Blank page after a deploy while the app is open: a lazy page whose chunk the new service worker removed reloads once instead of rendering nothing (found 2026-09-29). | none | done |
+| T23 | #55 | [task-easy] Letters page: letter tails (ج ح خ ع غ م ي) overlap the name under them; room below the glyph, UI test measuring each glyph's ink (maintainer, 2026-09-29). | none | done |
 | L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | done |
 | L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | done |
 | L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | done |

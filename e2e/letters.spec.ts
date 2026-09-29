@@ -23,6 +23,31 @@ test('the header links to the letters page, which lists every letter as a card l
   }
 })
 
+test('no letter on the letters page reaches into its name (tails of ج ح خ ع غ م ي)', async ({ page }) => {
+  await page.goto('/#/letters')
+  await expect(page.locator('.letter-grid a.letter-card')).toHaveCount(letters.length)
+  await page.evaluate(() => document.fonts.ready)
+  // A span's box is its line box, not its ink: measure each glyph's ink with the font it is drawn in.
+  const clashes = await page.evaluate(() => {
+    const ctx = document.createElement('canvas').getContext('2d')!
+    return [...document.querySelectorAll('.letter-card')].flatMap((card) => {
+      const glyph = card.querySelector<HTMLElement>('.letter-card-glyph')!
+      const style = getComputedStyle(glyph)
+      ctx.font = `${style.fontSize} ${style.fontFamily}`
+      const ink = ctx.measureText(glyph.textContent!.trim())
+      const lineHeight = parseFloat(style.lineHeight)
+      const box = glyph.getBoundingClientRect()
+      const baseline =
+        box.top + parseFloat(style.paddingTop) + (lineHeight - ink.fontBoundingBoxAscent - ink.fontBoundingBoxDescent) / 2 + ink.fontBoundingBoxAscent
+      const nameTop = card.querySelector('strong')!.getBoundingClientRect().top
+      const cardTop = card.getBoundingClientRect().top
+      const clash = baseline + ink.actualBoundingBoxDescent > nameTop || baseline - ink.actualBoundingBoxAscent < cardTop
+      return clash ? [glyph.textContent!.trim()] : []
+    })
+  })
+  expect(clashes).toEqual([])
+})
+
 for (const lang of ['ar', 'en'] as const) {
   test(`a letter card shows its qualities and a clip ending on its word, at 375px in ${lang}`, async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 })

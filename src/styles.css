@@ -1592,6 +1592,11 @@ main {
 
 .letter-card-glyph {
   font-size: 3rem;
+  /* Amiri Quran's tails (ج ح خ ع غ م ي) reach about 0.55em below the baseline, far past a 1.4 line
+     box, and no letter rises above 0.8em: room below for the tails, the unused top trimmed. */
+  display: block;
+  padding-block-end: 0.55em;
+  margin-block-start: -0.4em;
 }
 
 .letter-card .lesson-card-action {
