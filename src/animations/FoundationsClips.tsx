@@ -95,13 +95,19 @@ export const foundationsHarakat: Clip = {
   ],
 }
 
-export const foundationsSukunShadda: Clip = {
-  title: { ar: 'السكون والشدّة', en: 'Sukun and shaddah' },
+export const foundationsSukun: Clip = {
+  title: { ar: 'السكون', en: 'Sukun' },
   steps: [
     step('sukun', 'b', { ar: 'السكون', en: 'Sukun' }, {
       ar: 'السكون: دائرة صغيرة فوق الحرف، معناها أنه بلا حركة؛ يُنطق الحرف وحده ويلتصق بما قبله، مثل «ab».',
       en: 'Sukun: a small circle above the letter. It means no vowel: the letter is said on its own, joined to the vowel before it, like "ab".',
     }),
+  ],
+}
+
+export const foundationsShadda: Clip = {
+  title: { ar: 'الشدّة', en: 'Shaddah' },
+  steps: [
     step('shadda', 'b + b', { ar: 'الشدّة', en: 'Shaddah' }, {
       ar: 'الشدّة: علامة كرأس السين فوق الحرف، معناها حرفان: الأول ساكن والثاني متحرك. تضغط على الحرف كأنك تنطقه مرتين.',
       en: 'Shaddah: a small mark shaped like a "w" above the letter. It means the letter is doubled: the first has a sukun, the second a vowel. Press on it as if saying it twice.',

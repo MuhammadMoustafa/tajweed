@@ -1,13 +1,14 @@
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { foundationsHarakat, foundationsSukunShadda, foundationsTanween, MARKS } from './FoundationsClips'
+import { foundationsHarakat, foundationsShadda, foundationsSukun, foundationsTanween, MARKS } from './FoundationsClips'
 
-const CLIPS = { foundationsHarakat, foundationsSukunShadda, foundationsTanween }
+const CLIPS = { foundationsHarakat, foundationsShadda, foundationsSukun, foundationsTanween }
 
 describe('foundations clips (src/animations/FoundationsClips.tsx)', () => {
-  it('has 3 + 2 + 3 steps, each labelled in both languages', () => {
+  it('has 3 + 1 + 1 + 3 steps, each labelled in both languages', () => {
     expect(foundationsHarakat.steps).toHaveLength(3)
-    expect(foundationsSukunShadda.steps).toHaveLength(2)
+    expect(foundationsSukun.steps).toHaveLength(1)
+    expect(foundationsShadda.steps).toHaveLength(1)
     expect(foundationsTanween.steps).toHaveLength(3)
     for (const clip of Object.values(CLIPS))
       for (const s of clip.steps) {

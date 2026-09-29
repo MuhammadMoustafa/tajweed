@@ -1,27 +1,34 @@
 import { describe, expect, it } from 'vitest'
 import { ANIMATIONS } from '../animations'
 import { foundations } from './foundations'
-import { findLesson } from './index'
+import { foundationsBasmala } from './foundations-basmala'
+import { foundationsHarakat } from './foundations-harakat'
+import { foundationsShaddahTanween } from './foundations-shaddah-tanween'
+import { findLesson, LESSONS } from './index'
 
-describe('foundations lesson', () => {
-  it('is registered first, in the first unit and no focus rule', () => {
+const UNIT = [foundations, foundationsHarakat, foundationsShaddahTanween, foundationsBasmala]
+
+describe('foundations lessons', () => {
+  it('are four lessons in the first unit, orders 1 to 1.3, with no focus rule; the first keeps its id', () => {
     expect(findLesson('foundations')).toBe(foundations)
-    expect(foundations.order).toBe(1)
-    expect(foundations.unit).toBe('foundations')
-    expect(foundations.focusRules).toEqual([])
+    expect(UNIT.map((l) => l.order)).toEqual([1, 1.1, 1.2, 1.3])
+    expect(LESSONS.filter((l) => l.unit === 'foundations')).toEqual(UNIT)
+    for (const l of UNIT) expect(l.focusRules).toEqual([])
   })
 
-  it('has a clip on each of the harakat, sukun/shaddah and tanween sections', () => {
-    const ids = foundations.sections.flatMap((s) => (s.animation ? [s.animation] : []))
-    expect(ids).toEqual(['foundations-harakat', 'foundations-sukun-shadda', 'foundations-tanween'])
-    for (const id of ids) expect(ANIMATIONS[id].steps.length).toBeGreaterThan(0)
+  it('give each visual section its own clip', () => {
+    const ids = (l: (typeof UNIT)[number]) => l.sections.flatMap((s) => (s.animation ? [s.animation] : []))
+    expect(ids(foundationsHarakat)).toEqual(['foundations-harakat', 'foundations-sukun'])
+    expect(ids(foundationsShaddahTanween)).toEqual(['foundations-shadda', 'foundations-tanween'])
+    for (const id of [...ids(foundationsHarakat), ...ids(foundationsShaddahTanween)])
+      expect(ANIMATIONS[id as keyof typeof ANIMATIONS].steps.length).toBeGreaterThan(0)
   })
 
-  it('uses the basmala, verse 1:1, as its first example', () => {
-    expect(foundations.examples[0].verseKey).toBe('1:1')
+  it('uses the basmala, verse 1:1, as the basmala lesson example', () => {
+    expect(foundationsBasmala.examples[0].verseKey).toBe('1:1')
   })
 
-  it('names both poems, neither covering the basics', () => {
-    expect(foundations.mutoon).toEqual({ tuhfa: 'not-covered', jazariyya: 'not-covered' })
+  it('name both poems, neither covering the basics', () => {
+    for (const l of UNIT) expect(l.mutoon).toEqual({ tuhfa: 'not-covered', jazariyya: 'not-covered' })
   })
 })

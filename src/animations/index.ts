@@ -7,7 +7,7 @@ import {
   makharijLisan,
   makharijShafatan,
 } from './MakharijClips'
-import { foundationsHarakat, foundationsSukunShadda, foundationsTanween } from './FoundationsClips'
+import { foundationsHarakat, foundationsSukun, foundationsShadda, foundationsTanween } from './FoundationsClips'
 import { lamAllah, lamQamariyyah, lamShamsiyyah } from './LamClips'
 import { idghamGhunnah, idghamWoGhunnah } from './IdghamClips'
 import { iqlabMeem } from './IqlabMeem'
@@ -38,7 +38,7 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'makharij-lisan': makharijLisan,
   'makharij-shafatan': makharijShafatan,
   'makharij-khayshum': makharijKhayshum,
-  'foundations-harakat': foundationsHarakat, 'foundations-sukun-shadda': foundationsSukunShadda, 'foundations-tanween': foundationsTanween,
+  'foundations-harakat': foundationsHarakat, 'foundations-sukun': foundationsSukun, 'foundations-shadda': foundationsShadda, 'foundations-tanween': foundationsTanween,
   'idgham-ghunnah': idghamGhunnah, 'idgham-wo-ghunnah': idghamWoGhunnah,
   'heavy-light': heavyLight,
   'ra-vowel': raVowel, 'ra-sakinah': raSakinah, 'ra-waqf': raWaqf,
