@@ -23,7 +23,9 @@ export function currentLetter(makhraj: Makhraj, progress: number): number | unde
   return phase < makhraj.letters.length ? phase : undefined
 }
 
-interface FrameProps {
+export interface FrameProps {
+  /** `raised-back` draws the back of the tongue lifted toward the palate (heavy letters). */
+  tongue?: 'rest' | 'raised-back'
   heading: Bilingual
   highlight: Makhraj['regions']
   /** Texts in the letters row; `current` (when set) is the one marked as shown now. */
@@ -34,9 +36,9 @@ interface FrameProps {
 }
 
 /** A step's frame: the lit point on the diagram, with its name, its letters and their names. */
-const frame = ({ heading, highlight, letters, current, names }: FrameProps) => (
+export const frame = ({ heading, highlight, letters, current, names, tongue }: FrameProps) => (
   <div className="makharij-tour">
-    <MouthDiagram highlight={highlight} labels={highlight} />
+    <MouthDiagram highlight={highlight} labels={highlight} tongue={tongue} />
     <div className="makharij-caption">
       <strong>
         <Localized text={heading} />

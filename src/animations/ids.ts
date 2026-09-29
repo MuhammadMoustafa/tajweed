@@ -19,3 +19,4 @@ export type AnimationId =
   | 'iqlab-meem'
   | 'madd-arid' | 'madd-leen' | 'madd-badal' | 'madd-iwad' | 'madd-silah'
   | 'lam-shamsiyyah' | 'lam-qamariyyah' | 'lam-allah'
+  | 'heavy-light'
