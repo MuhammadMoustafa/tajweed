@@ -26,7 +26,6 @@ describe('clip words (src/animations/words.ts)', () => {
     const { verseKey, position } = splitWordKey(key)
     const markup = getVerseMarkup(verseKey)
     expect(markup, `${verseKey}: clip word verses are fetched with the lesson verses`).toBeDefined()
-    expect(markup, `${verseKey}: run npm run fetch-quran`).toBeDefined()
     const verseWords = parseTajweed(markup!)
       .segments.map((s) => s.text)
       .join('')

@@ -44,10 +44,10 @@ export function App() {
           <span>{t(ui.appTagline)}</span>
         </a>
         <div className="header-actions">
-          <a href="#/letters" className="progress-link">
+          <a href="#/letters" className="header-link letters-link">
             {t(ui.lettersTitle)}
           </a>
-          <a href="#/progress" className="progress-link">
+          <a href="#/progress" className="header-link progress-link">
             {t(ui.progressTitle)}
           </a>
           <button
