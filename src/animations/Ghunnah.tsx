@@ -16,10 +16,10 @@ const COUNTS = 2
 const LETTER = 'نّ'
 const LABEL: Bilingual = { ar: 'نون مشددة: غنة حركتان', en: 'Noon with shaddah: ghunnah of 2 counts' }
 
-/** The nose (al-khayshum) beside the counting bar, lit once the ghunnah starts. */
-const withNose = (lit: boolean, bar: React.ReactNode) => (
+/** The nose (al-khayshum) beside the counting bar, lit once the ghunnah starts (with a nasal cloud of strength `nasal`, if given). */
+export const withNose = (lit: boolean, bar: React.ReactNode, nasal?: number) => (
   <div className="ghunnah-tour">
-    <MouthDiagram highlight={lit ? ['khayshum'] : []} labels={['khayshum']} />
+    <MouthDiagram highlight={lit ? ['khayshum'] : []} labels={['khayshum']} nasal={nasal} />
     {bar}
   </div>
 )

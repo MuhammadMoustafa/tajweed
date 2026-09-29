@@ -26,4 +26,5 @@ export type AnimationId =
   | 'hamzat-wasl' | 'hamzat-wasl-vowel' | 'silent-letters'
   | 'waqf-signs' | 'waqf-stop' | 'waqf-restart'
   | 'sifat-hams-jahr' | 'sifat-shiddah-rakhawah' | 'sifat-istila-istifal' | 'sifat-itbaq-infitah' | 'sifat-idhlaq-ismat' | 'sifat-safir-qalqalah-lin' | 'sifat-inhiraf-istitalah' | 'sifat-compare'
+  | 'tafkhim-levels' | 'ghunnah-levels' | 'idgham-naqis'
   | 'meem-ikhfa-shafawi' | 'meem-idgham-shafawi' | 'meem-izhar-shafawi'

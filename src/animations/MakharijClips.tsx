@@ -37,6 +37,8 @@ export interface LetterTourFrameProps {
   overlay?: MouthDiagramProps['overlay']
   /** The makhraj's exact contact, over the lit regions. */
   contact?: MouthDiagramProps['contact']
+  /** Passed on to MouthDiagram: the nasal cloud of the ghunnah, 0 to 1. */
+  nasal?: MouthDiagramProps['nasal']
   /** Texts in the letters row; `current` (when set) is the one marked as shown now. */
   letters: readonly string[]
   current?: number
@@ -48,9 +50,9 @@ export interface LetterTourFrameProps {
  * A step's frame: the lit point on the diagram, with its name, its letters and their names. Also
  * the sifat clips' frame (SifatClips.tsx), which add the tongue's position and an overlay.
  */
-export const letterTourFrame = ({ heading, highlight, tongue, overlay, contact, letters, current, names }: LetterTourFrameProps) => (
+export const letterTourFrame = ({ heading, highlight, tongue, overlay, nasal, contact, letters, current, names }: LetterTourFrameProps) => (
   <div className="makharij-tour">
-    <MouthDiagram highlight={highlight} labels={highlight} tongue={tongue} overlay={overlay} contact={contact} />
+    <MouthDiagram highlight={highlight} labels={highlight} tongue={tongue} overlay={overlay} nasal={nasal} contact={contact} />
     <div className="makharij-caption">
       <strong>
         <Localized text={heading} />

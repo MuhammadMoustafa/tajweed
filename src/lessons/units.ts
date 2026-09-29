@@ -12,7 +12,8 @@ export type UnitId =
   | "heavy-light"
   | "stopping"
   | "practice"
-  | "deeper";
+  | "deeper"
+  | "finer-levels";
 
 /** `core` units are the course proper; `advanced` ones are extra depth, shown after it on the home page. */
 export type UnitLevel = "core" | "advanced";
@@ -79,6 +80,11 @@ export const UNITS: Record<UnitId, Unit> = {
     title: { ar: "التعمّق: صفات الحروف", en: "Going deeper: sifat al-huruf" },
     order: 10,
   },
+  "finer-levels": {
+    level: "advanced",
+    title: { ar: 'مستويات أدق', en: 'Finer levels' },
+    order: 12,
+  },
 };
 
 /** One entry of the home list: a lesson on its own, or a unit with its lessons (chapters). */
@@ -113,7 +119,7 @@ export function splitByLevel(lessons: readonly Lesson[]): {
   return {
     core: lessons.filter((l) => !isAdvanced(l)),
     advanced: lessons.filter(isAdvanced),
-  };
+};
 }
 
 /** The lesson to take next: the first not-learned core lesson, and only when all core lessons are

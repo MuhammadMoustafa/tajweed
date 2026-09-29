@@ -31,10 +31,13 @@ import { practiceFatiha } from './practice-fatiha'
 import { practiceIkhlasFalaq } from './practice-ikhlas-falaq'
 import { practiceNas } from './practice-nas'
 import { practiceAsrKawthar } from './practice-asr-kawthar'
+import { tafkhimLevels } from './finer-tafkhim'
+import { ghunnahLevels } from './finer-ghunnah'
+import { idghamNaqis } from './finer-idgham'
 import type { Lesson } from './types'
 
 /** Register new lessons here; they are shown in `order`. */
-export const LESSONS: Lesson[] = [foundations, makharij, makharijJawf, makharijHalq, makharijLisan, makharijShafatan, makharijKhayshum, qalqalah, naturalMadd, muttasilMunfasil, maddLazim, maddWhenStopping, maddBadalSilah, lamRules, izhar, idgham, iqlab, ikhfa, heavyLight, ghunnahLesson, ra, hamzatWasl, idghamLetters, waqf, sifat, meemSakinah, foundationsHarakat, foundationsShaddahTanween, foundationsBasmala, practiceFatiha, practiceIkhlasFalaq, practiceNas, practiceAsrKawthar].sort(
+export const LESSONS: Lesson[] = [foundations, foundationsBasmala, foundationsHarakat, foundationsShaddahTanween, heavyLight, ghunnahLesson, ra, maddLazim, izhar, idgham, iqlab, ikhfa, hamzatWasl, idghamLetters, makharij, makharijHalq, makharijJawf, makharijKhayshum, makharijLisan, makharijShafatan, meemSakinah, muttasilMunfasil, naturalMadd, maddWhenStopping, maddBadalSilah, lamRules, qalqalah, waqf, sifat, practiceFatiha, practiceIkhlasFalaq, practiceNas, practiceAsrKawthar, tafkhimLevels, ghunnahLevels, idghamNaqis].sort(
   (a, b) => a.order - b.order,
 )
 
