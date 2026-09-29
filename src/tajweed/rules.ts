@@ -32,7 +32,7 @@ export type TajweedRuleId = (typeof TAJWEED_RULE_IDS)[number]
  * `isTajweedRuleId` keeps meaning "an API class" for the parser. Applied to text via
  * `src/tajweed/marks.ts`, never by the API markup.
  */
-export const CUSTOM_RULE_IDS = ['izhar', 'izhar_shafawi', 'laam_qamariyah', 'tafkheem', 'tarqeeq', 'waqf_sign'] as const
+export const CUSTOM_RULE_IDS = ['izhar', 'izhar_shafawi', 'idgham_mithlayn', 'laam_qamariyah', 'tafkheem', 'tarqeeq', 'waqf_sign'] as const
 
 export type CustomRuleId = (typeof CUSTOM_RULE_IDS)[number]
 
@@ -174,6 +174,12 @@ export const CUSTOM_RULES: Record<CustomRuleId, TajweedRule<CustomRuleId>> = {
     id: 'izhar_shafawi',
     color: 'izhar',
     name: { ar: 'إظهار شفوي', en: 'Labial izhar' },
+  },
+  // The API tags mutajanisayn and mutaqaribayn but not mithlayn (a letter merged into the same letter).
+  idgham_mithlayn: {
+    id: 'idgham_mithlayn',
+    color: 'silent',
+    name: { ar: 'إدغام مثلين', en: 'Idgham of identical letters' },
   },
   laam_qamariyah: {
     id: 'laam_qamariyah',

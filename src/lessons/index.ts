@@ -8,6 +8,7 @@ import { idgham } from './idgham'
 import { iqlab } from './iqlab'
 import { ikhfa } from './ikhfa'
 import { hamzatWasl } from './hamzat-wasl'
+import { idghamLetters } from './idgham-letters'
 import { makharij } from './makharij'
 import { makharijHalq } from './makharij-halq'
 import { makharijJawf } from './makharij-jawf'
@@ -22,7 +23,7 @@ import { qalqalah } from './qalqalah'
 import type { Lesson } from './types'
 
 /** Register new lessons here; they are shown in `order`. */
-export const LESSONS: Lesson[] = [foundations, makharij, makharijJawf, makharijHalq, makharijLisan, makharijShafatan, makharijKhayshum, qalqalah, naturalMadd, muttasilMunfasil, maddLazim, otherMadd, lamRules, izhar, idgham, iqlab, ikhfa, heavyLight, ghunnahLesson, ra, hamzatWasl].sort(
+export const LESSONS: Lesson[] = [foundations, makharij, makharijJawf, makharijHalq, makharijLisan, makharijShafatan, makharijKhayshum, qalqalah, naturalMadd, muttasilMunfasil, maddLazim, otherMadd, lamRules, izhar, idgham, iqlab, ikhfa, heavyLight, ghunnahLesson, ra, hamzatWasl, idghamLetters].sort(
   (a, b) => a.order - b.order,
 )
 

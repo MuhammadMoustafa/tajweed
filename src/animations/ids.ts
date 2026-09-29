@@ -17,6 +17,7 @@ export type AnimationId =
   | 'madd-lazim-cause'
   | 'izhar-clip'
   | 'iqlab-meem'
+  | 'idgham-mithlayn' | 'idgham-mutajanisayn' | 'idgham-mutaqaribayn'
   | 'madd-arid' | 'madd-leen' | 'madd-badal' | 'madd-iwad' | 'madd-silah'
   | 'lam-shamsiyyah' | 'lam-qamariyyah' | 'lam-allah'
   | 'heavy-light'

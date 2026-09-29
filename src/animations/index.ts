@@ -15,6 +15,7 @@ import { ikhfaHidden } from './IkhfaClip'
 import { heavyLight } from './HeavyLight'
 import { ghunnah } from './Ghunnah'
 import { raSakinah, raVowel, raWaqf } from './RaClips'
+import { idghamMithlayn, idghamMutajanisayn, idghamMutaqaribayn } from './IdghamLetters'
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { izharClip } from './IzharClip'
@@ -46,6 +47,7 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'madd-lazim-cause': maddLazimCause,
   'izhar-clip': izharClip,
   'iqlab-meem': iqlabMeem,
+  'idgham-mithlayn': idghamMithlayn, 'idgham-mutajanisayn': idghamMutajanisayn, 'idgham-mutaqaribayn': idghamMutaqaribayn,
   'madd-arid': maddArid, 'madd-leen': maddLeen, 'madd-badal': maddBadal, 'madd-iwad': maddIwad, 'madd-silah': maddSilah,
   'lam-shamsiyyah': lamShamsiyyah, 'lam-qamariyyah': lamQamariyyah, 'lam-allah': lamAllah,
   'hamzat-wasl': hamzatWasl, 'hamzat-wasl-vowel': hamzatWaslVowel, 'silent-letters': silentLetters,
