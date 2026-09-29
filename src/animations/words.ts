@@ -31,4 +31,6 @@ export const CLIP_WORDS = {
   /** Hamzat al-wasl: the first word of 96:1 (started with) and the next word (joined to the one before). */
   waslStart: '96:1:1',
   waslJoined: '96:1:2',
+  /** Hafs special words (L23): a sad read as seen (2:245), a sad read as sad (88:22), the kasra lam of 49:11 read on. */
+  readSeen: '2:245:14', readSad: '88:22:3', ismJoined: '49:11:30',
 } as const satisfies Record<string, WordKey>

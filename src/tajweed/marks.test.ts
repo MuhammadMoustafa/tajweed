@@ -35,6 +35,17 @@ describe('applyMarks', () => {
     expect(marked.some((s) => s.rule === 'ham_wasl' && s.text === 'ٱ')).toBe(true)
   })
 
+  it('replaces the API rule on exactly the marked letter when the mark overrides it', () => {
+    const { segments } = parseTajweed(ikhlas1)
+    // Word 4 "أَحَدٌ": the API tags only its dal (qalaqah); letter 3 is that dal with its tanween
+    // split off, so overriding letter 3 retags the dal alone.
+    const marked = applyMarks(segments, [{ word: 4, letter: 3, rule: 'tafkheem', override: true }])
+
+    expect(marked.some((s) => s.rule === 'qalaqah')).toBe(false)
+    expect(marked.find((s) => s.rule === 'tafkheem')?.text).toBe('دٌ')
+    expect(marked.map((s) => s.text).join('')).toBe(segments.map((s) => s.text).join(''))
+  })
+
   it('applies several marks, splitting segments as needed', () => {
     const { segments } = parseTajweed(ikhlas1)
     const marked = applyMarks(segments, [

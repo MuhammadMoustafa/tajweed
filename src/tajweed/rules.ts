@@ -32,7 +32,7 @@ export type TajweedRuleId = (typeof TAJWEED_RULE_IDS)[number]
  * `isTajweedRuleId` keeps meaning "an API class" for the parser. Applied to text via
  * `src/tajweed/marks.ts`, never by the API markup.
  */
-export const CUSTOM_RULE_IDS = ['izhar', 'izhar_shafawi', 'idgham_mithlayn', 'laam_qamariyah', 'tafkheem', 'tarqeeq', 'waqf_sign'] as const
+export const CUSTOM_RULE_IDS = ['izhar', 'izhar_shafawi', 'idgham_mithlayn', 'laam_qamariyah', 'tafkheem', 'tarqeeq', 'waqf_sign', 'hafs_special'] as const
 
 export type CustomRuleId = (typeof CUSTOM_RULE_IDS)[number]
 
@@ -58,6 +58,7 @@ export type ColorToken =
   | 'tafkheem'
   | 'tarqeeq'
   | 'waqf'
+  | 'hafs-special'
 
 export interface TajweedRule<Id extends RuleId = RuleId> {
   id: Id
@@ -200,6 +201,13 @@ export const CUSTOM_RULES: Record<CustomRuleId, TajweedRule<CustomRuleId>> = {
     id: 'waqf_sign',
     color: 'waqf',
     name: { ar: 'علامة وقف', en: 'Waqf sign (stopping mark)' },
+  },
+  // The few places Hafs ʿan ʿAsim reads in a special way (sakt, imalah, tas-hil, ishmam, sad/seen …),
+  // mostly shown in the mushaf by a small sign the API text carries but does not tag.
+  hafs_special: {
+    id: 'hafs_special',
+    color: 'hafs-special',
+    name: { ar: 'موضع خاص في رواية حفص', en: 'A special word in Hafs' },
   },
 }
 

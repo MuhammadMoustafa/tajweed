@@ -28,6 +28,7 @@ import type { Clip } from './player/clip'
 import { qalqalahBounce } from './QalqalahBounce'
 import { waqfRestart, waqfSigns, waqfStop } from './Waqf'
 import * as sifat from './SifatClips'
+import { hafsImalah, hafsIsm, hafsIshmam, hafsSadSeen, hafsSakt, hafsTashil } from './HafsSpecial'
 
 /** Clips by id, played by AnimationPlayer (src/animations/player) for a lesson or one of its sections. */
 export const ANIMATIONS: Record<AnimationId, Clip> = {
@@ -59,4 +60,5 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'waqf-signs': waqfSigns, 'waqf-stop': waqfStop, 'waqf-restart': waqfRestart,
   'tafkhim-levels': tafkhimLevels, 'ghunnah-levels': ghunnahLevels, 'idgham-naqis': idghamNaqis,
   'meem-ikhfa-shafawi': meemIkhfaShafawi, 'meem-idgham-shafawi': meemIdghamShafawi, 'meem-izhar-shafawi': meemIzharShafawi,
+  'hafs-sakt': hafsSakt, 'hafs-imalah': hafsImalah, 'hafs-tashil': hafsTashil, 'hafs-ishmam': hafsIshmam, 'hafs-sad-seen': hafsSadSeen, 'hafs-ism': hafsIsm,
 }

@@ -38,6 +38,7 @@
   --tj-tafkheem: #1d3a8f;
   --tj-tarqeeq: #0e8f7a;
   --tj-waqf: #46536b;
+  --tj-hafs-special: #8a4a12;
 
   /* Quiz segment states (src/components/Quiz.tsx) — never the rule colors above, so tapping
      doesn't give the answer away before checking. */
@@ -104,6 +105,7 @@
     --tj-tafkheem: #6f8fe8;
     --tj-tarqeeq: #4fd9bd;
     --tj-waqf: #93a3bf;
+    --tj-hafs-special: #e3a56a;
 
     --anat-skin: #5a463b;
     --anat-edge: #c9a58c;
@@ -1522,6 +1524,12 @@ main {
 }
 
 .hw-sound {
+  font-size: 20px;
+  fill: var(--muted);
+}
+
+/* Hafs special words clips (src/animations/HafsSpecial.tsx): the sound line under the letters. */
+.hafs-sound {
   font-size: 20px;
   fill: var(--muted);
 }

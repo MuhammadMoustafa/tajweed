@@ -13,6 +13,7 @@ export type UnitId =
   | "stopping"
   | "practice"
   | "deeper"
+  | "hafs-special"
   | "finer-levels";
 
 /** `core` units are the course proper; `advanced` ones are extra depth, shown after it on the home page. */
@@ -79,6 +80,11 @@ export const UNITS: Record<UnitId, Unit> = {
     level: "advanced",
     title: { ar: "التعمّق: صفات الحروف", en: "Going deeper: sifat al-huruf" },
     order: 10,
+  },
+  "hafs-special": {
+    level: "advanced",
+    title: { ar: 'كلمات خاصة في رواية حفص', en: 'Special words in the Hafs reading' },
+    order: 11,
   },
   "finer-levels": {
     level: "advanced",

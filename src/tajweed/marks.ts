@@ -12,6 +12,12 @@ export interface Mark {
   /** 1-based grapheme index within the word (via `Intl.Segmenter`, so a letter keeps its harakat). Omit to mark the whole word. */
   letter?: number
   rule: CustomRuleId
+  /**
+   * Replace an API tag on these letters instead of yielding to it. Only for a place where the API's
+   * rule is wrong for the reading taught: e.g. it tags the noon of 75:27 as merged into the ra,
+   * but Hafs's sakt there keeps the noon clear.
+   */
+  override?: boolean
 }
 
 export interface MarkedSegment {
@@ -41,20 +47,20 @@ function wordRanges(text: string): Range[] {
   return ranges
 }
 
-/** Splits `part` around `[overlapStart, overlapEnd)` and tags the overlap, unless it is already ruled. */
-function applyRangeToParts(parts: Part[], target: Range, rule: CustomRuleId): Part[] {
+/** Splits `part` around `[overlapStart, overlapEnd)` and tags the overlap, unless it is already ruled (and not `override`). */
+function applyRangeToParts(parts: Part[], target: Range, rule: CustomRuleId, override = false): Part[] {
   const result: Part[] = []
   for (const part of parts) {
     const overlapStart = Math.max(part.start, target.start)
     const overlapEnd = Math.min(part.end, target.end)
     // No overlap, or the letters here already carry a rule (an API class, or an earlier mark) — API/earlier wins.
-    if (overlapStart >= overlapEnd || part.rule !== undefined) {
+    if (overlapStart >= overlapEnd || (part.rule !== undefined && !override)) {
       result.push(part)
       continue
     }
-    if (part.start < overlapStart) result.push({ start: part.start, end: overlapStart, rule: undefined })
+    if (part.start < overlapStart) result.push({ start: part.start, end: overlapStart, rule: part.rule })
     result.push({ start: overlapStart, end: overlapEnd, rule })
-    if (overlapEnd < part.end) result.push({ start: overlapEnd, end: part.end, rule: undefined })
+    if (overlapEnd < part.end) result.push({ start: overlapEnd, end: part.end, rule: part.rule })
   }
   return result
 }
@@ -62,7 +68,8 @@ function applyRangeToParts(parts: Part[], target: Range, rule: CustomRuleId): Pa
 /**
  * Applies hand-placed marks to segments already produced by `parseTajweed`, splitting segments
  * as needed. The underlying text is never retyped — only sliced. Letters an API rule already
- * tags keep that rule: a mark never overwrites one.
+ * tags keep that rule: a mark never overwrites one, unless it is an `override` mark (for a place
+ * where the API's tag is wrong for the reading taught).
  *
  * Throws when a mark's `word` or `letter` falls outside the verse.
  */
@@ -98,7 +105,7 @@ export function applyMarks(segments: readonly TajweedSegment[], marks: readonly 
         target = { start: word.start + grapheme.index, end: word.start + grapheme.index + grapheme.segment.length }
       }
 
-      parts = applyRangeToParts(parts, target, mark.rule)
+      parts = applyRangeToParts(parts, target, mark.rule, mark.override)
     }
   }
 

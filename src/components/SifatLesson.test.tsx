@@ -23,7 +23,7 @@ describe('sifat lesson (L20)', () => {
     expect(sifat.order).toBe(10)
     expect(sifat.unit).toBe('deeper')
     expect(sifat.reviewed).toBe(false)
-    expect(LESSONS.filter((l) => l.unit === 'deeper').at(-1)).toBe(sifat)
+    expect(LESSONS.filter((l) => l.unit === 'deeper')).toEqual([sifat])
   })
 
   it('gives every section after the intro its own clip, and the lesson none of its own', () => {
