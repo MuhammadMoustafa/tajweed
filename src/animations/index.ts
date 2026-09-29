@@ -22,6 +22,7 @@ import { izharClip } from './IzharClip'
 import { hamzatWasl, hamzatWaslVowel, silentLetters } from './HamzatWasl'
 import { naturalMadd } from './NaturalMadd'
 import { maddArid, maddBadal, maddIwad, maddLeen, maddSilah } from './OtherMadd'
+import { meemIdghamShafawi, meemIkhfaShafawi, meemIzharShafawi } from './MeemSakinahClips'
 import type { Clip } from './player/clip'
 import { qalqalahBounce } from './QalqalahBounce'
 import { waqfRestart, waqfSigns, waqfStop } from './Waqf'
@@ -55,4 +56,5 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'lam-shamsiyyah': lamShamsiyyah, 'lam-qamariyyah': lamQamariyyah, 'lam-allah': lamAllah,
   'hamzat-wasl': hamzatWasl, 'hamzat-wasl-vowel': hamzatWaslVowel, 'silent-letters': silentLetters,
   'waqf-signs': waqfSigns, 'waqf-stop': waqfStop, 'waqf-restart': waqfRestart,
+  'meem-ikhfa-shafawi': meemIkhfaShafawi, 'meem-idgham-shafawi': meemIdghamShafawi, 'meem-izhar-shafawi': meemIzharShafawi,
 }
