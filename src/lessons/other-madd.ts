@@ -7,7 +7,7 @@ import type { Lesson } from './types'
 // badal and ʿiwad are never tagged, and no custom rule id exists for them, so notes point at them.
 export const otherMadd: Lesson = {
   id: 'other-madd',
-  order: 16,
+  order: 6.3,
   unit: 'madd',
   title: {
     ar: 'مدود أخرى: العارض للسكون واللين والبدل والعوض والصلة',

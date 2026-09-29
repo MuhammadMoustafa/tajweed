@@ -2,7 +2,7 @@ import type { Lesson } from './types'
 
 export const maddLazim: Lesson = {
   id: 'madd-lazim',
-  order: 15,
+  order: 6.2,
   unit: 'madd',
   title: { ar: 'المدّ اللازم', en: 'Necessary madd (al-madd al-lazim)' },
   summary: {

@@ -8,7 +8,7 @@ const lesson = findLesson('iqlab')!
 describe('iqlab lesson', () => {
   it('is the third noon-sakinah lesson, in that unit, with both poems', () => {
     expect(lesson.unit).toBe('noon-sakinah')
-    expect(lesson.order).toBe(6)
+    expect(lesson.order).toBe(3.2)
     expect(lesson.focusRules).toEqual(['iqlab'])
     expect(lesson.animation).toBe('iqlab-meem')
     expect(Array.isArray(lesson.mutoon?.tuhfa)).toBe(true)

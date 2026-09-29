@@ -4,7 +4,8 @@ import type { Lesson } from './types'
 // this file holds the lesson's prose. Mnemonic phrases are the classical ones, not Quran text.
 export const sifat: Lesson = {
   id: 'sifat',
-  order: 20,
+  order: 9,
+  unit: 'deeper',
   title: { ar: 'صفات الحروف', en: 'Sifat al-huruf (the letters’ qualities)' },
   summary: {
     ar: 'لكل حرف صفات تميّزه عن غيره: خمس صفات متضادة يأخذ الحرف واحدة من كل زوج منها، وسبع صفات لا ضد لها تختص بها بعض الحروف.',

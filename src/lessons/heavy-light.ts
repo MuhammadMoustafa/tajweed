@@ -2,7 +2,8 @@ import type { Lesson } from './types'
 
 export const heavyLight: Lesson = {
   id: 'heavy-light',
-  order: 3,
+  order: 7,
+  unit: 'heavy-light',
   title: { ar: 'التفخيم والترقيق', en: 'Heavy and light letters (tafkhim and tarqiq)' },
   summary: {
     ar: 'سبعة حروف تُنطق مفخَّمة دائمًا، وبقية الحروف مرقَّقة.',
@@ -26,8 +27,8 @@ export const heavyLight: Lesson = {
     {
       heading: { ar: 'باقي الحروف', en: 'All the other letters' },
       body: {
-        ar: 'كل الحروف الأخرى مرقَّقة. وثلاثة أحرف تتغير بحسب موضعها فتُفخَّم مرة وتُرقَّق أخرى: الراء، واللام في اسم الله، والألف. لها دروس خاصة لاحقًا، فلا نحكم عليها الآن.',
-        en: 'Every other letter is light. Three letters vary with where they appear, sometimes heavy and sometimes light: ra, the lam in the name of Allah, and alif. They have lessons of their own later, so do not judge them yet.',
+        ar: 'كل الحروف الأخرى مرقَّقة. وثلاثة أحرف تتغير بحسب موضعها فتُفخَّم مرة وتُرقَّق أخرى: الراء، واللام في اسم الله، والألف. أما اللام في اسم الله فتعلمتها في درس اللام، وللراء درس خاص يلي هذا الدرس، فلا نحكم على الراء الآن.',
+        en: 'Every other letter is light. Three letters vary with where they appear, sometimes heavy and sometimes light: ra, the lam in the name of Allah, and alif. The lam in the name of Allah was covered in the lam lesson, and ra has a lesson of its own right after this one, so do not judge ra yet.',
       },
     },
     {

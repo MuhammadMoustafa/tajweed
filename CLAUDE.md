@@ -64,22 +64,17 @@ Data flows one way: **lesson data → verse markup → parsed segments → color
 
 ## Learning path (lesson order)
 
-Ordered so each step only depends on earlier ones; examples should come from short, familiar surahs (Juz 'Amma, Al-Fatiha).
+Nine units in the conventional beginner order (Tuhfat al-Atfal's sequence), each lesson in one; unit N's lessons are N, N.1, N.2 … (src/lessons/units.ts), shown on the home page as collapsible groups. Each step only depends on earlier ones; examples come from short, familiar surahs (Juz 'Amma, Al-Fatiha).
 
-1. Foundations: letters, harakat, sukun, shadda, tanween; istiʿadha and basmala
-2. Makharij (articulation points) — simplified 5 regions, then details
-3. Heavy vs. light letters (tafkhim/tarqiq basics)
-4. Noon sakinah & tanween: izhar → idgham (with/without ghunnah) → iqlab → ikhfa
-5. Meem sakinah: ikhfa shafawi, idgham shafawi, izhar shafawi
-6. Ghunnah on mushaddad noon/meem
-7. Qalqalah (sughra/kubra)
-8. Lam rules: lam shamsiyyah/qamariyyah, lam in the name of Allah
-9. Ra: tafkhim/tarqiq
-10. Madd: natural (2) → muttasil / munfasil → lazim → ʿarid lis-sukun, leen, badal, silah
-11. Hamzat al-wasl and silent letters
-12. Idgham of letters: mithlayn, mutajanisayn, mutaqaribayn
-13. Waqf & ibtida (stopping/starting signs)
-14. Sifat al-huruf (characteristics) in depth
+1. Getting started: foundations (letters, harakat, sukun, shadda, tanween; istiʿadha and basmala)
+2. Makharij: intro, then the five areas
+3. Noon sakinah & tanween: izhar, idgham, iqlab, ikhfa
+4. Ghunnah & meem sakinah: ghunnah on mushaddad noon/meem, then meem sakinah
+5. Lam & merging letters: lam rules (shamsiyyah/qamariyyah, lam of Allah), idgham of letters
+6. Madd: natural, muttasil/munfasil, lazim, other madd (ʿarid, leen, badal, silah)
+7. Heavy & light letters: heavy/light, ra, qalqalah
+8. Stopping & starting: waqf, hamzat al-wasl
+9. Going deeper: sifat al-huruf
 
 Each lesson: short explanation → animation → highlighted Quran examples with audio → a link to its quiz page.
 

@@ -2,7 +2,8 @@ import type { Lesson } from './types'
 
 export const lamRules: Lesson = {
   id: 'lam-rules',
-  order: 11,
+  order: 5,
+  unit: 'lam-merging',
   title: { ar: 'أحكام اللام', en: 'Lam rules' },
   summary: {
     ar: 'لام «أل» شمسية أو قمرية، ولام اسم الله تُفخَّم أو تُرقَّق.',

@@ -1,6 +1,6 @@
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import { useLocale } from '../i18n/LocaleProvider'
-import { formatLearnedCount, ui } from '../i18n/ui'
+import { formatLearnedCount, formatTemplate, ui } from '../i18n/ui'
 import { LESSONS } from '../lessons'
 import { groupByUnit, UNITS } from '../lessons/units'
 import { useProgress } from '../progress'
@@ -36,6 +36,9 @@ export function LessonList() {
   const idPrefix = useId()
   // The next lesson to take: the first, in order, not yet marked learned.
   const nextId = LESSONS.find((lesson) => !isLearned(lesson.id))?.id
+  // The unit holding the next lesson starts open, the rest closed. Fixed at first render, so a
+  // unit the learner opens or closes stays as they left it when progress changes.
+  const [initiallyOpen] = useState(() => LESSONS.find((lesson) => lesson.id === nextId)?.unit)
 
   return (
     <section>
@@ -50,16 +53,29 @@ export function LessonList() {
             </li>
           ))
           if (group.unit === undefined) return cards
-          // A unit: its heading, then its chapters as their own nested list of the same cards.
-          const headingId = `${idPrefix}unit-${group.unit}`
+          // A unit: a native <details> (keyboard and screen-reader support for free) whose summary
+          // shows its number, title and progress, then its lessons as a nested list of the same cards.
+          const unit = UNITS[group.unit]
+          const learned = group.lessons.filter((lesson) => isLearned(lesson.id)).length
+          const titleId = `${idPrefix}unit-${group.unit}`
           return (
-            <li key={headingId} className="lesson-unit" data-unit={group.unit}>
-              <section aria-labelledby={headingId}>
-                <h3 id={headingId} className="lesson-unit-title">
-                  {t(UNITS[group.unit].title)}
-                </h3>
-                <ol className="lesson-list lesson-unit-chapters">{cards}</ol>
-              </section>
+            <li key={titleId} className="lesson-unit" data-unit={group.unit}>
+              <details open={group.unit === initiallyOpen}>
+                <summary>
+                  <span className="lesson-unit-heading">
+                    <span className="lesson-unit-number">{formatTemplate(locale, ui.unitNumber, { n: unit.order })}</span>
+                    <strong id={titleId} className="lesson-unit-title">
+                      {t(unit.title)}
+                    </strong>
+                  </span>
+                  <span className="lesson-unit-progress">
+                    {formatLearnedCount(locale, learned, group.lessons.length)}
+                  </span>
+                </summary>
+                <ol className="lesson-list lesson-unit-chapters" aria-labelledby={titleId}>
+                  {cards}
+                </ol>
+              </details>
             </li>
           )
         })}

@@ -20,10 +20,10 @@ const coloredLetters = (verseKey: VerseKey) => {
     .map((s) => [s.rule, s.text] as [RuleId, string]);
 };
 
-describe("idgham-letters lesson (L18)", () => {
-  it("is lesson 18, teaches the three kinds, and has one clip per kind, each in its own section", () => {
-    expect(lesson.order).toBe(18);
-    expect(lesson.unit).toBeUndefined();
+describe("idgham-letters lesson (L18, unit 5)", () => {
+  it("is lesson 5.1, teaches the three kinds, and has one clip per kind, each in its own section", () => {
+    expect(lesson.order).toBe(5.1);
+    expect(lesson.unit).toBe('lam-merging');
     expect(lesson.focusRules).toEqual([
       "idgham_mithlayn",
       "idgham_mutajanisayn",

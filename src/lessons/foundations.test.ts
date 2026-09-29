@@ -4,10 +4,10 @@ import { foundations } from './foundations'
 import { findLesson } from './index'
 
 describe('foundations lesson', () => {
-  it('is registered first, with no unit and no focus rule', () => {
+  it('is registered first, in the first unit and no focus rule', () => {
     expect(findLesson('foundations')).toBe(foundations)
     expect(foundations.order).toBe(1)
-    expect(foundations.unit).toBeUndefined()
+    expect(foundations.unit).toBe('foundations')
     expect(foundations.focusRules).toEqual([])
   })
 

@@ -30,10 +30,10 @@ const markedTexts = (key: string, marks: NonNullable<(typeof waqf.examples)[numb
 }
 
 describe('waqf lesson (src/lessons/waqf.ts)', () => {
-  it('is registered as lesson 19 with no unit, focusing waqf_sign', () => {
+  it('is registered as lesson 8 opening the stopping unit, focusing waqf_sign', () => {
     expect(LESSONS.find((l) => l.id === 'waqf')).toBe(waqf)
-    expect(waqf.order).toBe(19)
-    expect(waqf.unit).toBeUndefined()
+    expect(waqf.order).toBe(8)
+    expect(waqf.unit).toBe('stopping')
     expect(waqf.focusRules).toEqual(['waqf_sign'])
   })
 

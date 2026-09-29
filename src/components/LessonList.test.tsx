@@ -103,17 +103,42 @@ describe('LessonList', () => {
           </LocaleProvider>,
         )
         const group = container.querySelector(`.lesson-unit[data-unit="${unitId}"]`)!
-        expect(group.querySelector('h3')).toHaveTextContent(unit.title[locale])
-        expect(within(group as HTMLElement).getByRole('region', { name: unit.title[locale] })).toBeInTheDocument()
+        expect(group.querySelector('summary .lesson-unit-title')).toHaveTextContent(unit.title[locale])
+        expect(group.querySelector('summary .lesson-unit-number')).toHaveTextContent(formatNumber(locale, unit.order))
+        expect(within(group as HTMLElement).getByRole('list', { name: unit.title[locale] })).toBeInTheDocument()
         const links = [...group.querySelectorAll('.lesson-unit-chapters .lesson-card-main')]
         expect(links.map((a) => a.getAttribute('href'))).toEqual(members.map((l) => `#/lesson/${l.id}`))
         unmount()
       }
     }
-    // Lessons outside any unit stay at the top level of the list.
+  })
+
+  it('opens only the unit holding the next lesson, and keeps that choice when progress changes', () => {
     const { container } = renderList()
-    for (const lesson of LESSONS.filter((l) => !l.unit)) {
-      expect(cardFor(container, lesson.id)?.closest('.lesson-unit')).toBeNull()
+    const openUnits = () => [...container.querySelectorAll('.lesson-unit details[open]')].map((d) => d.closest('.lesson-unit')?.getAttribute('data-unit'))
+    expect(openUnits()).toEqual([LESSONS[0].unit])
+    // Learning the whole first unit moves "next" on, but the open state is not forced again.
+    act(() => {
+      for (const l of LESSONS.filter((x) => x.unit === LESSONS[0].unit)) setLessonLearned(l.id, true)
+    })
+    expect(openUnits()).toEqual([LESSONS[0].unit])
+  })
+
+  it("shows each unit's progress in the locale's digits", () => {
+    const first = LESSONS.filter((l) => l.unit === LESSONS[0].unit)
+    setLessonLearned(first[0].id, true)
+    for (const locale of ['en', 'ar'] as const) {
+      localStorage.setItem('tajweed.locale', locale)
+      const { container, unmount } = render(
+        <LocaleProvider>
+          <LessonList />
+        </LocaleProvider>,
+      )
+      const progress = container.querySelector('.lesson-unit summary .lesson-unit-progress')!
+      const learned = formatNumber(locale, 1)
+      const total = formatNumber(locale, first.length)
+      expect(progress.textContent).toBe(locale === 'en' ? `${learned} of ${total} learned` : `${learned} من ${total} تم تعلّمها`)
+      unmount()
     }
   })
 

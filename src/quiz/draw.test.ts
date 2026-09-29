@@ -24,11 +24,11 @@ const draw = (lesson: Lesson, difficulty: Difficulty, seed: number) =>
 
 describe('taughtRules / hasQuiz', () => {
   it('collects the focus rules of every lesson up to this one, by order', () => {
-    expect(taughtRules(qalqalah, LESSONS_HERE)).toEqual(['qalaqah'])
-    expect(new Set(taughtRules(naturalMadd, LESSONS_HERE))).toEqual(new Set(['madda_normal', 'qalaqah']))
-    // Reordered: qalqalah after natural madd now reviews it too.
-    const later = { ...qalqalah, order: 99 }
-    expect(new Set(taughtRules(later, [makharij, naturalMadd, later]))).toEqual(new Set(['qalaqah', 'madda_normal']))
+    expect(taughtRules(naturalMadd, LESSONS_HERE)).toEqual(['madda_normal'])
+    expect(new Set(taughtRules(qalqalah, LESSONS_HERE))).toEqual(new Set(['madda_normal', 'qalaqah']))
+    // Reordered: qalqalah before natural madd asks only about itself.
+    const earlier = { ...qalqalah, order: 0.5 }
+    expect(taughtRules(earlier, [earlier, makharij, naturalMadd])).toEqual(['qalaqah'])
   })
 
   it('gives a lesson without focus rules none, even after other lessons', () => {
@@ -140,14 +140,14 @@ describe('drawQuiz', () => {
   })
 
   it('asks mostly about the lesson’s own rule, and reviews earlier ones', () => {
-    const rules = SEEDS.flatMap((seed) => draw(naturalMadd, 'medium', seed).map(ruleOf)).filter(Boolean)
-    const own = rules.filter((r) => r === 'madda_normal').length
+    const rules = SEEDS.flatMap((seed) => draw(qalqalah, 'medium', seed).map(ruleOf)).filter(Boolean)
+    const own = rules.filter((r) => r === 'qalaqah').length
     expect(own).toBeGreaterThan(rules.length / 2)
-    expect(rules).toContain('qalaqah')
+    expect(rules).toContain('madda_normal')
   })
 
   it('mixes tap and "which rule?" questions once two rules are taught', () => {
-    const kinds = new Set(SEEDS.flatMap((seed) => draw(naturalMadd, 'medium', seed).map((q) => q.kind)))
+    const kinds = new Set(SEEDS.flatMap((seed) => draw(qalqalah, 'medium', seed).map((q) => q.kind)))
     expect(kinds).toEqual(new Set(['tap', 'rule', 'choice']))
   })
 

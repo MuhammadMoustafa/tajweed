@@ -7,9 +7,9 @@ import { LESSONS } from '.'
 const lesson = LESSONS.find((l) => l.id === 'izhar')!
 
 describe('izhar lesson', () => {
-  it('opens the noon-sakinah unit at order 4 with its clip and the izhar rule', () => {
+  it('opens the noon-sakinah unit at order 3 with its clip and the izhar rule', () => {
     expect(lesson.unit).toBe('noon-sakinah')
-    expect(lesson.order).toBe(4)
+    expect(lesson.order).toBe(3)
     expect(lesson.animation).toBe('izhar-clip')
     expect(lesson.focusRules).toEqual(['izhar'])
     expect(lesson.reviewed).toBe(false)

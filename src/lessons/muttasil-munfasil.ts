@@ -2,7 +2,7 @@ import type { Lesson } from './types'
 
 export const muttasilMunfasil: Lesson = {
   id: 'muttasil-munfasil',
-  order: 14,
+  order: 6.1,
   unit: 'madd',
   title: { ar: 'المد الواجب المتصل والمد الجائز المنفصل', en: 'Madd wajib muttasil and madd jaiz munfasil' },
   summary: {

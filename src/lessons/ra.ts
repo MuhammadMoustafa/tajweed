@@ -2,7 +2,8 @@ import type { Lesson } from './types'
 
 export const ra: Lesson = {
   id: 'ra',
-  order: 12,
+  order: 7.1,
+  unit: 'heavy-light',
   title: { ar: 'أحكام الراء', en: 'Ra: heavy or light' },
   summary: {
     ar: 'الراء تُفخَّم مع الفتحة والضمة، وتُرقَّق مع الكسرة، والراء الساكنة يتبع حكمها ما قبلها.',

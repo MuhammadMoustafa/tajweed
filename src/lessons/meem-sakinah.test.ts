@@ -17,8 +17,8 @@ const coloredBy = (verseKey: `${number}:${number}`, rule: string) => {
 
 describe('meem-sakinah lesson', () => {
   it('is lesson 8, with one clip per rule under its own section', () => {
-    expect(lesson.order).toBe(8)
-    expect(lesson.unit).toBeUndefined()
+    expect(lesson.order).toBe(4.1)
+    expect(lesson.unit).toBe('ghunnah-meem')
     const clips = lesson.sections.map((s) => s.animation).filter(Boolean)
     expect(clips).toEqual(['meem-ikhfa-shafawi', 'meem-idgham-shafawi', 'meem-izhar-shafawi'])
     for (const id of clips) expect(ANIMATIONS[id!].steps.length).toBeGreaterThan(2)

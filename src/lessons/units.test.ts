@@ -35,6 +35,21 @@ describe('groupByUnit', () => {
   })
 })
 
+describe('learning path', () => {
+  it('puts every lesson in a unit, and every unit has lessons', () => {
+    expect(LESSONS.filter((l) => l.unit === undefined).map((l) => l.id)).toEqual([])
+    for (const id of Object.keys(UNITS)) expect(LESSONS.some((l) => l.unit === id)).toBe(true)
+  })
+
+  it('numbers units 1-9 in order, each lesson N, N.1, N.2 ... within its unit', () => {
+    expect(Object.values(UNITS).map((u) => u.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
+    for (const [id, unit] of Object.entries(UNITS)) {
+      const orders = LESSONS.filter((l) => l.unit === id).map((l) => l.order)
+      expect(orders).toEqual(orders.map((_, i) => Math.round((unit.order + i / 10) * 10) / 10))
+    }
+  })
+})
+
 describe.each(Object.entries(UNITS))('unit %s', (id, unit) => {
   const lessons = LESSONS.filter((l) => l.unit === id)
 

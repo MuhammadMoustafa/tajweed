@@ -135,9 +135,9 @@ describe('hamzat-wasl lesson (L17)', () => {
   const rulesOf = (key: `${number}:${number}`) =>
     new Set(parseTajweed(getVerseMarkup(key)!).segments.map((s) => s.rule))
 
-  it('is lesson 17, outside any unit, with a clip per teaching section', () => {
-    expect(lesson.order).toBe(17)
-    expect(lesson.unit).toBeUndefined()
+  it('is lesson 8.1 of the stopping unit, with a clip per teaching section', () => {
+    expect(lesson.order).toBe(8.1)
+    expect(lesson.unit).toBe('stopping')
     expect(lesson.animation).toBe('hamzat-wasl')
     expect(lesson.sections.map((s) => s.animation)).toEqual([undefined, 'hamzat-wasl-vowel', 'silent-letters'])
   })

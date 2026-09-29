@@ -2,7 +2,7 @@ import type { Lesson } from './types'
 
 export const naturalMadd: Lesson = {
   id: 'natural-madd',
-  order: 13,
+  order: 6,
   unit: 'madd',
   title: { ar: 'المد الطبيعي', en: 'Natural madd (al-madd al-tabi’i)' },
   summary: {

@@ -2,7 +2,8 @@ import type { Lesson } from './types'
 
 export const ghunnahLesson: Lesson = {
   id: 'ghunnah',
-  order: 9,
+  order: 4,
+  unit: 'ghunnah-meem',
   title: { ar: 'الغنة في النون والميم المشددتين', en: 'Ghunnah on noon and meem with a shaddah' },
   summary: {
     ar: 'كل نون أو ميم عليها شدة تُقرأ بغنة كاملة مقدارها حركتان.',

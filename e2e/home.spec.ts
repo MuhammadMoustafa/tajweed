@@ -8,6 +8,9 @@ test.describe('home page', () => {
     test(`links to and opens "${lesson.id}"`, async ({ page }) => {
       await page.goto('/')
       const link = page.locator(`a[href="#/lesson/${lesson.id}"]`)
+      // Only the unit holding the next lesson starts open: open this lesson's unit first.
+      const unit = page.locator(`.lesson-unit[data-unit="${lesson.unit}"] details`)
+      if ((await unit.getAttribute('open')) === null) await unit.locator('summary').click()
       await expect(link).toBeVisible()
 
       await link.click()
@@ -20,14 +23,17 @@ test.describe('home page', () => {
   }
 })
 
-// Each unit (src/lessons/units.ts) shows as a heading with its chapters' links nested under it.
+// Each unit (src/lessons/units.ts) is a collapsible group: a summary with its number and title, and its lessons' links nested under it.
 test.describe('home page units', () => {
   for (const [unitId, unit] of Object.entries(UNITS)) {
     test(`shows the "${unitId}" unit heading with its chapters under it`, async ({ page }) => {
       await page.goto('/')
       const lang = (await page.locator('html').getAttribute('lang')) === 'ar' ? 'ar' : 'en'
       const group = page.locator(`.lesson-unit[data-unit="${unitId}"]`)
-      await expect(group.getByRole('heading', { level: 3 })).toHaveText(unit.title[lang])
+      await expect(group.locator('summary .lesson-unit-title')).toHaveText(unit.title[lang])
+      await group.locator('summary').click() // whatever its start state, one click toggles it
+      const open = (await group.locator('details').getAttribute('open')) !== null
+      await expect(group.locator('.lesson-card-main').first()).toBeVisible({ visible: open })
       const chapters = LESSONS.filter((l) => l.unit === unitId)
       await expect(group.locator('.lesson-card-main')).toHaveCount(chapters.length)
       for (const [i, chapter] of chapters.entries()) {

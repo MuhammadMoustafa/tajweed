@@ -18,10 +18,10 @@ const renderLesson = (locale: 'ar' | 'en') => {
 }
 
 describe('sifat lesson (L20)', () => {
-  it('is registered as lesson 20, outside any unit, awaiting review', () => {
+  it('is registered as lesson 9, alone in its unit, awaiting review', () => {
     expect(LESSONS.find((l) => l.id === 'sifat')).toBe(sifat)
-    expect(sifat.order).toBe(20)
-    expect(sifat.unit).toBeUndefined()
+    expect(sifat.order).toBe(9)
+    expect(sifat.unit).toBe('deeper')
     expect(sifat.reviewed).toBe(false)
     expect(LESSONS[LESSONS.length - 1]).toBe(sifat)
   })

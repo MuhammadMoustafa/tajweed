@@ -2,7 +2,7 @@ import type { Lesson } from './types'
 
 export const iqlab: Lesson = {
   id: 'iqlab',
-  order: 6,
+  order: 3.2,
   unit: 'noon-sakinah',
   title: { ar: 'الإقلاب', en: 'Iqlab (the noon turns into a meem)' },
   summary: {

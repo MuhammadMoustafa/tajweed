@@ -205,15 +205,72 @@ main {
   gap: 0.75rem;
 }
 
-/* A unit on the home list (src/components/LessonList.tsx): its title, then its chapters' cards,
-   indented behind a rule on the inline-start side so they read as one group. */
+/* A unit on the home list (src/components/LessonList.tsx): a collapsible group whose header (a
+   filled bar, unlike the lesson cards) shows its number, title and progress; its lessons' cards
+   are indented behind a rule on the inline-start side so they read as nested under it. */
+.lesson-unit > details > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--border);
+  cursor: pointer;
+  list-style: none;
+}
+
+.lesson-unit > details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.lesson-unit > details > summary::before {
+  content: '▸';
+  flex: none;
+}
+
+.lesson-unit > details[open] > summary::before {
+  content: '▾';
+}
+
+[dir='rtl'] .lesson-unit > details > summary::before {
+  content: '◂';
+}
+
+[dir='rtl'] .lesson-unit > details[open] > summary::before {
+  content: '▾';
+}
+
+.lesson-unit > details > summary:focus-visible {
+  outline: 3px solid var(--accent, currentColor);
+  outline-offset: 2px;
+}
+
+.lesson-unit-heading {
+  display: flex;
+  flex: 1 1 12rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+}
+
+.lesson-unit-number {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .lesson-unit-title {
-  margin: 0.5rem 0 0.5rem;
   font-size: 1.1rem;
 }
 
+.lesson-unit-progress {
+  font-size: 0.9rem;
+}
+
 .lesson-unit-chapters {
-  margin: 0;
+  margin: 0.75rem 0 0;
   padding-inline-start: 0.75rem;
   border-inline-start: 3px solid var(--border);
 }

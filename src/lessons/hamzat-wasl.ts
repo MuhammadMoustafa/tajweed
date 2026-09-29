@@ -2,7 +2,8 @@ import type { Lesson } from './types'
 
 export const hamzatWasl: Lesson = {
   id: 'hamzat-wasl',
-  order: 17,
+  order: 8.1,
+  unit: 'stopping',
   title: { ar: 'همزة الوصل والحروف التي لا تُنطق', en: 'Hamzat al-wasl and silent letters' },
   summary: {
     ar: 'همزة تُنطق إذا ابتدأنا بها وتسقط إذا وصلناها، وحروف تُكتب في المصحف ولا تُقرأ.',

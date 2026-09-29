@@ -2,7 +2,8 @@ import type { Lesson } from './types'
 
 export const meemSakinah: Lesson = {
   id: 'meem-sakinah',
-  order: 8,
+  order: 4.1,
+  unit: 'ghunnah-meem',
   title: { ar: 'أحكام الميم الساكنة', en: 'Meem sakinah rules' },
   summary: {
     ar: 'للميم الساكنة ثلاثة أحكام بحسب الحرف الذي بعدها: إخفاء شفوي، وإدغام شفوي، وإظهار شفوي.',

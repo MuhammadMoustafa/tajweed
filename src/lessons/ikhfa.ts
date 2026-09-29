@@ -2,7 +2,7 @@ import type { Lesson } from './types'
 
 export const ikhfa: Lesson = {
   id: 'ikhfa',
-  order: 7,
+  order: 3.3,
   unit: 'noon-sakinah',
   title: { ar: 'الإخفاء الحقيقي', en: 'Ikhfa (hiding the noon)' },
   summary: {
@@ -27,8 +27,8 @@ export const ikhfa: Lesson = {
     {
       heading: { ar: 'كيف ننطقه؟', en: 'How to say it' },
       body: {
-        ar: 'لا يلمس اللسان مخرج النون، بل يتهيأ لمخرج الحرف التالي، ويخرج الصوت من الخيشوم بغنة مقدارها حركتان. وتكون الغنة مفخّمة قبل حروف الاستعلاء (ص ض ط ظ ق)، ومرقّقة قبل غيرها.',
-        en: 'The tongue does not touch the noon’s spot; it gets ready for the next letter’s spot while the sound comes through the nose as a ghunnah of two counts. The ghunnah is full (tafkhim) before the heavy letters (ص ض ط ظ ق) and light (tarqiq) before the rest.',
+        ar: 'لا يلمس اللسان مخرج النون، بل يتهيأ لمخرج الحرف التالي، ويخرج الصوت من الخيشوم بغنة مقدارها حركتان. وتكون الغنة مفخّمة قبل حروف الاستعلاء (ص ض ط ظ ق)، ومرقّقة قبل غيرها. وسيأتي شرح التفخيم والترقيق في درس لاحق.',
+        en: 'The tongue does not touch the noon’s spot; it gets ready for the next letter’s spot while the sound comes through the nose as a ghunnah of two counts. The ghunnah is full (tafkhim) before the heavy letters (ص ض ط ظ ق) and light (tarqiq) before the rest. Heavy and light letters are explained in a later lesson.',
       },
     },
     {

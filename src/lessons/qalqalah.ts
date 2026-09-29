@@ -2,7 +2,8 @@ import type { Lesson } from './types'
 
 export const qalqalah: Lesson = {
   id: 'qalqalah',
-  order: 10,
+  order: 7.2,
+  unit: 'heavy-light',
   title: { ar: 'القلقلة', en: 'Qalqalah (the echo)' },
   summary: {
     ar: 'نبرة قوية ترتدّ مع خمسة حروف إذا كانت ساكنة.',

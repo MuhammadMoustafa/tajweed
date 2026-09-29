@@ -2,7 +2,7 @@ import type { Lesson } from './types'
 
 export const izhar: Lesson = {
   id: 'izhar',
-  order: 4,
+  order: 3,
   unit: 'noon-sakinah',
   title: { ar: 'النون الساكنة والتنوين: الإظهار الحلقي', en: 'Noon sakinah and tanween: izhar halqi' },
   summary: {

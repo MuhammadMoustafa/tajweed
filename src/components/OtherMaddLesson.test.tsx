@@ -32,7 +32,7 @@ const ruleTitles = (card: HTMLElement, locale: 'ar' | 'en') =>
 describe('other-madd lesson (L16)', () => {
   it('is registered as lesson 16', () => {
     expect(LESSONS.find((l) => l.id === 'other-madd')).toBe(otherMadd)
-    expect(otherMadd.order).toBe(16)
+    expect(otherMadd.order).toBe(6.3)
     expect(otherMadd.reviewed).toBe(false)
   })
 

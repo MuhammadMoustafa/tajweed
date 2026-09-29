@@ -3,6 +3,7 @@ import type { Lesson } from './types'
 export const foundations: Lesson = {
   id: 'foundations',
   order: 1,
+  unit: 'foundations',
   title: { ar: 'الأساسيات: الحروف والحركات والتنوين', en: 'Foundations: letters, harakat and tanween' },
   summary: {
     ar: 'الحروف تُكتب، والحركات والسكون والشدّة والتنوين علامات فوقها أو تحتها تدلّ على كيفية نطقها؛ ثم الاستعاذة والبسملة عند بدء القراءة.',

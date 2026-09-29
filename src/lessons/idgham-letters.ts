@@ -2,7 +2,8 @@ import type { Lesson } from './types'
 
 export const idghamLetters: Lesson = {
   id: 'idgham-letters',
-  order: 18,
+  order: 5.1,
+  unit: 'lam-merging',
   title: { ar: 'إدغام الحرفين: المثلان والمتجانسان والمتقاربان', en: 'Merging two letters: mithlayn, mutajanisayn, mutaqaribayn' },
   summary: {
     ar: 'حرف ساكن يلتقي بحرف متحرك يشبهه أو يقاربه في المخرج، فيدخل الأول في الثاني ويُنطق حرفًا واحدًا مشدَّدًا.',

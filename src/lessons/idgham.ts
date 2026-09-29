@@ -2,7 +2,7 @@ import type { Lesson } from './types'
 
 export const idgham: Lesson = {
   id: 'idgham',
-  order: 5,
+  order: 3.1,
   unit: 'noon-sakinah',
   title: { ar: 'الإدغام', en: 'Idgham (merging)' },
   summary: {

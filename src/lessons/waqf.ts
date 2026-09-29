@@ -7,7 +7,8 @@ import type { Lesson } from './types'
  */
 export const waqf: Lesson = {
   id: 'waqf',
-  order: 19,
+  order: 8,
+  unit: 'stopping',
   title: { ar: 'الوقف والابتداء', en: 'Waqf and ibtida (stopping and restarting)' },
   summary: {
     ar: 'علامات الوقف في المصحف، وكيف نقف على الكلمة، ومن أين نبدأ بعد الوقف.',
