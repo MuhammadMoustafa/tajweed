@@ -73,8 +73,8 @@ export const lamRules: Lesson = {
     {
       verseKey: '112:2',
       note: {
-        ar: 'في الكلمة الثانية لام شمسية لا تُنطق، ويُشدَّد الصاد بعدها. ولام اسم الله في أول الآية مفخَّمة إذا وصلتها بما قبلها، فقد سبقتها ضمة التنوين في آخر الآية السابقة.',
-        en: 'In the second word the sun lam is not pronounced and the sad after it is doubled. The lam of the name of Allah at the start of the ayah is heavy when you join it to the ayah before, since the damma of the tanween at the end of that ayah comes before it.',
+        ar: 'في الكلمة الثانية لام شمسية لا تُنطق، ويُشدَّد الصاد بعدها. ولام اسم الله في أول الآية مفخَّمة إذا بدأت بها، لأن همزة الوصل تُنطق مفتوحة. أما إذا وصلتها بالآية السابقة فالتنوين في آخرها يُكسر لالتقاء الساكنين، فتُرقَّق اللام.',
+        en: 'In the second word the sun lam is not pronounced and the sad after it is doubled. The lam of the name of Allah at the start of the ayah is heavy when you start here, since the hamzat al-wasl is read with a fatha. Joined to the ayah before, the tanween at its end takes a kasra to meet the silent lam, so the lam turns light.',
       },
       marks: [{ word: 1, letter: 3, rule: 'tafkheem' }],
     },
