@@ -13,6 +13,7 @@ import { idghamGhunnah, idghamWoGhunnah } from './IdghamClips'
 import { iqlabMeem } from './IqlabMeem'
 import { ikhfaHidden } from './IkhfaClip'
 import { heavyLight } from './HeavyLight'
+import { ghunnah } from './Ghunnah'
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { izharClip } from './IzharClip'
@@ -35,6 +36,7 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'idgham-ghunnah': idghamGhunnah, 'idgham-wo-ghunnah': idghamWoGhunnah,
   'heavy-light': heavyLight,
   'natural-madd': naturalMadd,
+  ghunnah,
   'madd-muttasil': maddMuttasil,
   'madd-munfasil': maddMunfasil,
   'madd-lazim-bar': maddLazimBar,

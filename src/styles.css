@@ -1245,3 +1245,10 @@ main {
   font-family: var(--font-ui-ar);
   font-size: 22px;
 }
+
+/* Ghunnah clip: the nose diagram above the counting bar. */
+.ghunnah-tour {
+  display: grid;
+  gap: 0.5rem;
+  inline-size: 100%;
+}
