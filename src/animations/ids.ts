@@ -25,3 +25,4 @@ export type AnimationId =
   | 'ra-vowel' | 'ra-sakinah' | 'ra-waqf'
   | 'hamzat-wasl' | 'hamzat-wasl-vowel' | 'silent-letters'
   | 'waqf-signs' | 'waqf-stop' | 'waqf-restart'
+  | 'sifat-hams-jahr' | 'sifat-shiddah-rakhawah' | 'sifat-istila-istifal' | 'sifat-itbaq-infitah' | 'sifat-idhlaq-ismat' | 'sifat-safir-qalqalah-lin' | 'sifat-inhiraf-istitalah' | 'sifat-compare'

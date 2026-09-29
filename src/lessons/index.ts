@@ -21,10 +21,11 @@ import { otherMadd } from './other-madd'
 import { lamRules } from './lam-rules'
 import { qalqalah } from './qalqalah'
 import { waqf } from './waqf'
+import { sifat } from './sifat'
 import type { Lesson } from './types'
 
 /** Register new lessons here; they are shown in `order`. */
-export const LESSONS: Lesson[] = [foundations, makharij, makharijJawf, makharijHalq, makharijLisan, makharijShafatan, makharijKhayshum, qalqalah, naturalMadd, muttasilMunfasil, maddLazim, otherMadd, lamRules, izhar, idgham, iqlab, ikhfa, heavyLight, ghunnahLesson, ra, hamzatWasl, idghamLetters, waqf].sort(
+export const LESSONS: Lesson[] = [foundations, makharij, makharijJawf, makharijHalq, makharijLisan, makharijShafatan, makharijKhayshum, qalqalah, naturalMadd, muttasilMunfasil, maddLazim, otherMadd, lamRules, izhar, idgham, iqlab, ikhfa, heavyLight, ghunnahLesson, ra, hamzatWasl, idghamLetters, waqf, sifat].sort(
   (a, b) => a.order - b.order,
 )
 

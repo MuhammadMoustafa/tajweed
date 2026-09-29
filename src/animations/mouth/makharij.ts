@@ -213,3 +213,13 @@ export const MAKHARIJ: readonly Makhraj[] = [
 
 /** The makharij of one area, in teaching order. */
 export const makharijOf = (area: MakharijArea): Makhraj[] => MAKHARIJ.filter((m) => m.area === area)
+
+/**
+ * A letter's own makhraj, where it is said as a consonant: waw and ya from the lips and the
+ * tongue (not the jawf, their madd form), noon and meem from the tongue and lips (not the
+ * khayshum, their ghunnah). Alif has only the jawf.
+ */
+export function makhrajOfLetter(letter: ArabicLetter): Makhraj {
+  const holding = MAKHARIJ.filter((m) => m.letters.some((l) => l.letter === letter))
+  return holding.find((m) => m.area !== 'jawf' && m.area !== 'khayshum') ?? holding[0]
+}

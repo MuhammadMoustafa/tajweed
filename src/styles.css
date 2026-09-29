@@ -58,6 +58,10 @@
   --anat-palate: #b8606e;
   --anat-highlight: #ffc21a;
   --anat-highlight-edge: #8a5a00;
+  /* Breath and sound drawn over the diagram (src/animations/SifatClips.tsx), on a halo so they read on any part. */
+  --anat-breath: #2566a8;
+  --anat-sound: #1a2b52;
+  --anat-halo: #ffffff;
 
   --font-quran: 'Amiri Quran', serif;
   --font-ui-ar: 'Noto Naskh Arabic', 'Noto Sans', serif;
@@ -109,6 +113,9 @@
     --anat-palate: #b35d6c;
     --anat-highlight: #ffd24d;
     --anat-highlight-edge: #fff1b8;
+    --anat-breath: #9cc9ff;
+    --anat-sound: #f2f5ff;
+    --anat-halo: #141414;
   }
 }
 
@@ -941,9 +948,93 @@ main {
   font-weight: 600;
 }
 
+/* Sifat clips (src/animations/SifatClips.tsx): breath dashed, sound solid, both on a halo. */
+.sifat-breath,
+.sifat-sound,
+.sifat-sound-partly,
+.sifat-voice,
+.sifat-echo {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sifat-breath {
+  stroke: var(--anat-breath);
+  stroke-width: 3;
+  stroke-dasharray: 6 5;
+}
+
+.sifat-sound {
+  stroke: var(--anat-sound);
+  stroke-width: 4;
+}
+
+.mouth-diagram .sifat-halo {
+  stroke: var(--anat-halo);
+  stroke-width: 8;
+  opacity: 0.8;
+}
+
+.sifat-breath-head {
+  fill: var(--anat-breath);
+}
+
+.sifat-sound-head {
+  fill: var(--anat-sound);
+}
+
+.sifat-sound-partly {
+  stroke: var(--anat-sound);
+  stroke-width: 3;
+  stroke-dasharray: 1 6;
+}
+
+.sifat-barrier {
+  stroke: var(--anat-sound);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.sifat-voice,
+.sifat-echo {
+  stroke: var(--anat-sound);
+  stroke-width: 2.5;
+}
+
+/* Two look-alike letters side by side; the qualities they do not share are bold. */
+.sifat-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.sifat-compare-letter {
+  display: grid;
+  align-content: start;
+  opacity: 0.45;
+  transition: opacity 0.3s;
+}
+
+.sifat-compare-letter[data-current] {
+  opacity: 1;
+}
+
+.sifat-compare-letter ul {
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sifat-compare-letter li[data-differs] {
+  color: var(--accent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mouth-diagram [data-region],
-  .makharij-letter {
+  .makharij-letter,
+  .sifat-compare-letter {
     transition: none;
   }
 }

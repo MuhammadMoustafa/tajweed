@@ -1,6 +1,6 @@
 import type { Bilingual } from '../i18n/bilingual'
 import { LETTER_NAMES } from '../tajweed/letters'
-import { frame } from './MakharijClips'
+import { letterTourFrame as frame } from './MakharijClips'
 import type { Clip, ClipStep } from './player/clip'
 
 /** Each step is one still frame: long enough to read, and the learner controls the pace. */

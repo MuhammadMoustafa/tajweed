@@ -51,3 +51,30 @@ export const MAKHRAJ_REGION_NAMES: Record<MakhrajRegion, Bilingual> = {
   'lip-lower': { ar: 'الشفة السفلى', en: 'Lower lip' },
   khayshum: { ar: 'الخيشوم', en: 'Nose' },
 }
+
+/** MouthDiagram's label text position (y) and the point it points at, per region; left labels end at x=22. */
+export const LABELS: Record<MakhrajRegion, { side: 'left' | 'right'; y: number; to: [number, number] }> = {
+  gums: { side: 'left', y: 84, to: [70, 145] },
+  khayshum: { side: 'left', y: 104, to: [62, 132] },
+  teeth: { side: 'left', y: 128, to: [59, 156] },
+  'teeth-upper': { side: 'left', y: 128, to: [59, 156] },
+  'lip-upper': { side: 'left', y: 150, to: [44, 158] },
+  shafatan: { side: 'left', y: 170, to: [42, 168] },
+  'lip-lower': { side: 'left', y: 190, to: [44, 180] },
+  'teeth-lower': { side: 'left', y: 210, to: [59, 180] },
+  'tongue-tip': { side: 'left', y: 230, to: [70, 180] },
+  lisan: { side: 'left', y: 250, to: [110, 190] },
+  'tongue-sides': { side: 'left', y: 270, to: [118, 175] },
+  jawf: { side: 'right', y: 96, to: [150, 153] },
+  palate: { side: 'right', y: 116, to: [128, 144] },
+  'tongue-back': { side: 'right', y: 136, to: [168, 176] },
+  'tongue-middle': { side: 'right', y: 156, to: [120, 164] },
+  'molars-upper': { side: 'right', y: 176, to: [110, 154] },
+  'halq-closest': { side: 'right', y: 194, to: [201, 192] },
+  halq: { side: 'right', y: 236, to: [214, 236] },
+  'halq-middle': { side: 'right', y: 236, to: [201, 236] },
+  'halq-deepest': { side: 'right', y: 284, to: [201, 282] },
+}
+
+/** Where a region is on the diagram, in the head coordinates an `overlay` draws in. */
+export const regionPoint = (region: MakhrajRegion): readonly [number, number] => LABELS[region].to

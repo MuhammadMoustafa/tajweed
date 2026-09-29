@@ -1,6 +1,6 @@
 import { joinBilingual } from '../i18n/bilingual'
 import { LETTER_NAMES, type ArabicLetter } from '../tajweed/letters'
-import { frame } from './MakharijClips'
+import { letterTourFrame as frame } from './MakharijClips'
 import type { Clip, ClipStep } from './player/clip'
 
 /** The seven letters of isti'la, in the order of the mnemonic خُصَّ ضَغْطٍ قِظْ. */

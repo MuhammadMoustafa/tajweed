@@ -1,7 +1,7 @@
 import { joinBilingual, type Bilingual } from '../i18n/bilingual'
 import { Localized } from '../i18n/LocaleProvider'
 import { MAKHARIJ_AREAS, makharijOf, type MakharijArea, type Makhraj } from './mouth/makharij'
-import { MouthDiagram } from './mouth/MouthDiagram'
+import { MouthDiagram, type MouthDiagramProps } from './mouth/MouthDiagram'
 import type { Clip, ClipStep } from './player/clip'
 
 /** How long each letter of a makhraj stays on its own, and the closing "all together" view, in ms. */
@@ -9,25 +9,32 @@ export const LETTER_MS = 2200
 /** The shortest step, so a one-letter makhraj still leaves time to read its description. */
 const MIN_STEP_MS = 3000
 
-/** A step shows each letter of its makhraj in turn, then (with more than one) all of them together. */
-const phasesOf = (makhraj: Makhraj): number => (makhraj.letters.length > 1 ? makhraj.letters.length + 1 : 1)
+/** A step shows each of its `count` letters in turn, then (with more than one) all of them together. */
+export const phasesOf = (count: number): number => (count > 1 ? count + 1 : 1)
 
 /**
- * Index of the letter a makhraj's step shows on its own at `progress` (0–1), or `undefined` for
- * the closing phase that shows them all together. A one-letter makhraj always shows its letter.
- * The end frame (progress 1, as with reduced motion) is therefore the whole makhraj at once.
+ * Which of a step's `count` letters it shows on its own at `progress` (0–1), `undefined` for the
+ * closing phase that shows them all together, and how far into that phase it is (0–1). One letter
+ * is always shown on its own. The end frame (progress 1, as with reduced motion) is therefore the
+ * whole group at once, fully drawn.
  */
-export function currentLetter(makhraj: Makhraj, progress: number): number | undefined {
-  const phases = phasesOf(makhraj)
-  const phase = Math.min(Math.floor(progress * phases), phases - 1)
-  return phase < makhraj.letters.length ? phase : undefined
+export function letterInTurn(count: number, progress: number): { current?: number; local: number } {
+  const phases = phasesOf(count)
+  const at = Math.min(Math.max(progress, 0), 1) * phases
+  const phase = Math.min(Math.floor(at), phases - 1)
+  return { current: phase < count ? phase : undefined, local: Math.min(at - phase, 1) }
 }
 
-export interface FrameProps {
-  /** `raised-back` draws the back of the tongue lifted toward the palate (heavy letters). */
-  tongue?: 'rest' | 'raised-back'
+/** Index of the letter a makhraj's step shows on its own at `progress` (see `letterInTurn`). */
+export const currentLetter = (makhraj: Makhraj, progress: number): number | undefined =>
+  letterInTurn(makhraj.letters.length, progress).current
+
+export interface LetterTourFrameProps {
   heading: Bilingual
   highlight: Makhraj['regions']
+  /** Passed on to MouthDiagram (see its props). */
+  tongue?: MouthDiagramProps['tongue']
+  overlay?: MouthDiagramProps['overlay']
   /** Texts in the letters row; `current` (when set) is the one marked as shown now. */
   letters: readonly string[]
   current?: number
@@ -35,10 +42,13 @@ export interface FrameProps {
   names?: Bilingual
 }
 
-/** A step's frame: the lit point on the diagram, with its name, its letters and their names. */
-export const frame = ({ heading, highlight, letters, current, names, tongue }: FrameProps) => (
+/**
+ * A step's frame: the lit point on the diagram, with its name, its letters and their names. Also
+ * the sifat clips' frame (SifatClips.tsx), which add the tongue's position and an overlay.
+ */
+export const letterTourFrame = ({ heading, highlight, tongue, overlay, letters, current, names }: LetterTourFrameProps) => (
   <div className="makharij-tour">
-    <MouthDiagram highlight={highlight} labels={highlight} tongue={tongue} />
+    <MouthDiagram highlight={highlight} labels={highlight} tongue={tongue} overlay={overlay} />
     <div className="makharij-caption">
       <strong>
         <Localized text={heading} />
@@ -64,13 +74,13 @@ export const frame = ({ heading, highlight, letters, current, names, tongue }: F
 )
 
 const makhrajStep = (makhraj: Makhraj): ClipStep => ({
-  duration: Math.max(MIN_STEP_MS, phasesOf(makhraj) * LETTER_MS),
+  duration: Math.max(MIN_STEP_MS, phasesOf(makhraj.letters.length) * LETTER_MS),
   caption: makhraj.description,
   // Same short name as the frame's heading, so the timeline label matches what's on screen.
   label: makhraj.name,
   render: (progress) => {
     const current = currentLetter(makhraj, progress)
-    return frame({
+    return letterTourFrame({
       heading: makhraj.name,
       highlight: makhraj.regions,
       letters: makhraj.letters.map((l) => l.text),
@@ -124,7 +134,7 @@ export const makharijAreas: Clip = {
       caption: AREA_CAPTIONS[area],
       label: AREA_TITLES[area],
       render: () =>
-        frame({
+        letterTourFrame({
           heading: AREA_TITLES[area],
           highlight: [area],
           letters: makharijOf(area).flatMap((m) => m.letters.map((l) => l.text)),

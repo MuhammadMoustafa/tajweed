@@ -1,7 +1,7 @@
-import { useId } from 'react'
+import { useId, type ReactNode } from 'react'
 import { joinBilingual, type Bilingual } from '../../i18n/bilingual'
 import { useLocale } from '../../i18n/LocaleProvider'
-import { MAKHRAJ_REGION_NAMES, type MakhrajRegion } from './regions'
+import { LABELS, MAKHRAJ_REGION_NAMES, type MakhrajRegion } from './regions'
 
 export type { MakhrajRegion } from './regions'
 
@@ -51,6 +51,9 @@ const TONGUE = {
   'raised-back':
     'M64 176 C70 166 90 160 115 158 C136 156 150 148 166 150 C182 154 188 176 184 222 ' +
     'L150 224 C120 216 90 202 70 192 C62 188 60 182 64 176 Z',
+  sealed:
+    'M64 160 C80 152 104 148 126 149 C148 150 166 156 176 170 C186 188 186 206 182 222 ' +
+    'L150 224 C120 216 90 202 70 192 C60 186 58 168 64 160 Z',
 }
 const TONGUE_PARTS: [MakhrajRegion, number, number][] = [
   ['tongue-tip', 55, 90],
@@ -68,29 +71,6 @@ const TEETH_LOWER = 'M55 190 L65 189 L65 172 Q60 168 55 172 Z'
 const LIP_UPPER = 'M50 145 C33 149 30 164 41 168 L57 166 L57 148 Z'
 const LIP_LOWER = 'M41 170 C30 175 33 192 50 195 L57 192 L57 171 Z'
 
-/** Label text position (y) and the point it points at, per region; left labels end at x=22. */
-const LABELS: Record<MakhrajRegion, { side: 'left' | 'right'; y: number; to: [number, number] }> = {
-  gums: { side: 'left', y: 84, to: [70, 145] },
-  khayshum: { side: 'left', y: 104, to: [62, 132] },
-  teeth: { side: 'left', y: 128, to: [59, 156] },
-  'teeth-upper': { side: 'left', y: 128, to: [59, 156] },
-  'lip-upper': { side: 'left', y: 150, to: [44, 158] },
-  shafatan: { side: 'left', y: 170, to: [42, 168] },
-  'lip-lower': { side: 'left', y: 190, to: [44, 180] },
-  'teeth-lower': { side: 'left', y: 210, to: [59, 180] },
-  'tongue-tip': { side: 'left', y: 230, to: [70, 180] },
-  lisan: { side: 'left', y: 250, to: [110, 190] },
-  'tongue-sides': { side: 'left', y: 270, to: [118, 175] },
-  jawf: { side: 'right', y: 96, to: [150, 153] },
-  palate: { side: 'right', y: 116, to: [128, 144] },
-  'tongue-back': { side: 'right', y: 136, to: [168, 176] },
-  'tongue-middle': { side: 'right', y: 156, to: [120, 164] },
-  'molars-upper': { side: 'right', y: 176, to: [110, 154] },
-  'halq-closest': { side: 'right', y: 194, to: [201, 192] },
-  halq: { side: 'right', y: 236, to: [214, 236] },
-  'halq-middle': { side: 'right', y: 236, to: [201, 236] },
-  'halq-deepest': { side: 'right', y: 284, to: [201, 282] },
-}
 const LEFT_X = 22
 const RIGHT_X = 226
 
@@ -99,12 +79,16 @@ export interface MouthDiagramProps {
   highlight?: readonly MakhrajRegion[]
   /** Regions to name with a label and a pointer line. */
   labels?: readonly MakhrajRegion[]
-  /** `raised-back` lifts the back of the tongue toward the soft palate (heavy letters). */
+  /** `raised-back` lifts the back of the tongue toward the soft palate (heavy letters); `sealed`
+   *  presses the whole tongue up against the palate (itbaq). */
   tongue?: keyof typeof TONGUE
   /** A cloud of nasal sound in the nose passage, 0 (none) to 1 (full): the ghunnah. */
   nasal?: number
   /** A pointer sliding from one region's label point to another's, `progress` 0–1: where the tongue is heading. */
   pointer?: { from: MakhrajRegion; to: MakhrajRegion; progress: number }
+  /** Extra drawing (e.g. breath or sound flowing) over the anatomy, in the head's coordinates
+   *  (see `regionPoint`), under the labels. */
+  overlay?: ReactNode
   className?: string
 }
 /** Centre of the nose passage, where the nasal cloud sits (diagram coordinates). */
@@ -119,7 +103,7 @@ const NASAL_CLOUD: [number, number][] = [
  * A friendly side view (sagittal section) of the head showing where letters are articulated.
  * Shapes are deliberately simple; colors come from the `--anat-*` tokens in src/styles.css.
  */
-export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', nasal, pointer, className }: MouthDiagramProps) {
+export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', nasal, pointer, overlay, className }: MouthDiagramProps) {
   const { t } = useLocale()
   const id = useId().replace(/[^\w-]/g, '')
   const lit = (region: MakhrajRegion) => {
@@ -199,6 +183,7 @@ export function MouthDiagram({ highlight = [], labels = [], tongue = 'rest', nas
         <path d={TEETH_LOWER} className="anat-teeth" {...state('teeth-lower')} />
         <path d={LIP_UPPER} className="anat-lip" {...state('lip-upper')} />
         <path d={LIP_LOWER} className="anat-lip" {...state('lip-lower')} />
+        {overlay}
 
         {nasal !== undefined && nasal > 0 && (
           <g className="anat-nasal-cloud" data-nasal={nasal} opacity={nasal}>
