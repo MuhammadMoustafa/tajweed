@@ -73,6 +73,9 @@ test.describe('lesson progress ("mark as learned")', () => {
     await page.locator('.learned-toggle').click()
 
     await page.goto('/')
+    // Its unit starts closed once the next lesson is in another unit: open it first.
+    const unit = page.locator(`.lesson-unit[data-unit="${lesson.unit}"] details`)
+    if ((await unit.getAttribute('open')) === null) await unit.locator('summary').click()
     await expect(page.locator(`a[href="#/lesson/${lesson.id}"] .learned-check`)).toBeVisible()
   })
 })
