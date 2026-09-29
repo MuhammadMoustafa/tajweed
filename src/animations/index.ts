@@ -14,6 +14,7 @@ import { iqlabMeem } from './IqlabMeem'
 import { ikhfaHidden } from './IkhfaClip'
 import { heavyLight } from './HeavyLight'
 import { ghunnah } from './Ghunnah'
+import { raSakinah, raVowel, raWaqf } from './RaClips'
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { izharClip } from './IzharClip'
@@ -35,6 +36,7 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'foundations-harakat': foundationsHarakat, 'foundations-sukun-shadda': foundationsSukunShadda, 'foundations-tanween': foundationsTanween,
   'idgham-ghunnah': idghamGhunnah, 'idgham-wo-ghunnah': idghamWoGhunnah,
   'heavy-light': heavyLight,
+  'ra-vowel': raVowel, 'ra-sakinah': raSakinah, 'ra-waqf': raWaqf,
   'natural-madd': naturalMadd,
   ghunnah,
   'madd-muttasil': maddMuttasil,

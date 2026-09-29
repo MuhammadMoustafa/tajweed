@@ -21,3 +21,4 @@ export type AnimationId =
   | 'lam-shamsiyyah' | 'lam-qamariyyah' | 'lam-allah'
   | 'heavy-light'
   | 'ghunnah'
+  | 'ra-vowel' | 'ra-sakinah' | 'ra-waqf'
