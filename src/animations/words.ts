@@ -24,4 +24,6 @@ export const CLIP_WORDS = {
   lamAllahLight: '1:1:2',
   /** Izhar halqi: noon sakinah then ain inside one word, the third word of 1:7 (a lesson example). */
   izharAnamta: '1:7:3',
+  /** Iqlab: the noon sakinah before ba inside one word (80:27, a lesson example): the first word. */
+  iqlabAnbatna: '80:27:1',
 } as const satisfies Record<string, WordKey>

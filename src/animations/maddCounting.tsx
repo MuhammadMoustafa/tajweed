@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { formatNumber, type Bilingual } from '../i18n/bilingual'
 import { COUNT_MS, MADD_READY_MS, MADD_STOP_MS, MaddBar, maddBeatFilled, type MaddBarProps, type MaddCount } from './MaddBar'
 import type { ClipStep } from './player/clip'
@@ -18,6 +19,8 @@ export interface MaddCountingPass {
    * pass. Omit for a label per step: get ready, count 1 … count N, stop.
    */
   label?: Bilingual
+  /** Wraps each step's bar in a larger frame (e.g. beside a MouthDiagram); default: the bar alone. */
+  frame?: (bar: ReactNode) => ReactNode
 }
 
 const ORDINALS: Bilingual[] = [
@@ -50,10 +53,9 @@ const countLabel = (beat: number): Bilingual => ({
  * clip teaching a choice of lengths (e.g. 2, 4 or 6) chains one pass per length.
  */
 export function maddCountingSteps(pass: MaddCountingPass): ClipStep[] {
-  const { counts, bar, readyBarLabel, ready, stop, label } = pass
-  const frame = (filled: number, stopped = false, caption = bar.label) => (
-    <MaddBar {...bar} label={caption} counts={counts} filled={filled} current markers stopped={stopped} />
-  )
+  const { counts, bar, readyBarLabel, ready, stop, label, frame: wrap = (node) => node } = pass
+  const frame = (filled: number, stopped = false, caption = bar.label) =>
+    wrap(<MaddBar {...bar} label={caption} counts={counts} filled={filled} current markers stopped={stopped} />)
   const beats = Array.from({ length: counts }, (_, i) => i + 1)
   return [
     {

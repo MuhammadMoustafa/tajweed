@@ -10,6 +10,7 @@ import {
 import { foundationsHarakat, foundationsSukunShadda, foundationsTanween } from './FoundationsClips'
 import { lamAllah, lamQamariyyah, lamShamsiyyah } from './LamClips'
 import { idghamGhunnah, idghamWoGhunnah } from './IdghamClips'
+import { iqlabMeem } from './IqlabMeem'
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { izharClip } from './IzharClip'
@@ -35,6 +36,7 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'madd-lazim-bar': maddLazimBar,
   'madd-lazim-cause': maddLazimCause,
   'izhar-clip': izharClip,
+  'iqlab-meem': iqlabMeem,
   'madd-arid': maddArid, 'madd-leen': maddLeen, 'madd-badal': maddBadal, 'madd-iwad': maddIwad, 'madd-silah': maddSilah,
   'lam-shamsiyyah': lamShamsiyyah, 'lam-qamariyyah': lamQamariyyah, 'lam-allah': lamAllah,
 }
