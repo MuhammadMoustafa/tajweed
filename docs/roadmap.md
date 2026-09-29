@@ -34,7 +34,7 @@ in brackets picks the agent.
 | T13 | #36 | [task] Matn: each bayt on one line at every width; every line on the lesson's rule; both poems in every lesson, clearly separated, with a 'not covered' line when a poem doesn't treat the rule (maintainer, 2026-09-28). | none | done |
 | T14 | #38 | [task] Progress page (#/progress): quiz attempts, best/last scores, per-rule accuracy with review links; home cards colored by state (learned/started/next/not started) with text badges (maintainer, 2026-09-28). | none | done |
 | T15 | #39 | [task] Lesson cards: side panel with 'Take the quiz' or the grade + 'Retry quiz'; state tints clearly visible in both themes with an accent bar (maintainer, 2026-09-28). | none | done |
-| L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | in-progress |
+| L1 | #7 | [task] Foundations: letters, harakat, sukun, shadda, tanween, istiʿadha and basmala. Animation: marks landing on a letter with their sound. Allows lessons with no focus rule (adjust lessons.test.ts). | T2 | done |
 | L2 | #8 | [task-hard] Makharij: a reusable MouthDiagram SVG (side view: jawf, halq, lisan, shafatan, khayshum) with highlightable regions, used by later lessons. | T2 | done |
 | L2b | #31 | [task] One controllable makharij clip per section (jawf, halq, lisan, shafatan, khayshum) on MouthDiagram, slow enough to read captions. | T10 | done |
 | L2c | #37 | [task-hard] Makharij as a unit: intro + five chapters (jawf, halq, lisan, shafatan, khayshum), one clip step per makhraj (17, ن/ل/ر separate) and each letter shown in turn; lesson list groups units (maintainer, 2026-09-28). | T13 | done |
