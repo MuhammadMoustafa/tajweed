@@ -8,6 +8,7 @@ import {
   makharijShafatan,
 } from './MakharijClips'
 import { foundationsHarakat, foundationsSukunShadda, foundationsTanween } from './FoundationsClips'
+import { lamAllah, lamQamariyyah, lamShamsiyyah } from './LamClips'
 import { maddLazimBar, maddLazimCause } from './MaddLazim'
 import { maddMunfasil, maddMuttasil } from './MaddObligatory'
 import { naturalMadd } from './NaturalMadd'
@@ -31,4 +32,5 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'madd-lazim-bar': maddLazimBar,
   'madd-lazim-cause': maddLazimCause,
   'madd-arid': maddArid, 'madd-leen': maddLeen, 'madd-badal': maddBadal, 'madd-iwad': maddIwad, 'madd-silah': maddSilah,
+  'lam-shamsiyyah': lamShamsiyyah, 'lam-qamariyyah': lamQamariyyah, 'lam-allah': lamAllah,
 }

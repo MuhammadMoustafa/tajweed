@@ -14,4 +14,12 @@ export const CLIP_WORDS = {
   qalqalahQaf: '113:1:4',
   /** Qalqalah on dal with a sukun in the middle of 112:3 (a lesson example). */
   qalqalahDal: '112:3:2',
+  /** Lam shamsiyyah: the basmala's al-Rahman (1:1, a lesson example), where the lam is silent. */
+  lamShamsiyyah: '1:1:3',
+  /** Lam qamariyyah: the first word of al-Fatiha's second ayah (1:2, a lesson example). */
+  lamQamariyyah: '1:2:1',
+  /** The lam of the name of Allah after a fatha, heavy (112:1, a lesson example). */
+  lamAllahHeavy: '112:1:3',
+  /** The lam of the name of Allah after a kasra, light (1:1, a lesson example). */
+  lamAllahLight: '1:1:2',
 } as const satisfies Record<string, WordKey>

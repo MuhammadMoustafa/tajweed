@@ -1229,3 +1229,9 @@ main {
   font-family: var(--font-quran);
   font-size: 1.4rem;
 }
+
+/* Small caption inside a lam clip frame (heavy/light note under the letters). */
+.lam-tag {
+  font-family: var(--font-ui-ar);
+  font-size: 22px;
+}
