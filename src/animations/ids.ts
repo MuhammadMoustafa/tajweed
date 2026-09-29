@@ -24,3 +24,4 @@ export type AnimationId =
   | 'ghunnah'
   | 'ra-vowel' | 'ra-sakinah' | 'ra-waqf'
   | 'hamzat-wasl' | 'hamzat-wasl-vowel' | 'silent-letters'
+  | 'waqf-signs' | 'waqf-stop' | 'waqf-restart'

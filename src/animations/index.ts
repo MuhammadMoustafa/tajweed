@@ -24,6 +24,7 @@ import { naturalMadd } from './NaturalMadd'
 import { maddArid, maddBadal, maddIwad, maddLeen, maddSilah } from './OtherMadd'
 import type { Clip } from './player/clip'
 import { qalqalahBounce } from './QalqalahBounce'
+import { waqfRestart, waqfSigns, waqfStop } from './Waqf'
 
 /** Clips by id, played by AnimationPlayer (src/animations/player) for a lesson or one of its sections. */
 export const ANIMATIONS: Record<AnimationId, Clip> = {
@@ -51,4 +52,5 @@ export const ANIMATIONS: Record<AnimationId, Clip> = {
   'madd-arid': maddArid, 'madd-leen': maddLeen, 'madd-badal': maddBadal, 'madd-iwad': maddIwad, 'madd-silah': maddSilah,
   'lam-shamsiyyah': lamShamsiyyah, 'lam-qamariyyah': lamQamariyyah, 'lam-allah': lamAllah,
   'hamzat-wasl': hamzatWasl, 'hamzat-wasl-vowel': hamzatWaslVowel, 'silent-letters': silentLetters,
+  'waqf-signs': waqfSigns, 'waqf-stop': waqfStop, 'waqf-restart': waqfRestart,
 }
