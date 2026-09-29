@@ -43,7 +43,7 @@ in brackets picks the agent.
 | L5 | #11 | [task] Noon sakinah/tanween 2: idgham with and without ghunnah (`idgham_ghunnah`, `idgham_wo_ghunnah`). Animation: the noon merging into the next letter. | T2 | done |
 | L6 | #12 | [task] Noon sakinah/tanween 3: iqlab (`iqlab`). Animation: noon turning into meem. | T2 | done |
 | L7 | #13 | [task] Noon sakinah/tanween 4: ikhfa (`ikhafa`). Animation: noon hidden in a nasal cloud. | T2 | done |
-| L8 | #14 | [task] Meem sakinah: ikhfa, idgham and izhar shafawi (`ikhafa_shafawi`, `idgham_shafawi`), lips on MouthDiagram. | L2, T6, T10 | in-progress |
+| L8 | #14 | [task] Meem sakinah: ikhfa, idgham and izhar shafawi (`ikhafa_shafawi`, `idgham_shafawi`), lips on MouthDiagram. | L2, T6, T10 | done |
 | L9 | #15 | [task] Ghunnah on mushaddad noon/meem (`ghunnah`), nose on MouthDiagram, 2 counts. | L2, T10 | done |
 | L10 | #16 | Qalqalah — sample lesson from the scaffold. Quiz added by T2. | — | done |
 | L11 | #17 | [task] Lam rules: lam shamsiyyah (`laam_shamsiyah`) and qamariyyah, lam in the name of Allah. | T2, T6 | done |
