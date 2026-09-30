@@ -7,6 +7,7 @@ import { DIFFICULTY_LABEL } from '../quiz/difficultyLabel'
 import { drawQuiz, taughtRules } from '../quiz/draw'
 import { DIFFICULTIES, type Difficulty, type QuizPool } from '../quiz/pool'
 import { createRng, randomSeed } from '../quiz/random'
+import { LessonNav } from './LessonNav'
 import { Quiz } from './Quiz'
 
 /**
@@ -78,6 +79,8 @@ export function QuizPage({ lesson, seed: initialSeed }: { lesson: Lesson; seed?:
       ) : (
         <p role="status">{t(ui.loadingQuiz)}</p>
       )}
+
+      <LessonNav lessonId={lesson.id} />
     </article>
   )
 }

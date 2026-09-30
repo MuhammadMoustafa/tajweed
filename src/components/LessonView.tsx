@@ -1,13 +1,13 @@
 import { ANIMATIONS } from '../animations'
 import { AnimationPlayer } from '../animations/player/AnimationPlayer'
-import { dirOf } from '../i18n/bilingual'
+import { navArrows } from '../i18n/bilingual'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
-import { adjacentLessons } from '../lessons'
 import type { Lesson } from '../lessons/types'
 import { useProgress } from '../progress'
 import { hasQuiz } from '../lessons/quiz'
 import { AyahExample } from './AyahExample'
+import { LessonNav } from './LessonNav'
 import { MatnPanel } from './MatnPanel'
 import { RuleLegend } from './RuleLegend'
 
@@ -15,12 +15,7 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
   const { locale, t } = useLocale()
   const { isLearned, toggle } = useProgress()
   const learned = isLearned(lesson.id)
-  const { prev, next } = adjacentLessons(lesson.id)
-  // In RTL, "next" reads toward the visual left, so the arrows swap with direction rather than
-  // pointing the same way "previous"/"next" would in LTR.
-  const isRtl = dirOf(locale) === 'rtl'
-  const prevArrow = isRtl ? '→' : '←'
-  const nextArrow = isRtl ? '←' : '→'
+  const { nextArrow } = navArrows(locale)
 
   return (
     <article className="lesson">
@@ -81,24 +76,7 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
         </a>
       )}
 
-      {(prev || next) && (
-        <nav className="lesson-nav" aria-label={t(ui.lessonNavigation)}>
-          {prev ? (
-            <a href={`#/lesson/${prev.id}`} className="lesson-nav-link lesson-nav-prev">
-              {prevArrow} {t(ui.previousLesson)}
-            </a>
-          ) : (
-            <span />
-          )}
-          {next ? (
-            <a href={`#/lesson/${next.id}`} className="lesson-nav-link lesson-nav-next">
-              {t(ui.nextLesson)} {nextArrow}
-            </a>
-          ) : (
-            <span />
-          )}
-        </nav>
-      )}
+      <LessonNav lessonId={lesson.id} />
     </article>
   )
 }

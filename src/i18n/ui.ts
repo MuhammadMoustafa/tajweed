@@ -47,6 +47,11 @@ export const ui = {
   quizCorrect: { ar: 'إجابة صحيحة!', en: 'Correct!' },
   quizIncorrect: { ar: 'إجابة غير صحيحة.', en: 'Not quite.' },
   yourScore: { ar: 'نتيجتك', en: 'Your score' },
+  /** Under the score of a passing attempt (progress.ts `passesQuiz`), which marks the lesson learned. */
+  quizPassed: {
+    ar: 'أحسنت! نجحت في الاختبار، فعُلِّم الدرس بأنه تم تعلّمه.',
+    en: 'Well done! You passed, so the lesson is marked as learned.',
+  },
   correctLetters: { ar: 'الحروف الصحيحة', en: 'Correct letters' },
   testYourself: { ar: 'اختبر نفسك', en: 'Test yourself' },
   backToLesson: { ar: 'العودة إلى الدرس', en: 'Back to the lesson' },
@@ -126,8 +131,8 @@ export const ui = {
   nextLessonBadge: { ar: 'التالي', en: 'Next' },
   // Lesson-card primary action (label follows the card's state).
   startLessonAction: { ar: 'ابدأ الدرس', en: 'Start lesson' },
-  continueLessonAction: { ar: 'تابع', en: 'Continue' },
-  reviewLessonAction: { ar: 'مراجعة', en: 'Review' },
+  /** A card's action once the lesson is started (its quiz taken) or learned (maintainer, 2026-09-29). */
+  reviewLessonAction: { ar: 'راجع الدرس', en: 'Review lesson' },
   // Lesson-card quiz side panel (src/components/LessonCard.tsx).
   takeQuizButton: { ar: 'ابدأ الاختبار', en: 'Take the quiz' },
   retryQuizButton: { ar: 'إعادة الاختبار', en: 'Retry quiz' },

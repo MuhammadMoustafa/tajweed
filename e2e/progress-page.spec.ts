@@ -21,7 +21,9 @@ test.describe('progress page', () => {
     await expect(page.locator('.reset-progress')).toHaveCount(0)
   })
 
-  test('taking a quiz shows the attempt on the progress page and starts the home card', async ({ page }) => {
+  test('taking a quiz shows the attempt on the progress page and starts the home card (learned if passed)', async ({
+    page,
+  }) => {
     const lesson = LESSONS.find(hasQuiz)!
 
     await page.goto(`/#/lesson/${lesson.id}/quiz`)
@@ -29,6 +31,8 @@ test.describe('progress page', () => {
     await answerAll(page)
     await page.locator('.quiz-actions button').click()
     await expect(page.locator('.quiz-score')).toBeVisible()
+    // The answers are whatever came first, so the attempt may pass (80%+), which marks the lesson learned.
+    const passed = (await page.locator('.quiz-passed').count()) > 0
 
     await page.goto('/#/progress')
     const card = page.locator('.progress-lesson', { has: page.locator(`a[href="#/lesson/${lesson.id}"]`) })
@@ -37,8 +41,7 @@ test.describe('progress page', () => {
 
     await page.goto('/')
     const homeCard = page.locator('.lesson-card', { has: page.locator(`a[href="#/lesson/${lesson.id}"]`) })
-    await expect(homeCard).toHaveClass(/is-started/)
-    await expect(homeCard).not.toHaveClass(/is-learned/)
+    await expect(homeCard).toHaveClass(passed ? /is-learned/ : /is-started/)
   })
 
   test('marking a lesson learned turns its card green and moves the "next" badge', async ({ page }) => {
@@ -73,6 +76,16 @@ test.describe('progress page', () => {
     const quizLink = card.locator('.lesson-card-quiz-link')
     await expect(quizLink).toBeVisible()
     await expect(quizLink).toHaveAttribute('href', `#/lesson/${lesson.id}/quiz`)
+  })
+
+  test('the quiz page links on to the next lesson', async ({ page }) => {
+    const index = LESSONS.findIndex(hasQuiz)
+    const [lesson, next] = [LESSONS[index], LESSONS[index + 1]]
+    await page.goto(`/#/lesson/${lesson.id}/quiz`)
+    await answerAll(page)
+    await page.locator('.quiz-actions button').click()
+    await page.locator('.lesson-nav-next').click()
+    await expect(page).toHaveURL(new RegExp(`#/lesson/${next.id}$`))
   })
 
   test('after a quiz the card shows the grade and a "Retry quiz" link that opens the quiz page', async ({ page }) => {

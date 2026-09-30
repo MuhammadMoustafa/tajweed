@@ -26,7 +26,8 @@ export function LessonCard({ lesson, state, isNext }: LessonCardProps) {
   const attempts = attemptsFor(lesson.id)
   const best = bestAttempt(attempts)
   const last = lastAttempt(attempts)
-  const action = t(state === 'learned' ? ui.reviewLessonAction : state === 'started' ? ui.continueLessonAction : ui.startLessonAction)
+  // Only a quiz attempt or the learned mark starts a lesson, so a started lesson has been read: review it.
+  const action = t(state === 'not-started' ? ui.startLessonAction : ui.reviewLessonAction)
   const arrow = locale === 'ar' ? '‹' : '›'
 
   return (

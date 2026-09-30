@@ -243,6 +243,27 @@ describe('quiz attempts', () => {
   })
 })
 
+describe('passing a quiz', () => {
+  const answers = (correct: number, total: number) => Array.from({ length: total }, (_, i) => ({ correct: i < correct }))
+
+  it('marks the lesson learned at 80% or more, and not below', async () => {
+    const { isLessonLearned, passesQuiz, recordQuizAttempt } = await loadProgress()
+    expect(passesQuiz({ correct: 4, total: 5 })).toBe(true)
+    expect(passesQuiz({ correct: 6, total: 8 })).toBe(false)
+    recordQuizAttempt('ikhfa', 'easy', answers(6, 8))
+    expect(isLessonLearned('ikhfa')).toBe(false)
+    recordQuizAttempt('ikhfa', 'easy', answers(7, 8))
+    expect(isLessonLearned('ikhfa')).toBe(true)
+  })
+
+  it('never unmarks a learned lesson when a later attempt fails', async () => {
+    const { isLessonLearned, recordQuizAttempt, setLessonLearned } = await loadProgress()
+    setLessonLearned('ikhfa', true)
+    recordQuizAttempt('ikhfa', 'hard', answers(1, 8))
+    expect(isLessonLearned('ikhfa')).toBe(true)
+  })
+})
+
 describe('per-rule accuracy', () => {
   it('aggregates correct/total across lessons and attempts, only for questions tagged with a rule', async () => {
     const { ruleStatsFromAttempts } = await loadProgress()

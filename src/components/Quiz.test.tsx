@@ -106,6 +106,8 @@ describe('Quiz', () => {
 
     expect(screen.getAllByText(/Correct!/)).toHaveLength(2)
     expect(screen.getByText('Your score: 2 / 2')).toBeInTheDocument()
+    // 80% or more passes, which marks the lesson learned and says so.
+    expect(container.querySelector('.quiz-passed')).toHaveTextContent('You passed, so the lesson is marked as learned.')
   })
 
   it('marks a wrong choice, keeps the correct tap right, and lets the learner retry', () => {
@@ -118,6 +120,10 @@ describe('Quiz', () => {
     expect(screen.getByText(/Not quite\./)).toBeInTheDocument()
     expect(screen.getByText(/Because it is B/)).toBeInTheDocument()
     expect(screen.getByText('Your score: 1 / 2')).toBeInTheDocument()
+    expect(container.querySelector('.quiz-passed')).toBeNull()
+    // Color is never the only signal: the right answer carries ✓ and the wrong pick ✗.
+    expect(container.querySelector('.quiz-option.correct')).toHaveTextContent('✓ B')
+    expect(container.querySelector('.quiz-option.wrong')).toHaveTextContent('✗ A')
 
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
     expect(screen.getByRole('button', { name: 'Check answers' })).toBeEnabled()

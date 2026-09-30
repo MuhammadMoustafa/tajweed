@@ -65,9 +65,9 @@ describe('LessonList', () => {
     expect(container.querySelectorAll('.lesson-list .is-next')).toHaveLength(1)
   })
 
-  it('gives a lesson with an attempt (but not learned) the "started" state and a badge, not learned', () => {
+  it('gives a lesson with a failed attempt (so not learned) the "started" state and a badge', () => {
     const lesson = LESSONS[0]
-    recordQuizAttempt(lesson.id, 'easy', [{ correct: true }])
+    recordQuizAttempt(lesson.id, 'easy', [{ correct: false }])
     const { container } = renderList()
 
     const card = cardFor(container, lesson.id)

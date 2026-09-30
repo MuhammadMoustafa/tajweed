@@ -207,9 +207,17 @@ export function hasAttempts(lessonId: string): boolean {
   return attemptsForLesson(lessonId).length > 0
 }
 
+/** Share of correct answers that passes a quiz (maintainer, 2026-09-29). */
+export const PASS_RATIO = 0.8
+
+/** Whether `score` passes the quiz, which marks its lesson learned (recordQuizAttempt). */
+export const passesQuiz = (score: QuizAttempt['score']): boolean => score.correct >= PASS_RATIO * score.total
+
 /**
  * Records one completed attempt for `lessonId`: `results` in question order, score derived from
- * them. Keeps only the last MAX_ATTEMPTS_PER_LESSON attempts per lesson. Never throws.
+ * them. Keeps only the last MAX_ATTEMPTS_PER_LESSON attempts per lesson. A passing attempt
+ * (`passesQuiz`) also marks the lesson learned, so "next" moves on; a failing one never unmarks
+ * it. Never throws.
  */
 export function recordQuizAttempt(lessonId: string, difficulty: Difficulty, results: readonly QuestionResult[]): void {
   if (results.length === 0) return
@@ -222,6 +230,7 @@ export function recordQuizAttempt(lessonId: string, difficulty: Difficulty, resu
   const current = readAttempts()
   const forLesson = [...(current[lessonId] ?? []), attempt].slice(-MAX_ATTEMPTS_PER_LESSON)
   writeAttempts({ ...current, [lessonId]: forLesson })
+  if (passesQuiz(attempt.score) && !isLessonLearned(lessonId)) setLessonLearned(lessonId, true)
 }
 
 /** The most recent of `attempts` (stored oldest first). Shared by the lesson card's grade side

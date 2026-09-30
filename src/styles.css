@@ -1342,6 +1342,11 @@ main {
   font-weight: 600;
 }
 
+.quiz-passed {
+  color: var(--success-text);
+  font-weight: 600;
+}
+
 .quiz-actions {
   display: flex;
   align-items: center;

@@ -30,3 +30,10 @@ export const joinBilingual = (parts: readonly Bilingual[]): Bilingual => ({
   ar: parts.map((p) => p.ar).join(LIST_SEPARATORS.ar),
   en: parts.map((p) => p.en).join(LIST_SEPARATORS.en),
 })
+
+/**
+ * Arrows for "previous"/"next" lesson links. In RTL, "next" reads toward the visual left, so the
+ * arrows swap with direction rather than pointing the same way they would in LTR.
+ */
+export const navArrows = (locale: Locale): { prevArrow: string; nextArrow: string } =>
+  dirOf(locale) === 'rtl' ? { prevArrow: '→', nextArrow: '←' } : { prevArrow: '←', nextArrow: '→' }

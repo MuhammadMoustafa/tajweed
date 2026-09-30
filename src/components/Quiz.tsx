@@ -3,7 +3,7 @@ import type { Bilingual } from '../i18n/bilingual'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import { isChoiceAnswerCorrect, isTapAnswerCorrect, scoreQuiz, tapCorrectIndices, type SegmentState } from '../lessons/quiz'
-import { recordQuizAttempt, type QuestionResult } from '../progress'
+import { passesQuiz, recordQuizAttempt, type QuestionResult } from '../progress'
 import type { DrawnQuestion, DrawnRuleQuestion, DrawnTapQuestion } from '../quiz/draw'
 import type { Difficulty } from '../quiz/pool'
 import { segmentsToLetters } from '../tajweed/graphemes'
@@ -162,6 +162,7 @@ export function Quiz({
             <p className="quiz-score">
               {t(ui.yourScore)}: {n(score!.correct)} / {n(score!.total)}
             </p>
+            {passesQuiz(score!) && <p className="quiz-passed">✓ {t(ui.quizPassed)}</p>}
             <button type="button" onClick={reset}>
               {t(ui.tryAgain)}
             </button>
@@ -266,6 +267,9 @@ function ChoiceQuestion({
             disabled={checked}
             onClick={() => onChoose(i)}
           >
+            {/* After checking, a mark beside the color: ✓ the right answer, ✗ a wrong pick. */}
+            {isRightAnswer && <span className="quiz-mark">✓ </span>}
+            {isWrongPick && <span className="quiz-mark">✗ </span>}
             {t(option)}
           </button>
         )

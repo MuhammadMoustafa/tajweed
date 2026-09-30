@@ -38,8 +38,8 @@ afterEach(() => {
 describe('LessonCard primary action', () => {
   const cases: [LessonCardState, string, string][] = [
     ['not-started', 'Start lesson', 'ابدأ الدرس'],
-    ['started', 'Continue', 'تابع'],
-    ['learned', 'Review', 'مراجعة'],
+    ['started', 'Review lesson', 'راجع الدرس'],
+    ['learned', 'Review lesson', 'راجع الدرس'],
   ]
   for (const [state, en, ar] of cases) {
     it(`labels the ${state} card's lesson link in English and Arabic`, () => {
