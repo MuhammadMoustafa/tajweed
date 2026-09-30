@@ -15,7 +15,7 @@ export const imalahTashilIshmam: Lesson = {
       heading: { ar: 'الإمالة (هود ٤١)', en: 'Imalah (Hud 41)' },
       body: {
         ar: 'الإمالة: أن تميل بالفتحة نحو الكسرة وبالألف نحو الياء، فيخرج صوت بين الفتح والكسر. ولا يُميل حفص إلا في هذا الموضع، على الراء الملوّنة، وعلامتها معيَّن صغير تحتها. وتُرقَّق الراء عندئذ.',
-        en: 'Imalah means leaning the fatha toward a kasra and the alif toward a ya, so the vowel comes out between "a" and "i". Hafs does this in this one place only, on the colored ra, marked by a small diamond under it. The ra is then read light.',
+        en: 'Imalah means leaning the fatha toward a kasra and the alif toward a ya, so the vowel comes out between /a/ and /i/. Hafs does this in this one place only, on the colored ra, marked by a small diamond under it. The ra is then read light.',
       },
       animation: 'hafs-imalah',
     },

@@ -5,6 +5,7 @@ import { foundationsBasmala } from './foundations-basmala'
 import { foundationsHarakat } from './foundations-harakat'
 import { foundationsShaddahTanween } from './foundations-shaddah-tanween'
 import { findLesson, LESSONS } from './index'
+import { VOWELS } from './vowels'
 import { LETTER_CARDS } from '../letters/letters'
 import { LETTER_SIFAT } from '../animations/mouth/sifat'
 
@@ -44,5 +45,18 @@ describe('foundations lessons', () => {
 
   it('name both poems, neither covering the basics', () => {
     for (const l of UNIT) expect(l.mutoon).toEqual({ tuhfa: 'not-covered', jazariyya: 'not-covered' })
+  })
+
+  it('teaches each short vowel by mouth, syllable, word and IPA, in both languages', () => {
+    const sec = foundationsHarakat.sections[0].body
+    for (const v of VOWELS)
+      for (const lang of ['ar', 'en'] as const)
+        for (const part of [v.syllable, v.word, v.ipa, v.mouthDoes[lang]]) expect(sec[lang]).toContain(part)
+    expect(sec.en).toContain('approximate')
+  })
+
+  it('never gives a vowel as a bare Latin letter: Arabic quiz options carry no Latin letters', () => {
+    for (const q of foundationsHarakat.quiz!)
+      if (q.kind === 'choice') for (const o of q.options) expect(o.ar).not.toMatch(/[A-Za-z]/)
   })
 })

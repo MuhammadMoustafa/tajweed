@@ -273,13 +273,13 @@ export const hafsImalah: Clip = {
       label: { ar: 'الميل', en: 'The lean' },
       caption: {
         ar: 'تميل بالفتحة نحو الكسرة وبالألف نحو الياء: صوت قريب من الكسر دون أن يصير كسرة خالصة. والراء هنا مرقّقة.',
-        en: 'Lean the fatha toward a kasra and the alif toward a ya: a sound close to "i" without becoming a pure "i". The ra is light here.',
+        en: 'Lean the fatha toward a kasra and the alif toward a ya: a sound close to /i/ without becoming a pure /i/. The ra is light here.',
       },
       render: scaleFrame(
         { from: 'رَا', to: 'رِي' },
         0.7,
-        { from: { ar: 'فتح', en: 'a' }, to: { ar: 'كسر', en: 'i' } },
-        { ar: 'الإمالة: بين الفتح والكسر، أقرب إلى الكسر', en: 'Imalah: between a and i, nearer to i' },
+        { from: { ar: 'فتح', en: '/a/' }, to: { ar: 'كسر', en: '/i/' } },
+        { ar: 'الإمالة: بين الفتح والكسر، أقرب إلى الكسر', en: 'Imalah: between /a/ and /i/, nearer to /i/' },
       ),
     },
   ],

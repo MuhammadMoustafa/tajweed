@@ -1,4 +1,8 @@
 import type { Lesson } from './types'
+import { vowel } from './vowels'
+
+const [fatha, damma, kasra] = [vowel('fatha'), vowel('damma'), vowel('kasra')]
+const each = (f: (v: typeof fatha) => string) => [fatha, damma, kasra].map(f).join('؛ ')
 
 export const foundationsHarakat: Lesson = {
   id: 'foundations-harakat',
@@ -13,8 +17,8 @@ export const foundationsHarakat: Lesson = {
     {
       heading: { ar: 'الحركات: الفتحة والضمة والكسرة', en: 'Harakat: fatha, damma and kasra' },
       body: {
-        ar: 'الحركات ثلاث: الفتحة (ـَ) خط صغير مائل فوق الحرف وصوتها «a» قصير، والضمة (ـُ) شكل يشبه الواو الصغيرة فوق الحرف وصوتها «u» قصير، والكسرة (ـِ) خط صغير مائل تحت الحرف وصوتها «i» قصير. الحركة القصيرة تُنطق بمقدار حركة واحدة ولا تُمدّ.',
-        en: 'There are three harakat: the fatha (ـَ), a small slanted stroke above the letter, gives a short "a"; the damma (ـُ), a small waw-like curl above the letter, gives a short "u"; the kasra (ـِ), a small slanted stroke below the letter, gives a short "i". A short vowel takes one beat and is not stretched.',
+        ar: `الحركات ثلاث، وأسماؤها من عمل الفم: ${each((v) => `${v.label.ar} (${v.syllable}): ${v.mouthDoes.ar}، وصوتها ${v.ipa}، وكلمة تسمعها فيها: ${v.word}`)}. الحركة القصيرة تُنطق بمقدار حركة واحدة ولا تُمدّ.`,
+        en: `There are three harakat, and their names come from what the mouth does: ${each((v) => `${v.label.en} (${v.syllable}): ${v.mouthDoes.en}; heard in ${v.word}, it gives ${v.ipa}, close to ${v.englishLike} (approximate)`)}. A short vowel takes one beat and is not stretched.`,
       },
       animation: 'foundations-harakat',
     },
@@ -58,13 +62,13 @@ export const foundationsHarakat: Lesson = {
       kind: 'choice',
       prompt: { ar: 'ما الصوت الذي تعطيه الضمة؟', en: 'Which sound does the damma give?' },
       options: [
-        { ar: 'a', en: 'a' },
-        { ar: 'u', en: 'u' },
-        { ar: 'i', en: 'i' },
+        { ar: fatha.syllable, en: `${fatha.syllable} ${fatha.ipa}` },
+        { ar: damma.syllable, en: `${damma.syllable} ${damma.ipa}` },
+        { ar: kasra.syllable, en: `${kasra.syllable} ${kasra.ipa}` },
         { ar: 'لا صوت', en: 'No vowel' },
       ],
       correctIndex: 1,
-      explanation: { ar: 'الضمة تعطي صوت «u» قصيرًا.', en: 'The damma gives a short "u".' },
+      explanation: { ar: `الضمة تعطي صوتًا قصيرًا هو ${damma.syllable}.`, en: `The damma gives the short vowel ${damma.ipa}, as in ${damma.syllable}.` },
     },
     {
       kind: 'choice',

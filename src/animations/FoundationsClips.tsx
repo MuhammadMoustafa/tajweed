@@ -1,4 +1,5 @@
 import type { Bilingual } from '../i18n/bilingual'
+import { SOUND_IPA, VOWELS, type MouthShape, type Vowel } from '../lessons/vowels'
 import type { Clip, ClipStep } from './player/clip'
 
 /** Combining marks, by Unicode code point (not Quran text): a mark drawn on the bare letter ب. */
@@ -26,24 +27,26 @@ const LAND = 0.5
  * it lands the letter is drawn with the mark and the sound it gives (Latin transliteration) shows
  * underneath. At progress 1 (reduced motion) only the landed letter and the sound remain.
  */
-function frame(mark: MarkName, sound: string, extra?: string) {
+function frame(mark: MarkName, sound: string, extra?: string, shape?: MouthShape) {
+  const cx = shape ? 150 : 250
   return (step: number) => {
     const t = Math.min(1, step / LAND)
     const from = BELOW.includes(mark) ? 70 : -70
     const landed = step >= LAND
     return (
       <svg viewBox="0 0 500 230" aria-hidden="true" className="anim-svg foundations-frame" data-mark={mark}>
+        {shape && <Mouth shape={shape} />}
         {landed ? (
-          <text x={250} y={110} textAnchor="middle" dominantBaseline="central" className="anim-letter" fill="var(--accent)" data-landed>
+          <text x={cx} y={110} textAnchor="middle" dominantBaseline="central" className="anim-letter" fill="var(--accent)" data-landed>
             {LETTER + MARKS[mark]}
           </text>
         ) : (
           <>
-            <text x={250} y={110} textAnchor="middle" dominantBaseline="central" className="anim-letter" fill="var(--text)">
+            <text x={cx} y={110} textAnchor="middle" dominantBaseline="central" className="anim-letter" fill="var(--text)">
               {LETTER}
             </text>
             <text
-              x={250}
+              x={cx}
               y={110 + from * (1 - t)}
               textAnchor="middle"
               dominantBaseline="central"
@@ -56,7 +59,7 @@ function frame(mark: MarkName, sound: string, extra?: string) {
           </>
         )}
         {landed && (
-          <text x={250} y={200} textAnchor="middle" fontSize={30} fill="var(--text)" data-sound>
+          <text x={250} y={shape ? 210 : 200} textAnchor="middle" fontSize={shape ? 26 : 30} fill="var(--text)" data-sound>
             {sound}
             {extra ? `  ${extra}` : ''}
           </text>
@@ -77,30 +80,50 @@ const step = (
   return { duration: STEP_MS, label, caption, render: draw }
 }
 
+/** A front view of the mouth: wide open, lips gathered and rounded, or jaw lowered with lips spread. */
+// eslint-disable-next-line react/only-export-components
+function Mouth({ shape }: { shape: MouthShape }) {
+  const face = { stroke: 'var(--text)', strokeWidth: 4 } as const
+  return (
+    <g data-mouth={shape} transform="translate(380 105)">
+      {shape === 'open' && <ellipse rx={38} ry={44} fill="var(--accent)" fillOpacity={0.35} {...face} />}
+      {shape === 'round' && (
+        <>
+          <circle r={20} fill="var(--accent)" fillOpacity={0.35} {...face} />
+          <circle r={34} fill="none" {...face} strokeDasharray="4 6" />
+        </>
+      )}
+      {shape === 'lowered' && (
+        <>
+          <path d="M -58 -10 Q 0 -22 58 -10 Q 0 34 -58 -10 Z" fill="var(--accent)" fillOpacity={0.35} {...face} />
+          <path d="M -30 46 Q 0 58 30 46" fill="none" {...face} strokeDasharray="4 6" />
+        </>
+      )}
+    </g>
+  )
+}
+
+const harakaStep = (v: Vowel): ClipStep => ({
+  duration: STEP_MS,
+  label: v.label,
+  caption: {
+    ar: `${v.label.ar}: ${v.mouthDoes.ar}، وتعطي الحرف صوتًا قصيرًا ${v.ipa}: ${v.syllable}، كما تسمعه في ${v.word}.`,
+    en: `${v.label.en}: ${v.mouthDoes.en}. It gives the letter the short sound ${v.ipa}: ${v.syllable}, as in ${v.word}, close to ${v.englishLike} (approximate).`,
+  },
+  render: frame(v.name, `${v.syllable}  ${v.word}  ${v.ipa}`, undefined, v.mouth),
+})
+
 export const foundationsHarakat: Clip = {
   title: { ar: 'الحركات الثلاث', en: 'The three harakat' },
-  steps: [
-    step('fatha', 'ba', { ar: 'الفتحة', en: 'Fatha' }, {
-      ar: 'الفتحة: خط صغير مائل فوق الحرف، وتعطيه صوت «a» القصير: بَ.',
-      en: 'Fatha: a small slanted stroke above the letter. It gives the short "a" sound: ba.',
-    }),
-    step('damma', 'bu', { ar: 'الضمة', en: 'Damma' }, {
-      ar: 'الضمة: واو صغيرة فوق الحرف، وتعطيه صوت «u» القصير: بُ.',
-      en: 'Damma: a small waw-like curl above the letter. It gives the short "u" sound: bu.',
-    }),
-    step('kasra', 'bi', { ar: 'الكسرة', en: 'Kasra' }, {
-      ar: 'الكسرة: خط صغير مائل تحت الحرف، وتعطيه صوت «i» القصير: بِ.',
-      en: 'Kasra: a small slanted stroke below the letter. It gives the short "i" sound: bi.',
-    }),
-  ],
+  steps: VOWELS.map(harakaStep),
 }
 
 export const foundationsSukun: Clip = {
   title: { ar: 'السكون', en: 'Sukun' },
   steps: [
-    step('sukun', 'b', { ar: 'السكون', en: 'Sukun' }, {
-      ar: 'السكون: دائرة صغيرة فوق الحرف، معناها أنه بلا حركة؛ يُنطق الحرف وحده ويلتصق بما قبله، مثل «ab».',
-      en: 'Sukun: a small circle above the letter. It means no vowel: the letter is said on its own, joined to the vowel before it, like "ab".',
+    step('sukun', `أَبْ ${SOUND_IPA.ab}`, { ar: 'السكون', en: 'Sukun' }, {
+      ar: 'السكون: دائرة صغيرة فوق الحرف، معناها أنه بلا حركة؛ يُنطق الحرف وحده ويلتصق بما قبله، مثل أَبْ /ab/.',
+      en: 'Sukun: a small circle above the letter. It means no vowel: the letter is said on its own, joined to the vowel before it, like /ab/.',
     }),
   ],
 }
@@ -118,17 +141,17 @@ export const foundationsShadda: Clip = {
 export const foundationsTanween: Clip = {
   title: { ar: 'التنوين', en: 'Tanween' },
   steps: [
-    step('fathatan', 'ban', { ar: 'تنوين الفتح', en: 'Tanween fath' }, {
-      ar: 'تنوين الفتح: فتحتان فوق الحرف، وصوتهما «an»: نون ساكنة تُنطق ولا تُكتب.',
-      en: 'Tanween fath: two fathas above the letter, giving "an": a noon sakinah that is pronounced but not written.',
+    step('fathatan', `بً ${SOUND_IPA.an}`, { ar: 'تنوين الفتح', en: 'Tanween fath' }, {
+      ar: 'تنوين الفتح: فتحتان فوق الحرف، وصوتهما /an/: نون ساكنة تُنطق ولا تُكتب.',
+      en: 'Tanween fath: two fathas above the letter, giving /an/: a noon sakinah that is pronounced but not written.',
     }),
-    step('dammatan', 'bun', { ar: 'تنوين الضم', en: 'Tanween damm' }, {
-      ar: 'تنوين الضم: ضمتان فوق الحرف، وصوتهما «un».',
-      en: 'Tanween damm: two dammas above the letter, giving "un".',
+    step('dammatan', `بٌ ${SOUND_IPA.un}`, { ar: 'تنوين الضم', en: 'Tanween damm' }, {
+      ar: 'تنوين الضم: ضمتان فوق الحرف، وصوتهما /un/.',
+      en: 'Tanween damm: two dammas above the letter, giving /un/.',
     }),
-    step('kasratan', 'bin', { ar: 'تنوين الكسر', en: 'Tanween kasr' }, {
-      ar: 'تنوين الكسر: كسرتان تحت الحرف، وصوتهما «in».',
-      en: 'Tanween kasr: two kasras below the letter, giving "in".',
+    step('kasratan', `بٍ ${SOUND_IPA.in}`, { ar: 'تنوين الكسر', en: 'Tanween kasr' }, {
+      ar: 'تنوين الكسر: كسرتان تحت الحرف، وصوتهما /in/.',
+      en: 'Tanween kasr: two kasras below the letter, giving /in/.',
     }),
   ],
 }
