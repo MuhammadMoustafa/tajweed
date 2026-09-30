@@ -2,7 +2,7 @@ import type { Lesson } from './types'
 import { vowel } from './vowels'
 
 const [fatha, damma, kasra] = [vowel('fatha'), vowel('damma'), vowel('kasra')]
-const each = (f: (v: typeof fatha) => string) => [fatha, damma, kasra].map(f).join('؛ ')
+const each = (f: (v: typeof fatha) => string) => [fatha, damma, kasra].map(f).join(' ')
 
 export const foundationsHarakat: Lesson = {
   id: 'foundations-harakat',
@@ -17,8 +17,8 @@ export const foundationsHarakat: Lesson = {
     {
       heading: { ar: 'الحركات: الفتحة والضمة والكسرة', en: 'Harakat: fatha, damma and kasra' },
       body: {
-        ar: `الحركات ثلاث، وأسماؤها من عمل الفم: ${each((v) => `${v.label.ar} (${v.syllable}): ${v.mouthDoes.ar}، وصوتها ${v.ipa}، وكلمة تسمعها فيها: ${v.word}`)}. الحركة القصيرة تُنطق بمقدار حركة واحدة ولا تُمدّ.`,
-        en: `There are three harakat, and their names come from what the mouth does: ${each((v) => `${v.label.en} (${v.syllable}): ${v.mouthDoes.en}; heard in ${v.word}, it gives ${v.ipa}, close to ${v.englishLike} (approximate)`)}. A short vowel takes one beat and is not stretched.`,
+        ar: `الحركات ثلاث، وأسماؤها من عمل الفم. ${each((v) => `${v.label.ar} (${v.syllable}): ${v.mouthDoes.ar}، وصوتها ${v.ipa} كما في ${v.word}.`)} الحركة القصيرة تُنطق بمقدار حركة واحدة ولا تُمدّ.`,
+        en: `There are three harakat, and their names come from what the mouth does. ${each((v) => `${v.label.en} (${v.syllable}): ${v.mouthDoes.en}. It gives ${v.ipa}, as in ${v.word}, close to ${v.englishLike}.`)} (The English words are only approximate.) A short vowel takes one beat and is not stretched.`,
       },
       animation: 'foundations-harakat',
     },

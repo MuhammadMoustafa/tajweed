@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import type { Bilingual } from '../i18n/bilingual'
 import { SOUND_IPA, VOWELS, type MouthShape, type Vowel } from '../lessons/vowels'
 import type { Clip, ClipStep } from './player/clip'
@@ -37,7 +38,7 @@ function frame(mark: MarkName, sound: string, extra?: string, mouth?: { shape: M
     const landed = step >= LAND
     return (
       <svg viewBox="0 0 500 230" aria-hidden="true" className="anim-svg foundations-frame" data-mark={mark}>
-        {mouth && <Mouth shape={mouth.shape} />}
+        {mouth && <Mouth shape={mouth.shape} t={t} />}
         {landed ? (
           <text x={cx} y={110} textAnchor="middle" dominantBaseline="central" className="anim-letter" fill="var(--accent)" data-landed>
             {LETTER + MARKS[mark]}
@@ -89,24 +90,40 @@ const step = (
   return { duration: STEP_MS, label, caption, render: draw }
 }
 
-/** A front view of the mouth: wide open, lips gathered and rounded, or jaw lowered with lips spread. */
+/** Half-width and half-height of the opening between the lips, the lips' thickness, and whether
+ *  the jaw drops (an arrow under the chin). Closed is where every shape starts. */
+const MOUTHS: Record<MouthShape | 'closed', { w: number; h: number; lip: number; jaw?: boolean }> = {
+  closed: { w: 42, h: 1, lip: 9 },
+  open: { w: 40, h: 36, lip: 9 },
+  round: { w: 17, h: 17, lip: 15 },
+  lowered: { w: 58, h: 12, lip: 8, jaw: true },
+}
+
+/** A lens through (-w, 0) and (w, 0), bulging h above and below. */
+const lens = (w: number, h: number) =>
+  `M ${-w} 0 C ${-w / 2} ${-h * 1.33} ${w / 2} ${-h * 1.33} ${w} 0 C ${w / 2} ${h * 1.33} ${-w / 2} ${h * 1.33} ${-w} 0 Z`
+
+/**
+ * A front view of the lips, opening from closed into the haraka's shape as `t` goes 0 to 1: wide
+ * open (fatha), gathered and rounded (damma), spread with the jaw lowered (kasra).
+ */
 // eslint-disable-next-line react/only-export-components
-function Mouth({ shape }: { shape: MouthShape }) {
-  const face = { stroke: 'var(--text)', strokeWidth: 4 } as const
+function Mouth({ shape, t }: { shape: MouthShape; t: number }) {
+  const [from, to] = [MOUTHS.closed, MOUTHS[shape]]
+  const [w, h, lip] = [from.w + (to.w - from.w) * t, from.h + (to.h - from.h) * t, from.lip + (to.lip - from.lip) * t]
+  const clip = useId()
   return (
-    <g data-mouth={shape} transform="translate(380 105)">
-      {shape === 'open' && <ellipse rx={38} ry={44} fill="var(--accent)" fillOpacity={0.35} {...face} />}
-      {shape === 'round' && (
-        <>
-          <circle r={20} fill="var(--accent)" fillOpacity={0.35} {...face} />
-          <circle r={34} fill="none" {...face} strokeDasharray="4 6" />
-        </>
-      )}
-      {shape === 'lowered' && (
-        <>
-          <path d="M -58 -10 Q 0 -22 58 -10 Q 0 34 -58 -10 Z" fill="var(--accent)" fillOpacity={0.35} {...face} />
-          <path d="M -30 46 Q 0 58 30 46" fill="none" {...face} strokeDasharray="4 6" />
-        </>
+    <g data-mouth={shape} transform="translate(380 95)">
+      <path d={lens(w + lip, h + lip)} fill="var(--anat-lip)" stroke="var(--anat-edge)" strokeWidth={3} />
+      <clipPath id={clip}>
+        <path d={lens(w, h)} />
+      </clipPath>
+      {/* The inside of the mouth, with the upper teeth showing at its top. */}
+      <path d={lens(w, h)} fill="var(--anat-cavity)" />
+      <rect x={-w} y={-h * 1.2} width={2 * w} height={h * 0.55} fill="var(--anat-teeth)" clipPath={`url(#${clip})`} />
+      <path d={lens(w, h)} fill="none" stroke="var(--anat-edge)" strokeWidth={2} />
+      {to.jaw && t > 0 && (
+        <path d={`M 0 ${h + lip + 10} v ${22 * t} m -8 -8 l 8 8 l 8 -8`} fill="none" stroke="var(--accent)" strokeWidth={3} />
       )}
     </g>
   )
