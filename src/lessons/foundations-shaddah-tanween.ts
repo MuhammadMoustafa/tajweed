@@ -1,4 +1,8 @@
 import type { Lesson } from './types'
+import { SOUNDS, soundText, vowel } from './vowels'
+
+const [an, un, inn] = [soundText(SOUNDS.fathatan), soundText(SOUNDS.dammatan), soundText(SOUNDS.kasratan)]
+const longI = vowel('kasra').long
 
 export const foundationsShaddahTanween: Lesson = {
   id: 'foundations-shaddah-tanween',
@@ -21,8 +25,8 @@ export const foundationsShaddahTanween: Lesson = {
     {
       heading: { ar: 'التنوين', en: 'Tanween' },
       body: {
-        ar: 'التنوين نون ساكنة زائدة تلحق آخر الاسم، تُنطق ولا تُكتب حرفًا. وله ثلاث صور: تنوين الفتح (ـً) وصوته «an»، وتنوين الضم (ـٌ) وصوته «un»، وتنوين الكسر (ـٍ) وصوته «in». وعند الوقف على الكلمة يُحذف التنوين، إلا تنوين الفتح فيُبدَل ألفًا. وللنون الساكنة والتنوين أحكام سيأتي شرحها في وحدة مستقلة.',
-        en: 'Tanween is an extra noon sakinah added to the end of a noun; it is pronounced but not written as a letter. It has three forms: tanween fath (ـً) gives "an", tanween damm (ـٌ) gives "un", and tanween kasr (ـٍ) gives "in". When you stop on the word the tanween is dropped, except that tanween fath is turned into a long alif. The noon sakinah and tanween have their own rules, taught in a later unit.',
+        ar: `التنوين نون ساكنة زائدة تلحق آخر الاسم، تُنطق ولا تُكتب حرفًا. وله ثلاث صور: تنوين الفتح (ـً) وصوته ${an}، وتنوين الضم (ـٌ) وصوته ${un}، وتنوين الكسر (ـٍ) وصوته ${inn}. وعند الوقف على الكلمة يُحذف التنوين، إلا تنوين الفتح فيُبدَل ألفًا. وللنون الساكنة والتنوين أحكام سيأتي شرحها في وحدة مستقلة.`,
+        en: `Tanween is an extra noon sakinah added to the end of a noun; it is pronounced but not written as a letter. It has three forms: tanween fath (ـً) gives ${an}, tanween damm (ـٌ) gives ${un}, and tanween kasr (ـٍ) gives ${inn}. When you stop on the word the tanween is dropped, except that tanween fath is turned into a long alif. The noon sakinah and tanween have their own rules, taught in a later unit.`,
       },
       animation: 'foundations-tanween',
     },
@@ -39,8 +43,8 @@ export const foundationsShaddahTanween: Lesson = {
     {
       verseKey: '112:4',
       note: {
-        ar: 'الكلمة الرابعة تنتهي بتنوين فتح، وصوته «an».',
-        en: 'The fourth word ends with a tanween fath, which gives "an".',
+        ar: `الكلمة الرابعة تنتهي بتنوين فتح، وصوته ${an}.`,
+        en: `The fourth word ends with a tanween fath, which gives ${SOUNDS.fathatan.ipa}.`,
       },
     },
   ],
@@ -64,13 +68,16 @@ export const foundationsShaddahTanween: Lesson = {
       kind: 'choice',
       prompt: { ar: 'ما الصوت الذي يعطيه تنوين الكسر؟', en: 'Which sound does tanween kasr give?' },
       options: [
-        { ar: 'an', en: 'an' },
-        { ar: 'un', en: 'un' },
-        { ar: 'in', en: 'in' },
-        { ar: 'i طويلة', en: 'A long "ee"' },
+        { ar: an, en: an },
+        { ar: un, en: un },
+        { ar: inn, en: inn },
+        { ar: soundText(longI), en: soundText(longI) },
       ],
       correctIndex: 2,
-      explanation: { ar: 'تنوين الكسر كسرتان وصوته «in».', en: 'Tanween kasr is two kasras, giving "in".' },
+      explanation: {
+        ar: `تنوين الكسر كسرتان وصوته ${inn}: كسرة ثم نون ساكنة، لا كسرة ممدودة.`,
+        en: `Tanween kasr is two kasras, giving ${SOUNDS.kasratan.ipa}: a kasra then a sakin noon, not a long ${longI.ipa}.`,
+      },
     },
   ],
   reviewed: false,

@@ -1,6 +1,6 @@
 import { useId } from 'react'
 import type { Bilingual } from '../i18n/bilingual'
-import { SOUND_IPA, VOWELS, type MouthShape, type Vowel } from '../lessons/vowels'
+import { SOUNDS, soundText, VOWELS, type MouthShape, type Vowel } from '../lessons/vowels'
 import type { Clip, ClipStep } from './player/clip'
 
 /** Combining marks, by Unicode code point (not Quran text): a mark drawn on the bare letter ب. */
@@ -147,7 +147,7 @@ export const foundationsHarakat: Clip = {
 export const foundationsSukun: Clip = {
   title: { ar: 'السكون', en: 'Sukun' },
   steps: [
-    step('sukun', `أَبْ ${SOUND_IPA.ab}`, { ar: 'السكون', en: 'Sukun' }, {
+    step('sukun', soundText(SOUNDS.sukun), { ar: 'السكون', en: 'Sukun' }, {
       ar: 'السكون: دائرة صغيرة فوق الحرف، معناها أنه بلا حركة؛ يُنطق الحرف وحده ويلتصق بما قبله، مثل أَبْ /ab/.',
       en: 'Sukun: a small circle above the letter. It means no vowel: the letter is said on its own, joined to the vowel before it, like /ab/.',
     }),
@@ -167,16 +167,16 @@ export const foundationsShadda: Clip = {
 export const foundationsTanween: Clip = {
   title: { ar: 'التنوين', en: 'Tanween' },
   steps: [
-    step('fathatan', `بً ${SOUND_IPA.an}`, { ar: 'تنوين الفتح', en: 'Tanween fath' }, {
-      ar: 'تنوين الفتح: فتحتان فوق الحرف، وصوتهما /an/: نون ساكنة تُنطق ولا تُكتب.',
+    step('fathatan', soundText(SOUNDS.fathatan), { ar: 'تنوين الفتح', en: 'Tanween fath' }, {
+      ar: 'تنوين الفتح: فتحتان فوق الحرف، وصوتهما بً /an/: نون ساكنة تُنطق ولا تُكتب.',
       en: 'Tanween fath: two fathas above the letter, giving /an/: a noon sakinah that is pronounced but not written.',
     }),
-    step('dammatan', `بٌ ${SOUND_IPA.un}`, { ar: 'تنوين الضم', en: 'Tanween damm' }, {
-      ar: 'تنوين الضم: ضمتان فوق الحرف، وصوتهما /un/.',
+    step('dammatan', soundText(SOUNDS.dammatan), { ar: 'تنوين الضم', en: 'Tanween damm' }, {
+      ar: 'تنوين الضم: ضمتان فوق الحرف، وصوتهما بٌ /un/.',
       en: 'Tanween damm: two dammas above the letter, giving /un/.',
     }),
-    step('kasratan', `بٍ ${SOUND_IPA.in}`, { ar: 'تنوين الكسر', en: 'Tanween kasr' }, {
-      ar: 'تنوين الكسر: كسرتان تحت الحرف، وصوتهما /in/.',
+    step('kasratan', soundText(SOUNDS.kasratan), { ar: 'تنوين الكسر', en: 'Tanween kasr' }, {
+      ar: 'تنوين الكسر: كسرتان تحت الحرف، وصوتهما بٍ /in/.',
       en: 'Tanween kasr: two kasras below the letter, giving /in/.',
     }),
   ],

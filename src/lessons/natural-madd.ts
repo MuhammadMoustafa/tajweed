@@ -1,4 +1,8 @@
 import type { Lesson } from './types'
+import { VOWELS } from './vowels'
+
+/** Each madd letter's long sound, from the short vowel it draws out. */
+const longSounds = (f: (l: (typeof VOWELS)[number]['long']) => string, sep: string) => VOWELS.map((v) => f(v.long)).join(sep)
 
 export const naturalMadd: Lesson = {
   id: 'natural-madd',
@@ -19,8 +23,8 @@ export const naturalMadd: Lesson = {
     {
       heading: { ar: 'حروف المدّ', en: 'The madd letters' },
       body: {
-        ar: 'حروف المدّ ثلاثة، وكل واحد منها لا يمدّ إلا مع الحركة التي تناسبه قبله: الألف الساكنة وقبلها فتحة (ـَا)، الواو الساكنة وقبلها ضمة (ـُو)، الياء الساكنة وقبلها كسرة (ـِي). وفي المصحف تُكتب الألف أحيانًا ألفًا صغيرة فوق الحرف (ـٰ)، وحكمها حكم الألف.',
-        en: 'There are three madd letters, and each one only stretches with the harakah that matches it right before: alif preceded by fatha (ـَا), waw sakinah preceded by damma (ـُو), and ya sakinah preceded by kasra (ـِي). In the mushaf the alif is often written as a small alif above the letter (ـٰ); it is read just like a full alif.',
+        ar: `حروف المدّ ثلاثة، وكل واحد منها لا يمدّ إلا مع الحركة التي تناسبه قبله: الألف الساكنة وقبلها فتحة (ـَا)، الواو الساكنة وقبلها ضمة (ـُو)، الياء الساكنة وقبلها كسرة (ـِي). فحرف المدّ يطيل صوت الحركة التي قبله: ${longSounds((l) => `${l.syllable} ${l.ipa} كما في ${l.word}`, '، ')}. وفي المصحف تُكتب الألف أحيانًا ألفًا صغيرة فوق الحرف (ـٰ)، وحكمها حكم الألف.`,
+        en: `There are three madd letters, and each one only stretches with the harakah that matches it right before: alif preceded by fatha (ـَا), waw sakinah preceded by damma (ـُو), and ya sakinah preceded by kasra (ـِي). A madd letter draws out the vowel before it: ${longSounds((l) => `${l.syllable} gives ${l.ipa}, as in ${l.word}, close to ${l.englishLike}`, '; ')} (the English words are approximate). In the mushaf the alif is often written as a small alif above the letter (ـٰ); it is read just like a full alif.`,
       },
     },
     {

@@ -22,6 +22,8 @@ export interface Vowel {
   mouthDoes: Bilingual
   /** An approximate English word for the sound (English text only; marked approximate there). */
   englishLike: string
+  /** The same vowel drawn out two counts by its madd letter (natural madd). */
+  long: { syllable: string; word: string; ipa: string; englishLike: string }
 }
 
 export const VOWELS: readonly Vowel[] = [
@@ -34,6 +36,7 @@ export const VOWELS: readonly Vowel[] = [
     mouth: 'open',
     mouthDoes: { ar: 'تفتح فمك', en: 'the mouth opens' },
     englishLike: 'a short "a" as in "father"',
+    long: { syllable: 'بَا', word: 'كِتَاب', ipa: '/aː/', englishLike: 'the "a" in "father"' },
   },
   {
     name: 'damma',
@@ -44,6 +47,7 @@ export const VOWELS: readonly Vowel[] = [
     mouth: 'round',
     mouthDoes: { ar: 'تضمّ شفتيك وتدوّرهما إلى الأمام', en: 'the lips are gathered and rounded forward' },
     englishLike: 'the vowel in "put", with the lips rounded',
+    long: { syllable: 'بُو', word: 'نُور', ipa: '/uː/', englishLike: 'the "oo" in "food"' },
   },
   {
     name: 'kasra',
@@ -54,10 +58,19 @@ export const VOWELS: readonly Vowel[] = [
     mouth: 'lowered',
     mouthDoes: { ar: 'تخفض فكّك السفلي', en: 'the jaw lowers, the lips spread' },
     englishLike: 'the vowel in "sit", but nearer to "ee"',
+    long: { syllable: 'بِي', word: 'كَبِير', ipa: '/iː/', englishLike: 'the "ee" in "see"' },
   },
 ]
 
 export const vowel = (name: VowelName): Vowel => VOWELS.find((v) => v.name === name)!
 
-/** Tanween and sukun syllables, shown as the Arabic syllable with IPA. */
-export const SOUND_IPA = { ab: '/ab/', an: '/an/', un: '/un/', in: '/in/' } as const
+/** The sukun and tanween sounds: an Arabic syllable and its IPA, never a bare Latin spelling. */
+export const SOUNDS = {
+  sukun: { syllable: 'أَبْ', ipa: '/ab/' },
+  fathatan: { syllable: 'بً', ipa: '/an/' },
+  dammatan: { syllable: 'بٌ', ipa: '/un/' },
+  kasratan: { syllable: 'بٍ', ipa: '/in/' },
+} as const
+
+/** A sound as shown in text: the syllable, then its IPA. */
+export const soundText = (s: { syllable: string; ipa: string }) => `${s.syllable} ${s.ipa}`

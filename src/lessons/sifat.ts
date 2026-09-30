@@ -30,7 +30,7 @@ export const sifat: Lesson = {
       heading: { ar: 'الشدة والتوسط والرخاوة: الصوت', en: 'Shiddah, tawassut and rakhawah: the sound' },
       body: {
         ar: 'الشدة: انحباس الصوت عند مخرج الحرف إذا سكن، فلا يمكن مدّه. حروفها ثمانية: «أَجِدْ قَطٍ بَكَتْ»، كالباء في «أَبْ». الرخاوة ضدها: جريان الصوت مع الحرف، فيمكن مدّه، كالسين في «أَسْ»؛ وحروفها ستة عشر. وبينهما التوسط: لا ينحبس الصوت كله ولا يجري كله، وحروفه خمسة: «لِنْ عُمَرْ».',
-        en: 'Shiddah (strength): when the letter has a sukun, its sound stops at the makhraj and cannot be drawn out. Its eight letters are gathered in the phrase "ajid qaṭin bakat", like the ba in "ab". Rakhawah (softness) is the opposite: the sound flows on with the letter and can be drawn out, like the seen in "as". It has sixteen letters. Between them is tawassut: the sound neither stops completely nor flows completely. Its five letters are gathered in the phrase "lin ʿumar".',
+        en: 'Shiddah (strength): when the letter has a sukun, its sound stops at the makhraj and cannot be drawn out. Its eight letters are gathered in the phrase "ajid qaṭin bakat", like the ba in أَبْ /ab/. Rakhawah (softness) is the opposite: the sound flows on with the letter and can be drawn out, like the seen in أَسْ /as/. It has sixteen letters. Between them is tawassut: the sound neither stops completely nor flows completely. Its five letters are gathered in the phrase "lin ʿumar".',
       },
       animation: 'sifat-shiddah-rakhawah',
     },
@@ -203,7 +203,7 @@ export const sifat: Lesson = {
       correctIndex: 0,
       explanation: {
         ar: 'الشدة انحباس الصوت عند مخرج الحرف الساكن، كالباء في «أَبْ». وجريان الصوت هو الرخاوة.',
-        en: 'In shiddah the sound of a letter with a sukun stops at its makhraj, like the ba in "ab". A flowing sound is rakhawah.',
+        en: 'In shiddah the sound of a letter with a sukun stops at its makhraj, like the ba in أَبْ /ab/. A flowing sound is rakhawah.',
       },
     },
     {
