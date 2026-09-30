@@ -24,18 +24,20 @@ const LAND = 0.5
 
 /**
  * Frame: the bare letter with the mark's own glyph (on a dotted circle) travelling onto it; once
- * it lands the letter is drawn with the mark and the sound it gives (Latin transliteration) shows
- * underneath. At progress 1 (reduced motion) only the landed letter and the sound remain.
+ * it lands the letter is drawn with the mark and the sound it gives (the syllable and its IPA)
+ * shows underneath. A haraka's frame also draws the mouth shape beside the letter, with the
+ * everyday word under the letter and the IPA under the mouth. At progress 1 (reduced motion) only
+ * the landed letter, the mouth and the sound remain.
  */
-function frame(mark: MarkName, sound: string, extra?: string, shape?: MouthShape) {
-  const cx = shape ? 150 : 250
+function frame(mark: MarkName, sound: string, extra?: string, mouth?: { shape: MouthShape; word: string; ipa: string }) {
+  const cx = mouth ? 150 : 250
   return (step: number) => {
     const t = Math.min(1, step / LAND)
     const from = BELOW.includes(mark) ? 70 : -70
     const landed = step >= LAND
     return (
       <svg viewBox="0 0 500 230" aria-hidden="true" className="anim-svg foundations-frame" data-mark={mark}>
-        {shape && <Mouth shape={shape} />}
+        {mouth && <Mouth shape={mouth.shape} />}
         {landed ? (
           <text x={cx} y={110} textAnchor="middle" dominantBaseline="central" className="anim-letter" fill="var(--accent)" data-landed>
             {LETTER + MARKS[mark]}
@@ -58,8 +60,15 @@ function frame(mark: MarkName, sound: string, extra?: string, shape?: MouthShape
             </text>
           </>
         )}
-        {landed && (
-          <text x={250} y={shape ? 210 : 200} textAnchor="middle" fontSize={shape ? 26 : 30} fill="var(--text)" data-sound>
+        {landed && mouth && (
+          // Two texts, not one line: a line mixing Arabic and Latin would reorder under bidi.
+          <g data-sound fontSize={28} fill="var(--text)" textAnchor="middle">
+            <text x={cx} y={205}>{mouth.word}</text>
+            <text x={380} y={205} direction="ltr">{mouth.ipa}</text>
+          </g>
+        )}
+        {landed && !mouth && (
+          <text x={250} y={200} textAnchor="middle" fontSize={30} fill="var(--text)" data-sound>
             {sound}
             {extra ? `  ${extra}` : ''}
           </text>
@@ -110,7 +119,7 @@ const harakaStep = (v: Vowel): ClipStep => ({
     ar: `${v.label.ar}: ${v.mouthDoes.ar}، وتعطي الحرف صوتًا قصيرًا ${v.ipa}: ${v.syllable}، كما تسمعه في ${v.word}.`,
     en: `${v.label.en}: ${v.mouthDoes.en}. It gives the letter the short sound ${v.ipa}: ${v.syllable}, as in ${v.word}, close to ${v.englishLike} (approximate).`,
   },
-  render: frame(v.name, `${v.syllable}  ${v.word}  ${v.ipa}`, undefined, v.mouth),
+  render: frame(v.name, v.syllable, undefined, { shape: v.mouth, word: v.word, ipa: v.ipa }),
 })
 
 export const foundationsHarakat: Clip = {

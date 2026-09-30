@@ -37,8 +37,9 @@ describe('foundations clips (src/animations/FoundationsClips.tsx)', () => {
   it('shows a distinct mouth shape per haraka, with syllable, word and IPA at the end of the step', () => {
     const shapes = foundationsHarakat.steps.map((s, i) => {
       const { container } = render(<>{s.render(1)}</>)
+      expect(container.querySelector('[data-landed]')!.textContent).toBe(VOWELS[i].syllable)
       const sound = container.querySelector('[data-sound]')!.textContent!
-      for (const part of [VOWELS[i].syllable, VOWELS[i].word, VOWELS[i].ipa]) expect(sound).toContain(part)
+      for (const part of [VOWELS[i].word, VOWELS[i].ipa]) expect(sound).toContain(part)
       return container.querySelector('[data-mouth]')!.getAttribute('data-mouth')
     })
     expect(shapes).toEqual(['open', 'round', 'lowered'])
