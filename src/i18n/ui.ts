@@ -134,8 +134,8 @@ export const ui = {
   // The letters page (#/letters, src/components/LettersPage.tsx) and a letter's card (LetterView.tsx).
   lettersTitle: { ar: 'الحروف', en: 'Letters' },
   lettersIntro: {
-    ar: 'لكل حرف بطاقة: مخرجه مرسومًا على الفم، وصفاته، وكلمة من القرآن تسمعه فيها بصوت الشيخ الحصري. والهمزة والألف مختلفتان في المخرج، فلكلٍّ منهما بطاقة.',
-    en: 'Each letter has a card: its makhraj drawn on the mouth, its qualities, and a Quran word to hear it in, recited by Sheikh al-Husary. Hamzah and alif come from different makharij, so each has its own card.',
+    ar: 'الحروف تسعة وعشرون، لكل حرف بطاقة: مخرجه مرسومًا على الفم، وصفاته، وكلمة من القرآن تسمعه فيها بصوت الشيخ الحصري. والهمزة والألف حرفان مختلفان في المخرج، فلكلٍّ منهما بطاقة.',
+    en: 'There are 29 letters, each with a card: its makhraj drawn on the mouth, its qualities, and a Quran word to hear it in, recited by Sheikh al-Husary. Hamzah and alif are two letters with different makharij, so each has its own card.',
   },
   openLetterAction: { ar: 'تعلّم نطقه', en: 'Learn to say it' },
   backToLetters: { ar: 'العودة إلى الحروف', en: 'Back to the letters' },

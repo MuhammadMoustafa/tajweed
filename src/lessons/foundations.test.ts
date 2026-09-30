@@ -5,6 +5,8 @@ import { foundationsBasmala } from './foundations-basmala'
 import { foundationsHarakat } from './foundations-harakat'
 import { foundationsShaddahTanween } from './foundations-shaddah-tanween'
 import { findLesson, LESSONS } from './index'
+import { LETTER_CARDS } from '../letters/letters'
+import { LETTER_SIFAT } from '../animations/mouth/sifat'
 
 const UNIT = [foundations, foundationsHarakat, foundationsShaddahTanween, foundationsBasmala]
 
@@ -26,6 +28,18 @@ describe('foundations lessons', () => {
 
   it('uses the basmala, verse 1:1, as the basmala lesson example', () => {
     expect(foundationsBasmala.examples[0].verseKey).toBe('1:1')
+  })
+
+  // The app counts 29 letters, hamzah and alif apart (maintainer, 2026-09-29): the lesson, its quiz,
+  // the letters page and the sifat data must agree.
+  it('counts the letters as the letters page and the sifat data do', () => {
+    const count = LETTER_CARDS.length
+    expect(count).toBe(29)
+    expect(Object.keys(LETTER_SIFAT)).toHaveLength(count)
+    expect(foundations.summary.en).toContain(String(count))
+    expect(foundations.sections[0].body.en).toContain(`has ${count} letters`)
+    const question = foundations.quiz!.find((q) => q.kind === 'choice' && q.options.some((o) => o.en === String(count)))
+    expect(question?.kind === 'choice' && question.options[question.correctIndex].en).toBe(String(count))
   })
 
   it('name both poems, neither covering the basics', () => {
