@@ -1,4 +1,4 @@
-# Tajweed · تعلّم التجويد
+# Tajweed · التجويد
 
 Beginner tajweed lessons in Arabic and English, with animations beside the text and color-coded Quran examples with audio.
 

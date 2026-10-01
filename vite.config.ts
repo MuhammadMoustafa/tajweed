@@ -28,7 +28,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png'],
       manifest: {
-        name: 'تعلّم التجويد · Learn Tajweed',
+        name: 'التجويد · Tajweed',
         short_name: 'Tajweed',
         description: 'Tajweed rules for beginners in Arabic and English',
         lang: 'ar',

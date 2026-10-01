@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'com.muhammadmoustafa.tajweed',
-  appName: 'Learn Tajweed',
+  appName: 'Tajweed',
   webDir: 'dist',
 }
 

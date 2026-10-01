@@ -5,7 +5,7 @@
  */
 import { APK_ASSET_NAME, IPA_ASSET_NAME, WEB_APP_URL } from '../../src/update/releases.ts'
 
-export const releaseTitle = (version: string) => `Learn Tajweed ${version}`
+export const releaseTitle = (version: string) => `Tajweed ${version}`
 export const releaseCommitMessage = (version: string) => `Release v${version}`
 
 export interface ReleaseArgs {
