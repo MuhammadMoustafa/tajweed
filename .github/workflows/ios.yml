@@ -1,0 +1,260 @@
+# Builds the Capacitor iOS app (ios/) from the same web build as the PWA, on a macOS runner:
+# an unsigned device build packaged as an .ipa, a simulator build, and a smoke test that launches
+# the simulator build and screenshots it. The .ipa, the zipped simulator app and the screenshot
+# are run artifacts. On a release tag (pushed by `npm run release`) the .ipa is also attached to
+# that tag's GitHub release, beside the APK; a manual run (workflow_dispatch) never touches releases.
+name: iOS build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+jobs:
+  build:
+    name: Build and smoke-test
+    runs-on: macos-latest
+    timeout-minutes: 60
+    outputs:
+      ipa-name: ${{ steps.version.outputs.IPA_NAME }}
+    env:
+      PROJECT: ios/App/App.xcodeproj
+      SCHEME: App
+      DERIVED_DATA: build/ios/DerivedData
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Version from package.json
+        id: version
+        run: |
+          echo "Deriving the iOS version and the .ipa name from package.json (scripts/ios-ci.ts env):"
+          lines=$(npx tsx scripts/ios-ci.ts env)
+          echo "$lines"
+          echo "$lines" >> "$GITHUB_ENV"
+          echo "$lines" >> "$GITHUB_OUTPUT"
+
+      - name: Show the toolchain
+        run: |
+          echo "Xcode:"
+          xcodebuild -version
+          echo "Developer dir: $(xcode-select -p)"
+          echo "Node: $(node --version)"
+
+      - name: Build the web app
+        run: |
+          echo "Building dist/ (tsc -b + vite build)"
+          npm run build
+
+      - name: Copy the web app into the iOS project
+        run: |
+          echo "npx cap sync ios"
+          npx cap sync ios
+          echo "Files cap sync changed in ios/ (expected: none):"
+          git status --porcelain -- ios
+
+      - name: Resolve Swift packages
+        run: |
+          echo "Schemes in $PROJECT:"
+          xcodebuild -list -project "$PROJECT"
+          bash scripts/ios-xcodebuild.sh resolve -resolvePackageDependencies \
+            -project "$PROJECT" -scheme "$SCHEME" -derivedDataPath "$DERIVED_DATA"
+
+      - name: Device build (unsigned)
+        run: |
+          echo "Building $SCHEME for iphoneos, Release, without code signing, version $MARKETING_VERSION ($CURRENT_PROJECT_VERSION)"
+          bash scripts/ios-xcodebuild.sh device build \
+            -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath "$DERIVED_DATA" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            MARKETING_VERSION="$MARKETING_VERSION" CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION"
+
+      - name: Package the .ipa
+        run: |
+          app="$DERIVED_DATA/Build/Products/Release-iphoneos/App.app"
+          if [ ! -d "$app" ]; then
+            echo "::error::The device build produced no $app. Products found:"
+            find "$DERIVED_DATA/Build/Products" -maxdepth 2 -name '*.app' || true
+            exit 1
+          fi
+          plist="$app/Info.plist"
+          short=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$plist")
+          build=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$plist")
+          echo "Built $(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$plist") version $short ($build)"
+          if [ "$short" != "$MARKETING_VERSION" ] || [ "$build" != "$CURRENT_PROJECT_VERSION" ]; then
+            echo "::error::Info.plist has version $short ($build), expected $MARKETING_VERSION ($CURRENT_PROJECT_VERSION) from package.json"
+            exit 1
+          fi
+          echo "Packaging Payload/App.app into $IPA_NAME"
+          rm -rf build/ios/ipa
+          mkdir -p build/ios/ipa/Payload
+          cp -R "$app" build/ios/ipa/Payload/
+          (cd build/ios/ipa && zip -qry "$GITHUB_WORKSPACE/$IPA_NAME" Payload)
+          ls -lh "$IPA_NAME"
+
+      - name: Simulator build
+        run: |
+          echo "Building $SCHEME for iphonesimulator, Release"
+          bash scripts/ios-xcodebuild.sh simulator build \
+            -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$DERIVED_DATA" \
+            MARKETING_VERSION="$MARKETING_VERSION" CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION"
+          app="$DERIVED_DATA/Build/Products/Release-iphonesimulator/App.app"
+          if [ ! -d "$app" ]; then
+            echo "::error::The simulator build produced no $app"
+            exit 1
+          fi
+          echo "Zipping $app"
+          mkdir -p build/ios/artifacts
+          ditto -c -k --sequesterRsrc --keepParent "$app" build/ios/artifacts/tajweed-simulator.app.zip
+          ls -lh build/ios/artifacts/tajweed-simulator.app.zip
+          echo "SIM_APP=$app" >> "$GITHUB_ENV"
+
+      - name: Smoke test on a simulator
+        timeout-minutes: 15
+        run: |
+          bundle_id=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$SIM_APP/Info.plist")
+          echo "Available iPhone simulators:"
+          xcrun simctl list devices available | grep -E '^-- |iPhone' || true
+          udid=$(xcrun simctl list devices available --json | npx tsx scripts/ios-ci.ts pick-simulator)
+          echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
+
+          echo "Booting $udid and waiting until it has booted"
+          xcrun simctl bootstatus "$udid" -b
+
+          echo "Installing $SIM_APP"
+          xcrun simctl install "$udid" "$SIM_APP"
+
+          echo "Launching $bundle_id"
+          pid=""
+          for attempt in 1 2 3; do
+            if out=$(xcrun simctl launch "$udid" "$bundle_id" 2>&1); then
+              echo "$out"
+              pid=${out##*: }
+              [[ "$pid" =~ ^[0-9]+$ ]] && break
+            else
+              echo "$out"
+            fi
+            pid=""
+            echo "Launch attempt $attempt did not return a pid; retrying in 5s"
+            sleep 5
+          done
+          if [ -z "$pid" ]; then
+            echo "::error::$bundle_id did not launch on the simulator (no pid from simctl launch after 3 attempts)"
+            exit 1
+          fi
+          echo "Launched with pid $pid; giving the WebView 10s to load"
+          sleep 10
+          if ! ps -p "$pid" >/dev/null; then
+            echo "::error::$bundle_id (pid $pid) exited within 10s of launching"
+            exit 1
+          fi
+          echo "Still running; taking a screenshot"
+          mkdir -p build/ios/smoke
+          xcrun simctl io "$udid" screenshot build/ios/smoke/launch.png
+          ls -lh build/ios/smoke/launch.png
+
+      - name: App log after a failed smoke test
+        if: failure() && env.SIM_UDID != ''
+        run: |
+          echo "Last 3 minutes of the App process's log on the simulator:"
+          xcrun simctl spawn "$SIM_UDID" log show --last 3m --style compact --predicate 'process == "App"' | tail -200 || true
+          echo "Crash reports:"
+          ls -1 ~/Library/Logs/DiagnosticReports 2>/dev/null | grep -i '^App' || echo "(none)"
+
+      - name: Upload the .ipa
+        uses: actions/upload-artifact@v7
+        with:
+          name: tajweed-ipa
+          path: ${{ env.IPA_NAME }}
+          if-no-files-found: error
+
+      - name: Upload the simulator app
+        uses: actions/upload-artifact@v7
+        with:
+          name: tajweed-simulator-app
+          path: build/ios/artifacts/tajweed-simulator.app.zip
+          if-no-files-found: error
+
+      - name: Upload the launch screenshot
+        uses: actions/upload-artifact@v7
+        with:
+          name: launch-screenshot
+          path: build/ios/smoke/launch.png
+          if-no-files-found: error
+
+      - name: Upload the xcodebuild logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: xcodebuild-logs
+          path: build/ios/logs/
+          if-no-files-found: ignore
+
+  release-asset:
+    name: Attach the .ipa to the release
+    needs: build
+    # Tag pushes only: a manual run, even on a tag, never touches releases.
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ github.ref_name }}
+      IPA_NAME: ${{ needs.build.outputs.ipa-name }}
+    steps:
+      - name: Download the .ipa
+        uses: actions/download-artifact@v8
+        with:
+          name: tajweed-ipa
+          path: upload
+
+      - name: Wait for the release
+        run: |
+          # npm run release pushes the tag before it creates the release, so the release may not
+          # exist yet: check every 15s for up to 10 minutes.
+          echo "Waiting for the GitHub release of $TAG in $GH_REPO"
+          for attempt in $(seq 1 40); do
+            if gh release view "$TAG" --json tagName --jq .tagName >/dev/null 2>&1; then
+              echo "Release $TAG found"
+              exit 0
+            fi
+            echo "  no release for $TAG yet (check $attempt of 40); next check in 15s"
+            sleep 15
+          done
+          echo "::error::No GitHub release for $TAG after 10 minutes. Create it (npm run release does), then re-run this job; the .ipa is also this run's tajweed-ipa artifact."
+          exit 1
+
+      - name: Upload the .ipa to the release
+        run: |
+          ls -lh "upload/$IPA_NAME"
+          echo "gh release upload $TAG upload/$IPA_NAME --clobber"
+          gh release upload "$TAG" "upload/$IPA_NAME" --clobber
+          echo "Assets on $TAG now:"
+          gh release view "$TAG" --json assets --jq '.assets[].name'

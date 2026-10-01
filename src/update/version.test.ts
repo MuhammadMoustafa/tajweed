@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { compareVersions, isNewerVersion, nextVersion, parseVersion, versionCode } from './version'
+import { compareVersions, iosBuildSettings, isNewerVersion, nextVersion, parseVersion, versionCode } from './version'
 
 describe('parseVersion', () => {
   it('reads plain, v-prefixed and prerelease versions', () => {
@@ -69,5 +69,18 @@ describe('versionCode', () => {
     const gradle = readFileSync(new URL('../../android/app/build.gradle', import.meta.url), 'utf8')
     expect(gradle).toMatch(/\.\.\/\.\.\/package\.json/)
     expect(gradle).toMatch(/major \* 10000 \+ minor \* 100 \+ patch/)
+  })
+})
+
+describe('iosBuildSettings', () => {
+  it('gives the marketing version without a prerelease and the versionCode as the build number', () => {
+    expect(iosBuildSettings('0.2.0')).toEqual({ MARKETING_VERSION: '0.2.0', CURRENT_PROJECT_VERSION: '200' })
+    expect(iosBuildSettings('1.4.12-preview')).toEqual({ MARKETING_VERSION: '1.4.12', CURRENT_PROJECT_VERSION: '10412' })
+  })
+
+  it('is what ios/App/App/Info.plist reads', () => {
+    const plist = readFileSync(new URL('../../ios/App/App/Info.plist', import.meta.url), 'utf8')
+    expect(plist).toMatch(/<key>CFBundleShortVersionString<\/key>\s*<string>\$\(MARKETING_VERSION\)<\/string>/)
+    expect(plist).toMatch(/<key>CFBundleVersion<\/key>\s*<string>\$\(CURRENT_PROJECT_VERSION\)<\/string>/)
   })
 })

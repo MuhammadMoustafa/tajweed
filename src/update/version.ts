@@ -1,9 +1,10 @@
 /**
  * The app's version strings (semver `major.minor.patch`, optionally `-prerelease`): parsing,
- * comparing, bumping and the Android versionCode. Pure, shared by the update check (src/update/)
- * and the release script (scripts/release.ts). package.json's `version` is the only source of the
- * version itself: Vite defines it as `__APP_VERSION__` (src/update/appVersion.ts) and
- * android/app/build.gradle reads it for versionName/versionCode.
+ * comparing, bumping, the Android versionCode and the iOS version numbers. Pure, shared by the
+ * update check (src/update/), the release script (scripts/release.ts) and the iOS build
+ * (scripts/ios-ci.ts). package.json's `version` is the only source of the version itself: Vite
+ * defines it as `__APP_VERSION__` (src/update/appVersion.ts), android/app/build.gradle reads it for
+ * versionName/versionCode, and .github/workflows/ios.yml passes iosBuildSettings to xcodebuild.
  */
 
 export interface Version {
@@ -81,6 +82,16 @@ export function versionCode(version: string): number {
     throw new Error(`Version ${version}: minor and patch must stay below 100 (Android versionCode is major*10000 + minor*100 + patch)`)
   }
   return v.major * 10000 + v.minor * 100 + v.patch
+}
+
+/**
+ * The iOS app's version as xcodebuild build settings, which ios/App/App/Info.plist reads:
+ * MARKETING_VERSION is CFBundleShortVersionString (digits and dots only, so a prerelease suffix is
+ * dropped) and CURRENT_PROJECT_VERSION is CFBundleVersion, the same number as Android's versionCode.
+ */
+export function iosBuildSettings(version: string): { MARKETING_VERSION: string; CURRENT_PROJECT_VERSION: string } {
+  const v = mustParse(version)
+  return { MARKETING_VERSION: `${v.major}.${v.minor}.${v.patch}`, CURRENT_PROJECT_VERSION: String(versionCode(version)) }
 }
 
 function mustParse(text: string): Version {
