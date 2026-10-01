@@ -1,7 +1,7 @@
-import { QURAN_SOURCE, QURAN_WORDS_SOURCE, SURAHS_SOURCE, WORD_RECITATION } from '../data/quran'
+import { WORD_RECITATION } from '../data/quran'
 import { getMatnMeta, MUTOON_SOURCE } from '../data/mutoon'
 import { useLocale } from '../i18n/LocaleProvider'
-import { ui } from '../i18n/ui'
+import { formatTemplate, ui } from '../i18n/ui'
 import { UpdateStatus } from '../update/UpdateStatus'
 import { ContactLinks } from './ContactLinks'
 
@@ -18,8 +18,7 @@ const fontLicenseUrl = (pkg: string) => `https://unpkg.com/@fontsource/${pkg}/LI
 
 /** About page (#/about): what the app is, its sources, review status, version, and contact links. */
 export function AboutPage() {
-  const { t } = useLocale()
-  const sources = [QURAN_SOURCE, QURAN_WORDS_SOURCE, SURAHS_SOURCE]
+  const { locale, t } = useLocale()
   return (
     <article className="about-page">
       <h2>{t(ui.aboutTitle)}</h2>
@@ -31,24 +30,17 @@ export function AboutPage() {
 
       <section>
         <h3>{t(ui.aboutSourcesTitle)}</h3>
-        <p>{t(ui.aboutQuranText)}</p>
-        <ul>
-          {sources.map((source) => (
-            <li key={source.name} lang="en" dir="ltr">
-              <a href={QURAN_FOUNDATION_URL} {...EXTERNAL}>
-                {source.name}
-              </a>
-            </li>
-          ))}
-        </ul>
         <p>
-          {t(ui.aboutAyahAudio)}{' '}
-          <a href={EVERYAYAH_URL} {...EXTERNAL}>
-            EveryAyah
+          {formatTemplate(locale, ui.aboutQuranText, { reciter: t(WORD_RECITATION.reciter) })}{' '}
+          <a href={QURAN_FOUNDATION_URL} {...EXTERNAL}>
+            <bdi>Quran Foundation (quran.com)</bdi>
           </a>
         </p>
         <p>
-          {t(ui.aboutWordAudio)} ({t(WORD_RECITATION.reciter)})
+          {t(ui.aboutAyahAudio)}{' '}
+          <a href={EVERYAYAH_URL} {...EXTERNAL}>
+            <bdi>EveryAyah</bdi>
+          </a>
         </p>
         <p>
           {t(ui.aboutPoems)}{' '}

@@ -175,24 +175,21 @@ export const ui = {
     en: 'A free beginner tajweed course in the riwayah of Hafs ʿan ʿAsim, in Arabic and English, made for family and friends.',
   },
   aboutSourcesTitle: { ar: 'المصادر والشكر', en: 'Sources and credits' },
+  /** Template filled with `{reciter}` (WORD_RECITATION). */
   aboutQuranText: {
-    ar: 'نص القرآن وأسماء السور، وصوت الكلمات وتوقيتاتها:',
-    en: 'Quran text, surah names, and word audio with timings:',
+    ar: 'نص القرآن برواية حفص وأسماء السور، وتلاوة الكلمات في الرسوم بصوت {reciter}، من:',
+    en: 'The Quran text (riwayah of Hafs), the surah names, and the word recitations in the clips by {reciter}, from:',
   },
   aboutAyahAudio: {
-    ar: 'تلاوة الآيات بصوت مشاري العفاسي، من موقع EveryAyah:',
-    en: 'Ayah recitations by Mishary Alafasy, from EveryAyah:',
-  },
-  aboutWordAudio: {
-    ar: 'تلاوة الكلمات في الرسوم بصوت الشيخ محمود خليل الحصري، من Quran Foundation API.',
-    en: 'Word recitations in the clips by Sheikh Mahmoud Khalil al-Husary, from the Quran Foundation API.',
+    ar: 'تلاوة الآيات في الأمثلة بصوت الشيخ مشاري العفاسي، من:',
+    en: 'The ayah recitations in the examples by Sheikh Mishary Alafasy, from:',
   },
   aboutPoems: {
-    ar: 'المتنان (تحفة الأطفال والمقدمة الجزرية)، من موقع الألوكة:',
-    en: 'The two poems (Tuhfat al-Atfal and al-Muqaddimah al-Jazariyyah), from Alukah.net:',
+    ar: 'المتنان (تحفة الأطفال والمقدمة الجزرية)، من:',
+    en: 'The two poems (Tuhfat al-Atfal and al-Muqaddimah al-Jazariyyah), from:',
   },
   aboutFonts: {
-    ar: 'الخطوط: أميري قرآن، ونوتو نسخ عربي، ونوتو سانس، عبر @fontsource، برخصة SIL للخطوط المفتوحة:',
+    ar: 'الخطوط: أميري قرآن، ونوتو نسخ عربي، ونوتو سانس، وكلها برخصة الخطوط المفتوحة من SIL:',
     en: 'Fonts: Amiri Quran, Noto Naskh Arabic and Noto Sans, via @fontsource, under the SIL Open Font License:',
   },
   aboutFontLicense: { ar: 'نص الرخصة', en: 'License text' },
