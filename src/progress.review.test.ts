@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Review reproductions: `it.fails` asserts the desired behavior for a confirmed open defect.
 // When a fix lands, remove `.fails`; an unexpected pass deliberately fails the suite.
+// R1-R3 are fixed (T30) and pass as ordinary tests; progress.test.ts covers them more widely.
 beforeEach(() => {
   localStorage.clear()
   vi.resetModules()
@@ -16,7 +17,7 @@ afterEach(() => {
 })
 
 describe('2026-10-01 review: progress boundaries', () => {
-  it.fails('R1: rejects unknown rule IDs before they reach the progress renderer', async () => {
+  it('R1: rejects unknown rule IDs before they reach the progress renderer', async () => {
     localStorage.setItem('tajweed.progress.attempts', JSON.stringify({
       version: 1,
       attempts: { qalqalah: [{
@@ -28,7 +29,7 @@ describe('2026-10-01 review: progress boundaries', () => {
     expect(attemptsForLesson('qalqalah')).toEqual([])
   })
 
-  it.fails('R1: rejects an invalid date and inconsistent score', async () => {
+  it('R1: rejects an invalid date and inconsistent score', async () => {
     localStorage.setItem('tajweed.progress.attempts', JSON.stringify({
       version: 1,
       attempts: { qalqalah: [{
@@ -40,7 +41,7 @@ describe('2026-10-01 review: progress boundaries', () => {
     expect(attemptsForLesson('qalqalah')).toEqual([])
   })
 
-  it.fails('R2: reset stays cleared in memory when storage removal fails', async () => {
+  it('R2: reset stays cleared in memory when storage removal fails', async () => {
     const progress = await import('./progress')
     progress.recordQuizAttempt('qalqalah', 'easy', [{ correct: true }])
     vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => { throw new Error('blocked') })
@@ -51,7 +52,7 @@ describe('2026-10-01 review: progress boundaries', () => {
     }).toEqual({ learned: false, attempts: [] })
   })
 
-  it.fails('R3: a storage event updates mounted progress subscribers', async () => {
+  it('R3: a storage event updates mounted progress subscribers', async () => {
     const { useProgress } = await import('./progress')
     const { result } = renderHook(() => useProgress())
     act(() => {

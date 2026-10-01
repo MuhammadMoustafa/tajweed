@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { act, renderHook } from '@testing-library/react'
+import { act, cleanup, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Progress is module-level singleton state (so every component sees the same learned set), so
@@ -15,6 +15,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  cleanup()
   vi.restoreAllMocks()
 })
 
@@ -340,5 +341,199 @@ describe('resetAllProgress', () => {
     })
     expect(result.current.count).toBe(0)
     expect(result.current.hasAttempts('qalqalah')).toBe(false)
+  })
+})
+
+const LEARNED_KEY = 'tajweed.progress'
+const ATTEMPTS_KEY = 'tajweed.progress.attempts'
+
+/** A stored attempt as recordQuizAttempt writes it, with `overrides` replacing fields. */
+function storedAttempt(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    date: '2026-10-01T00:00:00.000Z',
+    difficulty: 'easy',
+    score: { correct: 1, total: 2 },
+    results: [{ rule: 'qalaqah', correct: true }, { correct: false }],
+    ...overrides,
+  }
+}
+
+function storeAttempts(attempts: Record<string, unknown[]>): void {
+  localStorage.setItem(ATTEMPTS_KEY, JSON.stringify({ version: 1, attempts }))
+}
+
+describe('R1: validating stored progress', () => {
+  it('drops attempts with an unknown rule, a bad date or a score that disagrees with the results, keeping valid siblings', async () => {
+    storeAttempts({
+      qalqalah: [
+        storedAttempt(),
+        storedAttempt({ results: [{ rule: 'unknown-rule', correct: true }, { correct: false }] }),
+        storedAttempt({ results: [{ rule: 42, correct: true }, { correct: false }] }),
+        storedAttempt({ date: 'invalid-date' }),
+        storedAttempt({ score: { correct: -1, total: 2 } }),
+        storedAttempt({ score: { correct: 0.5, total: 2 } }),
+        storedAttempt({ score: { correct: 1, total: 0 } }),
+        storedAttempt({ score: { correct: 3, total: 2 } }),
+        storedAttempt({ score: { correct: 2, total: 2 } }), // only one result is correct
+        storedAttempt({ score: { correct: 1, total: 3 } }), // two results, not three
+        storedAttempt({ score: { correct: '1', total: 2 } }),
+        storedAttempt({ score: null }),
+        storedAttempt({ score: { correct: 0, total: 0 }, results: [] }),
+        storedAttempt({ date: '2026-10-02T00:00:00.000Z', score: { correct: 1, total: 1 }, results: [{ correct: true }] }),
+      ],
+      'other-lesson': [storedAttempt({ date: 'not a date' })],
+    })
+    const { attemptsForLesson, useProgress } = await loadProgress()
+
+    expect(attemptsForLesson('qalqalah').map((a) => a.date)).toEqual(['2026-10-01T00:00:00.000Z', '2026-10-02T00:00:00.000Z'])
+    expect(attemptsForLesson('other-lesson')).toEqual([])
+    const { result } = renderHook(() => useProgress())
+    expect(result.current.ruleStats).toEqual([{ rule: 'qalaqah', correct: 1, total: 1 }])
+  })
+
+  it('accepts what recordQuizAttempt itself writes, across a reload', async () => {
+    const first = await loadProgress()
+    first.recordQuizAttempt('qalqalah', 'hard', [{ rule: 'ikhafa', correct: true }, { correct: true }, { rule: 'qalaqah', correct: false }])
+    vi.resetModules()
+    const reloaded = await loadProgress()
+    expect(reloaded.attemptsForLesson('qalqalah')).toEqual(first.attemptsForLesson('qalqalah'))
+    expect(reloaded.attemptsForLesson('qalqalah')[0].score).toEqual({ correct: 2, total: 3 })
+  })
+
+  it('reads learned ids only from a JSON array of strings', async () => {
+    localStorage.setItem(LEARNED_KEY, JSON.stringify('qalqalah'))
+    let progress = await loadProgress()
+    expect(progress.isLessonLearned('q')).toBe(false)
+    expect(progress.isLessonLearned('qalqalah')).toBe(false)
+
+    localStorage.setItem(LEARNED_KEY, JSON.stringify({ qalqalah: true }))
+    vi.resetModules()
+    progress = await loadProgress()
+    expect(progress.isLessonLearned('qalqalah')).toBe(false)
+
+    localStorage.setItem(LEARNED_KEY, JSON.stringify(['qalqalah', 7, null, 'ra']))
+    vi.resetModules()
+    progress = await loadProgress()
+    const { useProgress } = progress
+    const { result } = renderHook(() => useProgress())
+    expect([...result.current.learnedIds]).toEqual(['qalqalah', 'ra'])
+  })
+})
+
+describe('R2: reset when storage refuses to remove a key', () => {
+  async function resetWithFailingRemoval(failing: readonly string[]) {
+    const progress = await loadProgress()
+    progress.setLessonLearned('qalqalah', true)
+    progress.recordQuizAttempt('qalqalah', 'easy', [{ rule: 'qalaqah', correct: true }])
+    const removeItem = Storage.prototype.removeItem
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(function (this: Storage, key: string) {
+      if (failing.includes(key)) throw new Error('blocked')
+      removeItem.call(this, key)
+    })
+    progress.resetAllProgress()
+    return progress
+  }
+
+  it.each([[[LEARNED_KEY]], [[ATTEMPTS_KEY]], [[LEARNED_KEY, ATTEMPTS_KEY]]])(
+    'keeps the reset for the session when removing %j fails',
+    async (failing) => {
+      const progress = await resetWithFailingRemoval(failing)
+      const { useProgress } = progress
+      const { result } = renderHook(() => useProgress())
+
+      expect(progress.isLessonLearned('qalqalah')).toBe(false)
+      expect(progress.attemptsForLesson('qalqalah')).toEqual([])
+      expect(result.current.count).toBe(0)
+      expect(result.current.ruleStats).toEqual([])
+      // Only the refused keys are still in storage: a reload would read them again.
+      expect(localStorage.getItem(LEARNED_KEY) !== null).toBe(failing.includes(LEARNED_KEY))
+      expect(localStorage.getItem(ATTEMPTS_KEY) !== null).toBe(failing.includes(ATTEMPTS_KEY))
+    },
+  )
+
+  it('persists the next change after a refused reset, without the old data', async () => {
+    const progress = await resetWithFailingRemoval([LEARNED_KEY, ATTEMPTS_KEY])
+    progress.setLessonLearned('ra', true)
+    progress.recordQuizAttempt('ra', 'easy', [{ correct: false }])
+
+    vi.resetModules()
+    const reloaded = await loadProgress()
+    expect(reloaded.isLessonLearned('qalqalah')).toBe(false)
+    expect(reloaded.isLessonLearned('ra')).toBe(true)
+    expect(reloaded.attemptsForLesson('qalqalah')).toEqual([])
+    expect(reloaded.attemptsForLesson('ra')).toHaveLength(1)
+  })
+})
+
+describe('R3: changes from another tab', () => {
+  /** What the browser does in this tab when another tab writes `key` (null: clears storage). */
+  function otherTabWrites(key: string | null, newValue: string | null): void {
+    act(() => {
+      if (key === null) localStorage.clear()
+      else if (newValue === null) localStorage.removeItem(key)
+      else localStorage.setItem(key, newValue)
+      window.dispatchEvent(new StorageEvent('storage', { key, newValue, storageArea: localStorage }))
+    })
+  }
+
+  it('updates every mounted view: learned flags, attempts, then a clear', async () => {
+    const { useProgress } = await loadProgress()
+    const home = renderHook(() => useProgress())
+    const progressPage = renderHook(() => useProgress())
+
+    otherTabWrites(LEARNED_KEY, JSON.stringify(['qalqalah']))
+    for (const view of [home, progressPage]) expect(view.result.current.isLearned('qalqalah')).toBe(true)
+
+    otherTabWrites(ATTEMPTS_KEY, JSON.stringify({ version: 1, attempts: { ra: [storedAttempt()] } }))
+    for (const view of [home, progressPage]) {
+      expect(view.result.current.cardState('ra')).toBe('started')
+      expect(view.result.current.ruleStats).toEqual([{ rule: 'qalaqah', correct: 1, total: 1 }])
+    }
+
+    otherTabWrites(null, null)
+    for (const view of [home, progressPage]) {
+      expect(view.result.current.count).toBe(0)
+      expect(view.result.current.hasAttempts('ra')).toBe(false)
+    }
+  })
+
+  it("follows another tab's reset, which removes both keys", async () => {
+    const { useProgress, setLessonLearned, recordQuizAttempt } = await loadProgress()
+    setLessonLearned('qalqalah', true)
+    recordQuizAttempt('qalqalah', 'easy', [{ correct: true }])
+    const { result } = renderHook(() => useProgress())
+
+    otherTabWrites(LEARNED_KEY, null)
+    expect(result.current.count).toBe(0)
+    otherTabWrites(ATTEMPTS_KEY, null)
+    expect(result.current.hasAttempts('qalqalah')).toBe(false)
+  })
+
+  it('ignores storage events for other keys', async () => {
+    const { useProgress } = await loadProgress()
+    let renders = 0
+    renderHook(() => {
+      renders += 1
+      return useProgress()
+    })
+    const before = renders
+    otherTabWrites('tajweed.locale', 'ar')
+    expect(renders).toBe(before)
+  })
+
+  it('listens to the window only while a view is subscribed', async () => {
+    const add = vi.spyOn(window, 'addEventListener')
+    const remove = vi.spyOn(window, 'removeEventListener')
+    const { useProgress } = await loadProgress()
+    const storageCalls = (spy: typeof add) => spy.mock.calls.filter(([type]) => type === 'storage').length
+
+    const first = renderHook(() => useProgress())
+    const second = renderHook(() => useProgress())
+    expect(storageCalls(add)).toBe(1)
+
+    first.unmount()
+    expect(storageCalls(remove)).toBe(0)
+    second.unmount()
+    expect(storageCalls(remove)).toBe(1)
   })
 })

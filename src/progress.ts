@@ -1,12 +1,15 @@
 import { useMemo, useSyncExternalStore } from 'react'
 import { DIFFICULTIES, type Difficulty } from './quiz/pool'
-import type { RuleId } from './tajweed/rules'
+import { isRuleId, type RuleId } from './tajweed/rules'
 
 /**
  * Per-device learning progress, the only module that reads or writes it: which lessons are marked
  * "learned" and every quiz attempt taken. Two localStorage keys, each wrapped in try/catch so a
  * page still renders correctly when storage is unavailable (private browsing, restricted
  * WebViews) — changes just stop persisting across reloads and instead only last the session.
+ * Everything read back is validated record by record (a hand-edited, stale or corrupt record is
+ * dropped, its valid siblings kept), and a change another tab makes to either key notifies this
+ * tab's subscribers through the window `storage` event.
  */
 const STORAGE_KEY = 'tajweed.progress'
 const ATTEMPTS_KEY = 'tajweed.progress.attempts'
@@ -23,10 +26,19 @@ function emit(): void {
   for (const listener of listeners) listener()
 }
 
+/** Another tab wrote one of the keys, or cleared storage (`key === null`): re-read and notify.
+ *  The browser fires this only in the other tabs, never in the one that wrote. */
+function onStorage(event: StorageEvent): void {
+  if (event.key === null || event.key === STORAGE_KEY || event.key === ATTEMPTS_KEY) emit()
+}
+
+/** The window listener lives only while someone is subscribed, so nothing outlives the last view. */
 function subscribe(listener: Listener): () => void {
+  if (listeners.size === 0) window.addEventListener('storage', onStorage)
   listeners.add(listener)
   return () => {
     listeners.delete(listener)
+    if (listeners.size === 0) window.removeEventListener('storage', onStorage)
   }
 }
 
@@ -46,9 +58,15 @@ function readStorage(): string | null {
   }
 }
 
+/** The learned-lesson ids: a JSON array of strings. Anything else (corrupt JSON, a non-array such
+ *  as a bare string, which would otherwise spread into its characters) reads as none learned;
+ *  a non-string element is dropped and the string ids beside it kept. */
 function parseIds(raw: string | null): Set<string> {
+  if (!raw) return new Set()
   try {
-    return new Set(raw ? (JSON.parse(raw) as string[]) : [])
+    const parsed = JSON.parse(raw) as unknown
+    if (!Array.isArray(parsed)) return new Set()
+    return new Set(parsed.filter((id): id is string => typeof id === 'string'))
   } catch {
     return new Set()
   }
@@ -122,24 +140,26 @@ const EMPTY_ATTEMPTS: readonly QuizAttempt[] = []
 const EMPTY_ATTEMPTS_BY_LESSON: Record<string, QuizAttempt[]> = {}
 const EMPTY_LEARNED: ReadonlySet<string> = new Set()
 
+/** A result's `rule`, when present, must be a rule this app knows (src/tajweed/rules.ts): the
+ *  progress page looks its name and color up by id. */
 function isQuestionResult(value: unknown): value is QuestionResult {
   if (!value || typeof value !== 'object') return false
   const r = value as Record<string, unknown>
-  return typeof r.correct === 'boolean' && (r.rule === undefined || typeof r.rule === 'string')
+  return typeof r.correct === 'boolean' && (r.rule === undefined || (typeof r.rule === 'string' && isRuleId(r.rule)))
 }
 
+/** A stored attempt is exactly what recordQuizAttempt writes: a parseable date, a known
+ *  difficulty, at least one result (one per question, authored questions included), and a score
+ *  derived from those results — `total` is their count and `correct` the number answered right. */
 function isQuizAttempt(value: unknown): value is QuizAttempt {
   if (!value || typeof value !== 'object') return false
   const a = value as Record<string, unknown>
-  return (
-    typeof a.date === 'string' &&
-    (DIFFICULTIES as readonly string[]).includes(a.difficulty as string) &&
-    !!a.score &&
-    typeof (a.score as Record<string, unknown>).correct === 'number' &&
-    typeof (a.score as Record<string, unknown>).total === 'number' &&
-    Array.isArray(a.results) &&
-    a.results.every(isQuestionResult)
-  )
+  if (typeof a.date !== 'string' || Number.isNaN(Date.parse(a.date))) return false
+  if (!(DIFFICULTIES as readonly string[]).includes(a.difficulty as string)) return false
+  if (!Array.isArray(a.results) || a.results.length === 0 || !a.results.every(isQuestionResult)) return false
+  if (!a.score || typeof a.score !== 'object') return false
+  const score = a.score as Record<string, unknown>
+  return score.total === a.results.length && score.correct === a.results.filter((r) => r.correct).length
 }
 
 let cachedAttemptsRaw: string | null = null
@@ -275,20 +295,29 @@ export function ruleStatsFromAttempts(attemptsByLesson: Readonly<Record<string, 
     .sort((a, b) => a.correct / a.total - b.correct / b.total || b.total - a.total)
 }
 
-/** Clears every learned lesson and every recorded attempt. Never throws. */
+/**
+ * Clears every learned lesson and every recorded attempt. Never throws. When storage refuses to
+ * remove a key, the reset still applies for this session (the old data never comes back while
+ * the page is open) but is not persisted: a reload reads the old data again.
+ */
 export function resetAllProgress(): void {
+  // Read first so each baseline is what storage holds right now, then clear the in-memory state.
+  readAll()
+  readAttempts()
   cachedIds = new Set()
-  cachedRaw = null
+  cachedAttempts = {}
+  // As in setLessonLearned and writeAttempts, a baseline moves to "no data" only once the removal
+  // succeeded. If it threw, the baseline still matches the old content storage keeps, so the next
+  // read doesn't re-parse that content and undo the reset.
   try {
     localStorage.removeItem(STORAGE_KEY)
+    cachedRaw = null
   } catch {
     // Storage unavailable: the in-memory reset above still applies for this session.
   }
-
-  cachedAttempts = {}
-  cachedAttemptsRaw = null
   try {
     localStorage.removeItem(ATTEMPTS_KEY)
+    cachedAttemptsRaw = null
   } catch {
     // Storage unavailable: the in-memory reset above still applies for this session.
   }
