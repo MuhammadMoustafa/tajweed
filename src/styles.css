@@ -1636,3 +1636,35 @@ main {
   font-size: 0.95rem;
   color: var(--muted);
 }
+
+/* Footer on every page and the About page's link list: small and quiet, wrapping at phone width. */
+.app-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  padding-block: 1rem;
+  padding-inline: max(1rem, calc((100% - 60rem) / 2));
+  border-block-start: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.app-footer a,
+.about-page .contact-links a {
+  color: inherit;
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-page .contact-links {
+  flex-direction: column;
+}

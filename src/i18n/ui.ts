@@ -161,6 +161,53 @@ export const ui = {
     ar: 'أخضر: تم التعلّم · كهرماني: بدأ التعلّم · حدّ ملوّن: الدرس التالي المقترح',
     en: 'Green: learned · Amber: started · Accent border: suggested next lesson',
   },
+  // Footer and About page (#/about; src/components/Footer.tsx, AboutPage.tsx)
+  aboutTitle: { ar: 'عن التطبيق', en: 'About' },
+  reportIssue: { ar: 'الإبلاغ عن مشكلة', en: 'Report an issue' },
+  reportByEmail: { ar: 'أو بالبريد', en: 'or by email' },
+  contactEmail: { ar: 'البريد', en: 'Email' },
+  githubProfile: { ar: 'حسابي على GitHub', en: 'GitHub profile' },
+  sourceCode: { ar: 'الشيفرة المصدرية', en: 'Source code' },
+  footerLabel: { ar: 'روابط التطبيق', en: 'App links' },
+  aboutWhatTitle: { ar: 'ما هذا التطبيق', en: 'What this app is' },
+  aboutWhat: {
+    ar: 'دورة مجانية في التجويد للمبتدئين، برواية حفص عن عاصم، بالعربية والإنجليزية، صُنعت للأهل والأصدقاء.',
+    en: 'A free beginner tajweed course in the riwayah of Hafs ʿan ʿAsim, in Arabic and English, made for family and friends.',
+  },
+  aboutSourcesTitle: { ar: 'المصادر والشكر', en: 'Sources and credits' },
+  aboutQuranText: {
+    ar: 'نص القرآن وأسماء السور، وصوت الكلمات وتوقيتاتها:',
+    en: 'Quran text, surah names, and word audio with timings:',
+  },
+  aboutAyahAudio: {
+    ar: 'تلاوة الآيات بصوت مشاري العفاسي، من موقع EveryAyah:',
+    en: 'Ayah recitations by Mishary Alafasy, from EveryAyah:',
+  },
+  aboutWordAudio: {
+    ar: 'تلاوة الكلمات في الرسوم بصوت الشيخ محمود خليل الحصري، من Quran Foundation API.',
+    en: 'Word recitations in the clips by Sheikh Mahmoud Khalil al-Husary, from the Quran Foundation API.',
+  },
+  aboutPoems: {
+    ar: 'المتنان (تحفة الأطفال والمقدمة الجزرية)، من موقع الألوكة:',
+    en: 'The two poems (Tuhfat al-Atfal and al-Muqaddimah al-Jazariyyah), from Alukah.net:',
+  },
+  aboutFonts: {
+    ar: 'الخطوط: أميري قرآن، ونوتو نسخ عربي، ونوتو سانس، عبر @fontsource، برخصة SIL للخطوط المفتوحة:',
+    en: 'Fonts: Amiri Quran, Noto Naskh Arabic and Noto Sans, via @fontsource, under the SIL Open Font License:',
+  },
+  aboutFontLicense: { ar: 'نص الرخصة', en: 'License text' },
+  aboutReviewTitle: { ar: 'حالة المراجعة', en: 'Review status' },
+  aboutReview: {
+    ar: 'تُراجَع الدروس عند معلّم مُجاز في التجويد. وإلى أن يتمّ ذلك يعرض كل درس تنبيه «لم يُراجَع بعد».',
+    en: 'The lessons are being checked by a qualified tajweed teacher. Until then, each lesson shows a "not yet reviewed" notice.',
+  },
+  aboutVersionTitle: { ar: 'الإصدار والتحديثات', en: 'Version and updates' },
+  aboutVersion: { ar: 'إصدار التطبيق', en: 'App version' },
+  aboutContactTitle: { ar: 'تواصل وإبلاغ', en: 'Contact and reporting' },
+  aboutContactHint: {
+    ar: 'يحمل الإبلاغ رقم الإصدار والصفحة واللغة والمنصة فقط، ولا شيء شخصي.',
+    en: 'A report carries only the app version, page, language and platform: nothing personal.',
+  },
 } satisfies Record<string, Bilingual>
 
 /** Fills a `{rule}` template (e.g. `ui.quizTapPrompt`) with a rule's name, in both languages. */

@@ -24,3 +24,10 @@ describe('parseHash: letters', () => {
     expect(parseHash('#/letters/qaf/other')).toEqual({ page: 'home' })
   })
 })
+
+describe('parseHash: about', () => {
+  it('routes the about page', () => {
+    expect(parseHash('#/about')).toEqual({ page: 'about' })
+    expect(parseHash('#/about/x')).toEqual({ page: 'home' })
+  })
+})

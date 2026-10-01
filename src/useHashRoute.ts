@@ -7,15 +7,17 @@ export type Route =
   | { page: 'progress' }
   | { page: 'letters' }
   | { page: 'letter'; id: string }
+  | { page: 'about' }
 
 /**
  * Hash routing (#/lesson/<id>, its quiz page #/lesson/<id>/quiz, #/progress, and the letters page
- * #/letters with a card per letter at #/letters/<id>) needs no server
+ * #/letters with a card per letter at #/letters/<id>, and #/about) needs no server
  * rewrites, so the same build works on any static host, from a subfolder, and inside the
  * Capacitor WebView.
  */
 export function parseHash(hash: string): Route {
   if (hash === '#/progress') return { page: 'progress' }
+  if (hash === '#/about') return { page: 'about' }
   if (hash === '#/letters') return { page: 'letters' }
   const letter = /^#\/letters\/([\w-]+)$/.exec(hash)
   if (letter) return { page: 'letter', id: letter[1] }
@@ -29,7 +31,11 @@ const subscribe = (onChange: () => void) => {
   return () => window.removeEventListener('hashchange', onChange)
 }
 
+/** The current hash, re-rendering on change. */
+export function useHash(): string {
+  return useSyncExternalStore(subscribe, () => window.location.hash)
+}
+
 export function useHashRoute(): Route {
-  const hash = useSyncExternalStore(subscribe, () => window.location.hash)
-  return parseHash(hash)
+  return parseHash(useHash())
 }

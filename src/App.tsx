@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
+import { Footer } from './components/Footer'
 import { LessonList } from './components/LessonList'
 import { ProgressPage } from './components/ProgressPage'
 import { useLocale } from './i18n/LocaleProvider'
@@ -25,6 +26,9 @@ const LettersPage = lazy(() =>
 const LetterView = lazy(() =>
   reloadOnFailedImport(() => import('./components/LetterView')).then((m) => ({ default: m.LetterView })),
 )
+const AboutPage = lazy(() =>
+  reloadOnFailedImport(() => import('./components/AboutPage')).then((m) => ({ default: m.AboutPage })),
+)
 
 export function App() {
   const { locale, setLocale, t } = useLocale()
@@ -37,6 +41,8 @@ export function App() {
     const parts =
       route.page === 'progress'
         ? [t(ui.progressTitle)]
+        : route.page === 'about'
+          ? [t(ui.aboutTitle)]
         : route.page === 'letters' || route.page === 'letter'
           ? [...(letter ? [t(letterNameOf(letter))] : []), t(ui.lettersTitle)]
           : lesson
@@ -74,6 +80,7 @@ export function App() {
         <Suspense fallback={null}>
         {route.page === 'home' && <LessonList />}
         {route.page === 'progress' && <ProgressPage />}
+        {route.page === 'about' && <AboutPage />}
         {route.page === 'letters' && <LettersPage />}
         {route.page === 'letter' && (letter ? <LetterView key={letter} letter={letter} /> : <p>{t(ui.letterNotFound)}</p>)}
         {route.page === 'lesson' && (lesson ? <LessonView key={lesson.id} lesson={lesson} /> : <p>{t(ui.lessonNotFound)}</p>)}
@@ -81,6 +88,7 @@ export function App() {
           (lesson && hasQuiz(lesson) ? <QuizPage key={lesson.id} lesson={lesson} /> : <p>{t(ui.lessonNotFound)}</p>)}
         </Suspense>
       </main>
+      <Footer />
     </>
   )
 }
