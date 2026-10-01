@@ -32,3 +32,6 @@ playwright-report
 
 # npm run apk output (built locally; android/ has its own .gitignore for build outputs)
 apk
+# Signing keys never enter the repo (android/.gitignore also ignores android/keystore.properties)
+*.jks
+*.keystore

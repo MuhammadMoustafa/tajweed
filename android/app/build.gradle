@@ -1,5 +1,19 @@
 apply plugin: 'com.android.application'
 
+// The version comes from package.json only (see src/update/version.ts): versionName is its
+// `version`, versionCode is major * 10000 + minor * 100 + patch (so minor and patch stay below 100).
+def appVersion = new groovy.json.JsonSlurper().parse(file('../../package.json')).version as String
+def (major, minor, patch) = appVersion.tokenize('.-').take(3).collect { it as int }
+def appVersionCode = major * 10000 + minor * 100 + patch
+
+// Release signing: android/keystore.properties (gitignored; template in keystore.properties.example,
+// how to create the key in CLAUDE.md's Distribution section). Debug builds do not need it.
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+
 android {
     namespace = "com.muhammadmoustafa.tajweed"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,8 +21,8 @@ android {
         applicationId "com.muhammadmoustafa.tajweed"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,11 +30,33 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                storeFile rootProject.file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+}
+
+// A release build without the key fails before any task runs, naming the missing file.
+gradle.taskGraph.whenReady { graph ->
+    def buildsRelease = graph.allTasks.any { it.project == project && it.name.endsWith('Release') }
+    if (buildsRelease && !keystorePropertiesFile.exists()) {
+        throw new GradleException(
+            "Release signing needs ${keystorePropertiesFile} (gitignored). Copy " +
+            "android/keystore.properties.example to android/keystore.properties and fill it in; " +
+            "creating the release key is described in CLAUDE.md, section Distribution.")
     }
 }
 

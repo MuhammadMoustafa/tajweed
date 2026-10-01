@@ -1,7 +1,7 @@
 {
   "name": "tajweed",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +16,7 @@
     "fetch-mutoon": "tsx scripts/fetch-mutoon.ts",
     "build-quiz-pool": "tsx scripts/build-quiz-pool.ts",
     "apk": "tsx scripts/build-apk.ts",
+    "release": "tsx scripts/release.ts",
     "check": "npm run lint && npm test && npm run build"
   },
   "dependencies": {

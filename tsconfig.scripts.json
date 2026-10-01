@@ -13,6 +13,8 @@
     "scripts",
     "src/lessons",
     "src/mutoon",
+    "src/update/version.ts",
+    "src/update/releases.ts",
     "src/data/quran.json",
     "src/data/mutoon.json"
   ],
