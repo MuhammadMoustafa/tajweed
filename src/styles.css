@@ -167,8 +167,10 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-block: 1rem;
-  padding-inline: max(1rem, calc((100% - 60rem) / 2));
+  /* viewport-fit=cover (index.html): the page runs under an iPhone's status bar and camera
+     cutout, so the header keeps clear of them (the insets are 0 where there is none). */
+  padding-block: calc(1rem + env(safe-area-inset-top, 0px)) 1rem;
+  padding-inline: max(1rem, calc((100% - 60rem) / 2), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   border-block-end: 1px solid var(--border);
   background: var(--surface);
 }
@@ -1696,8 +1698,8 @@ main {
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.4rem 1rem;
-  padding-block: 1rem;
-  padding-inline: max(1rem, calc((100% - 60rem) / 2));
+  padding-block: 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+  padding-inline: max(1rem, calc((100% - 60rem) / 2), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   border-block-start: 1px solid var(--border);
   color: var(--muted);
   font-size: 0.8rem;
