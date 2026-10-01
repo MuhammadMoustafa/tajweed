@@ -3,55 +3,28 @@
  * holding a fetched word, and writes it to src/data/quran.json; and, for every Quran word a clip
  * or the letters page plays (src/animations/words.ts), its text and where the reciter (WORD_RECITATION) says it in the ayah's
  * audio, written to src/data/quran-words.json; and every surah's name (Arabic and English), written
- * to src/data/surahs.json. The JSON is committed so the app builds and runs
- * offline.
+ * to src/data/surahs.json. The JSON is committed so the app builds and runs offline. All three are
+ * downloaded and checked first, then replaced together: a failure leaves every file as it was.
  *
  * Run after adding or changing lesson examples or clip words:  npm run fetch-quran
  */
 import { FETCHED_WORDS } from '../src/animations/words.ts'
-import { compareVerseKeys, splitWordKey, WORD_RECITATION, type QuranWord } from '../src/data/quran.ts'
+import { splitWordKey, WORD_RECITATION } from '../src/data/quran.ts'
 import { LESSONS } from '../src/lessons/index.ts'
-import { writeJsonFile } from './lib/fetch.ts'
-import {
-  chaptersSource,
-  fetchSurahNames,
-  fetchTajweedVerses,
-  fetchVerseWords,
-  tajweedSource,
-  wordsSource,
-} from './lib/quran-api.ts'
+import { refreshQuranData } from './lib/quran-api.ts'
 
-const OUT = new URL('../src/data/quran.json', import.meta.url)
-const WORDS_OUT = new URL('../src/data/quran-words.json', import.meta.url)
-const SURAHS_OUT = new URL('../src/data/surahs.json', import.meta.url)
-
-const wordKeys = [...new Set(FETCHED_WORDS)].sort(compareVerseKeys)
 // The lesson examples' verses, plus each fetched word's own verse (words.test.ts checks every word
-// against its verse's text).
-const keys = [
-  ...new Set([...LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)), ...wordKeys.map((k) => splitWordKey(k).verseKey)]),
-].sort(compareVerseKeys)
-
-const verses: Record<string, string> = {}
-for (const key of keys) verses[key] = (await fetchTajweedVerses(key))[key]
-
-const data = { source: tajweedSource(), verses }
-
-await writeJsonFile(OUT, data)
-console.log(`Wrote ${keys.length} verses to src/data/quran.json`)
-
-const verseWords = new Map<string, Record<number, QuranWord>>()
-const words: Record<string, QuranWord> = {}
-for (const key of wordKeys) {
-  const { verseKey, position } = splitWordKey(key)
-  if (!verseWords.has(verseKey)) verseWords.set(verseKey, await fetchVerseWords(verseKey, WORD_RECITATION.id))
-  const word = verseWords.get(verseKey)![position]
-  if (!word) throw new Error(`${key}: ${verseKey} has no word ${position}`)
-  words[key] = word
-}
-
-await writeJsonFile(WORDS_OUT, { source: wordsSource(WORD_RECITATION.id), words })
-console.log(`Wrote ${wordKeys.length} words to src/data/quran-words.json`)
-
-await writeJsonFile(SURAHS_OUT, { source: chaptersSource(), names: await fetchSurahNames() })
-console.log('Wrote the 114 surah names to src/data/surahs.json')
+// against its verse's text). Everything is downloaded and checked before any file is replaced.
+const counts = await refreshQuranData({
+  verseKeys: [...LESSONS.flatMap((l) => l.examples.map((e) => e.verseKey)), ...FETCHED_WORDS.map((k) => splitWordKey(k).verseKey)],
+  wordKeys: FETCHED_WORDS,
+  recitationId: WORD_RECITATION.id,
+  outputs: {
+    quran: new URL('../src/data/quran.json', import.meta.url),
+    words: new URL('../src/data/quran-words.json', import.meta.url),
+    surahs: new URL('../src/data/surahs.json', import.meta.url),
+  },
+})
+console.log(`Wrote ${counts.verses} verses to src/data/quran.json`)
+console.log(`Wrote ${counts.words} words to src/data/quran-words.json`)
+console.log(`Wrote the ${counts.surahs} surah names to src/data/surahs.json`)

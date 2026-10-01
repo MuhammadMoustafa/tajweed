@@ -146,7 +146,7 @@ the endpoint/key and offending value. Extend word/timing checks with finite
 numbers and response identity checks as part of the same boundary review.
 
 Reproduction: R6 tests in
-[quran-api.review.test.ts](../scripts/lib/quran-api.review.test.ts). Fixtures
+[quran-api.test.ts](../scripts/lib/quran-api.test.ts) (fixed in T32). Fixtures
 contain no invented Quran text and make no network calls.
 
 ### R7 — Quran refresh is not transactional

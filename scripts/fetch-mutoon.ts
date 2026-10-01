@@ -9,7 +9,7 @@
  */
 import { parseMutoonHtml } from '../src/mutoon/parse.ts'
 import type { MatnId } from '../src/mutoon/types.ts'
-import { fetchHtml, writeJsonFile } from './lib/fetch.ts'
+import { fetchHtml, writeJsonFiles } from './lib/fetch.ts'
 
 const OUT = new URL('../src/data/mutoon.json', import.meta.url)
 const PUBLISHER = 'Alukah (alukah.net)'
@@ -45,5 +45,5 @@ for (const poem of POEMS) {
   console.log(`${poem.id}: ${poem.expectedCount} lines across ${parsed.sections.length} sections`)
 }
 
-await writeJsonFile(OUT, { publisher: PUBLISHER, fetchedAt, texts })
+await writeJsonFiles([{ url: OUT, data: { publisher: PUBLISHER, fetchedAt, texts } }])
 console.log('Wrote src/data/mutoon.json')
