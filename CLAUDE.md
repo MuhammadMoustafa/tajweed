@@ -105,6 +105,38 @@ Audience is family and friends, not app stores. Store publishing is out of scope
   (keytool ships with Android Studio: `"C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe"`), then copy android/keystore.properties.example to android/keystore.properties (gitignored) and fill in `storeFile` (forward slashes, e.g. `C:/Users/<you>/.android/tajweed-release.jks`), `storePassword`, `keyAlias=tajweed` and `keyPassword`. Back up the .jks and its passwords somewhere safe: an APK signed with another key cannot update an installed one, so losing it means everyone uninstalls and reinstalls. Without keystore.properties a release build fails with a message naming the file; debug builds do not need it.
 - Releasing: on main, clean and pushed, `npm run release -- patch` (or `minor`, `major`, an explicit `x.y.z`; the first release is `npm run release -- 0.2.0`, the version package.json already holds, so it skips the bump commit). Try `--dry-run` first. It refuses unless on main with a clean tree equal to origin/main, the tag is new and the key file exists. Release notes are the commit subjects since the previous `v*` tag (without `Roadmap:` commits) plus the install note (Android: the APK; iPhone: the web app via Safari; the unsigned .ipa for sideloading testers, arriving a few minutes later). If the iOS workflow fails on a tag, the release stands with the APK alone: re-run the run's failed jobs for a passing hiccup (e.g. the release came after the 10-minute wait); a fix to the workflow lands on main and a manual run with `release_tag` then attaches that release's .ipa (a re-run uses the tagged commit's workflow, so it would not see the fix).
 
+## Code quality
+
+These rules adapt the maintainer's imported guidelines to this TypeScript,
+React, static PWA and Capacitor repository. **Review** means a reviewer must
+read for the property; the named tools do not prove it. Existing violations
+belong in a report with evidence, rather than being silently grandfathered in.
+
+| Rule | Enforced by |
+| :--- | :--- |
+| One operation, one owner. Extend the existing modules for Quran/API parsing, graphemes, quiz draws, progress storage, bilingual formatting, audio, versions and process execution; merge duplicate algorithms instead of adding local copies. | Review; architecture above |
+| Use canonical domain names and types from their owner. Ordinary TypeScript type aliases and import syntax are allowed; do not invent a second vocabulary for the same tajweed rules, colors or data. | TypeScript; rule/color tests; review |
+| Keep component state local and derived data pure. Shared mutable state must have one documented owner, stable snapshots, notifications and cleanup. The progress external store is intentional; test failed writes, resets and cross-tab events. | Progress and component tests; review |
+| Validate external JSON and persisted records at runtime before treating them as typed data. Check IDs, finite numbers, ranges, dates, uniqueness and relationships (such as score versus answers), with context on rejection. A cast or generic fetch type is not validation. | Boundary tests; review |
+| Generated content refreshes validate the entire set before replacing outputs. Stage related files, report the source/key/value causing a failure, and avoid partial or truncated output; test failure after an earlier successful download. Never hand-edit Quran or matn text. | Data-integrity tests; script failure tests; review |
+| Distinguish broken required content from optional capability failures. Missing required bundled data is an actionable error. Storage unavailable, uncached audio offline, or an optional update check may degrade gracefully when the behavior is documented and tested; never fabricate text, quiz answers or timings. | Failure-path tests; review |
+| Handle failures at a clear boundary. Catch rejected media/network/import promises; show a bilingual, accessible error/retry when user-requested work fails. Startup update checks may stay silent. Lazy-route failures must leave navigation and recovery usable. | Component/browser failure tests; review |
+| Name behavioral limits, intervals, thresholds and defaults in the owning module, with a short reason. Do not extract ordinary layout coordinates or self-explanatory arithmetic merely to replace literals. | Review |
+| Remove unreachable code, obsolete paths and unused dependencies. Keep strict TypeScript and lint warning-free; fix underlying problems rather than disabling checks broadly. | `npm run lint`; `npm run typecheck`; review (dead exports and dependencies) |
+| Clean up subscriptions, timers, animation frames and media on unmount or replacement. Keep asynchronous results from overwriting newer state. | Player/component tests; review |
+| Preserve bilingual strings, `lang`/`dir`, Arabic joining, the single color system, non-color cues and reduced motion. Quran/poem provenance and qualified-teacher review remain mandatory as specified above. | Content/component tests; browser checks; review |
+| Preserve relative asset paths, hash routing, offline precaching and platform-specific behavior. APK update/download UI is Android-only; native iOS and browser/PWA paths require their own tests. | Build; update tests; browser checks; native build/smoke checks |
+| Tests assert content, data and observable behavior. Use seeded RNGs, injected clocks/media/network/storage and bounded waits for completion; do not grade correctness by wall-clock speed. Geometry checks are allowed specifically to detect clipping, overlap or overflow; screenshot artifacts may aid inspection but are not the correctness oracle. | Vitest; Playwright; review |
+| A bug reproduction asserts the intended behavior. If a review branch temporarily uses `it.fails`, label it with the reported issue and remove `.fails` with the fix; report expected failures separately from ordinary passing tests. Never suppress a defect without evidence. | Review; Vitest unexpected-pass failure |
+| Run `npm run check` for every change; run the relevant production browser tests for UI, routing, media and PWA changes, plus native checks for native/build changes. Record commands, counts, warnings and blocked checks; do not call an unrun gate passed. | Commands below; CI where configured; review |
+| Releases must identify the exact source revision and preserve platform artifact/version agreement. Keep signing secrets out of tracked files; report partial release state and recovery accurately. | Release/iOS tests; workflows; review |
+| Agents stop only their own processes, by verified PID, never by process name; register and close their background work. External writes require maintainer authorization for that action. | Review; background-task registry |
+
+The imported C++/XPPAUT-specific tools, Model/Session ownership rules, extension
+lists, numerical golden files and upstream paper log do not apply here. No
+`dupcheck`, sanitizer or other uninstalled checker is claimed as enforcement.
+See [the initial review](docs/code-review-2026-10-01.md) for existing gaps.
+
 ## Task agents
 
 Work is run as a task board (docs/roadmap.md). An agent
