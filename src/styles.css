@@ -598,6 +598,12 @@ main {
   color: var(--tj-quiz-wrong);
 }
 
+/* A failed page load (RouteErrorBoundary) or ayah playback (AyahExample). */
+.route-error p,
+.audio-error {
+  color: var(--tj-quiz-wrong);
+}
+
 .reset-confirm {
   display: grid;
   gap: 0.5rem;

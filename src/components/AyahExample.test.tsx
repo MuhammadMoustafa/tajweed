@@ -64,4 +64,18 @@ describe('AyahExample playback failure', () => {
     fireEvent.play(audio)
     expect(container.querySelector('[role="alert"]')).toBeNull()
   })
+
+  it('starts the download again when Listen is pressed after a failed load', async () => {
+    const { audio, button } = setup('en')
+    Object.defineProperty(audio, 'error', { configurable: true, value: { code: 2 } })
+    const load = vi.spyOn(audio, 'load').mockImplementation(() => {})
+    const play = vi.spyOn(audio, 'play').mockResolvedValue()
+    fireEvent.error(audio)
+    await act(async () => {
+      fireEvent.click(button)
+    })
+    expect(load).toHaveBeenCalledTimes(1)
+    expect(play).toHaveBeenCalledTimes(1)
+    expect(load.mock.invocationCallOrder[0]).toBeLessThan(play.mock.invocationCallOrder[0])
+  })
 })

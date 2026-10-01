@@ -31,6 +31,8 @@ export function AyahExample({ example, highlight }: Props) {
     const el = audio.current
     if (!el) return
     if (el.paused) {
+      // After a failed load the element stays in its error state: start the download again.
+      if (el.error) el.load()
       // Offline before the ayah is cached, or playback blocked: play() rejects.
       el.play().catch(fail)
     } else el.pause()
