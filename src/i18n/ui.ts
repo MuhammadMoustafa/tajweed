@@ -2,7 +2,7 @@ import { formatNumber, type Bilingual, type Locale } from './bilingual'
 
 /** Interface strings (not lesson content — that lives in src/lessons). */
 export const ui = {
-  appTitle: { ar: 'التجويد', en: 'Tajweed' },
+  appTitle: { ar: 'تجويد', en: 'Tajweed' },
   appTagline: {
     ar: 'أحكام التجويد للمبتدئين خطوة بخطوة',
     en: 'Tajweed rules for beginners, one step at a time',
