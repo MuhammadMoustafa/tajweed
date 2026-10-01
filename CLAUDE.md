@@ -24,6 +24,10 @@ npm run fetch-mutoon   # re-download the classical poem lines (Tuhfa, Jazariyyah
 npm run build-quiz-pool   # download the whole Quran (one API call), pick quiz verses → src/data/quiz-pool.json (prints its size; ≤ 400 KB)
 npm run apk            # web build + `cap sync android` + Gradle assembleDebug → apk/tajweed-debug.apk
                         # (first run downloads Gradle/dependencies and is slow)
+npm run release -- <patch|minor|major|x.y.z>   # maintainer only, on a clean main equal to origin/main: bump package.json,
+                        # npm run check, signed APK (assembleRelease) → apk/tajweed-<version>.apk, commit "Release v<version>",
+                        # tag, push, GitHub release with the APK as tajweed.apk (needs android/keystore.properties; see Distribution)
+npm run release -- minor --dry-run   # print every step and command without changing anything
 ```
 
 ## Stack
@@ -87,7 +91,13 @@ Each lesson: short explanation → animation → highlighted Quran examples with
 Audience is family and friends, not app stores. Store publishing is out of scope.
 
 - Primary: the PWA deployed to GitHub Pages (https://muhammadmoustafa.github.io/tajweed/) via `.github/workflows/deploy.yml` on every push to main, shared as a link and installed via "Add to Home Screen" (works on iPhone too, auto-updates).
-- Secondary: a sideloaded Android APK, built locally with `npm run apk` (web build → `cap sync android` → Gradle `assembleDebug` → `apk/tajweed-debug.apk`, gitignored). Send the APK file directly (e.g. a chat attachment or a private link); a relative installs it by opening the file on their phone and allowing "install unknown apps" for that source when prompted, since it isn't from the Play Store. Keep the web app free of browser-only assumptions that would break inside the Capacitor WebView (e.g. rely on relative asset paths, cache audio for offline use).
+- Secondary: a sideloaded Android APK, published as a GitHub release by `npm run release`; https://github.com/MuhammadMoustafa/tajweed/releases/latest/download/tajweed.apk always gets the newest. A relative installs it by opening the file on their phone and allowing "install unknown apps" for that source when prompted, since it isn't from the Play Store. Anyone with the pre-0.2.0 preview app uninstalls it once first (it was signed with a different key); every release after installs in place. `npm run apk` still builds a debug APK (this PC's debug key, so it cannot update a release install) (`apk/tajweed-debug.apk`, gitignored) for testing. Keep the web app free of browser-only assumptions that would break inside the Capacitor WebView (e.g. rely on relative asset paths, cache audio for offline use).
+- Version: package.json's `version` is the only source. android/app/build.gradle reads it for versionName and versionCode (major*10000 + minor*100 + patch, so minor and patch stay below 100); the app gets it through Vite's `__APP_VERSION__` (src/update/appVersion.ts) and shows it with UpdateStatus.
+- Update check (src/update/, APK only via `Capacitor.isNativePlatform()`; the PWA updates through its service worker and never calls the API): at startup, at most once a day, the GitHub latest-release API; a newer version shows a banner with Download and Later (Later hides that version). UpdateStatus adds a "Check for updates" button that ignores the daily limit. Download is a plain link with no target: Capacitor's WebView hands navigation to another host to Android (an ACTION_VIEW intent), so the system browser downloads the APK. The service worker must not cache api.github.com (vite.config.ts runtimeCaching).
+- Release key, once per maintainer machine (never in the repo): create it outside the repo with
+  `keytool -genkeypair -v -keystore "%USERPROFILE%\.android\tajweed-release.jks" -alias tajweed -keyalg RSA -keysize 4096 -validity 36500`
+  (keytool ships with Android Studio: `"C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe"`), then copy android/keystore.properties.example to android/keystore.properties (gitignored) and fill in `storeFile` (forward slashes, e.g. `C:/Users/<you>/.android/tajweed-release.jks`), `storePassword`, `keyAlias=tajweed` and `keyPassword`. Back up the .jks and its passwords somewhere safe: an APK signed with another key cannot update an installed one, so losing it means everyone uninstalls and reinstalls. Without keystore.properties a release build fails with a message naming the file; debug builds do not need it.
+- Releasing: on main, clean and pushed, `npm run release -- patch` (or `minor`, `major`, an explicit `x.y.z`; the first release is `npm run release -- 0.2.0`, the version package.json already holds, so it skips the bump commit). Try `--dry-run` first. It refuses unless on main with a clean tree equal to origin/main, the tag is new and the key file exists. Release notes are the commit subjects since the previous `v*` tag (without `Roadmap:` commits) plus the install note.
 
 ## Task agents
 
