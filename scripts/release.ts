@@ -6,7 +6,9 @@
  * when releasing the version already there), runs `npm run check`, builds the signed APK
  * (scripts/lib/android.ts) to apk/tajweed-<version>.apk, commits "Release v<version>", tags
  * v<version>, pushes main and the tag, and creates the GitHub release with the APK uploaded as
- * tajweed.apk and notes from the commit subjects since the previous v* tag.
+ * tajweed.apk and notes from the commit subjects since the previous v* tag. The APK is its only
+ * upload (the notes go in as text); the tag push also starts .github/workflows/ios.yml, which adds
+ * the unsigned tajweed.ipa to the same release a few minutes later.
  *
  * --dry-run runs only read-only git queries and prints every step and command instead of running it.
  */

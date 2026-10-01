@@ -1,9 +1,9 @@
 /**
  * The pure parts of `npm run release` (scripts/release.ts): its arguments, the checks that must
  * pass before anything changes, and the release notes. Version arithmetic is src/update/version.ts,
- * the repo and asset name src/update/releases.ts.
+ * the repo, asset names and web app URL src/update/releases.ts.
  */
-import { APK_ASSET_NAME } from '../../src/update/releases.ts'
+import { APK_ASSET_NAME, IPA_ASSET_NAME, WEB_APP_URL } from '../../src/update/releases.ts'
 
 export const releaseTitle = (version: string) => `Learn Tajweed ${version}`
 export const releaseCommitMessage = (version: string) => `Release v${version}`
@@ -53,9 +53,13 @@ const EXCLUDED_SUBJECTS = [/^Roadmap:/, /^Release v/]
 export const INSTALL_NOTE = [
   '## Install',
   '',
-  `Download **${APK_ASSET_NAME}** below on your Android phone and open it; allow installing apps from that source when asked.`,
+  `**Android:** download **${APK_ASSET_NAME}** below on your phone and open it; allow installing apps from that source when asked.`,
   '',
   'Coming from the preview app (before v0.2.0)? Uninstall it first: releases are signed with a new key, so this one cannot install over the preview. From v0.2.0 on, every update installs over the previous one.',
+  '',
+  `**iPhone:** open the web app ${WEB_APP_URL} in Safari, then Share, then Add to Home Screen. It works offline and updates itself.`,
+  '',
+  `**${IPA_ASSET_NAME}** is unsigned, for testers who sideload it with their own Apple ID (e.g. Sideloadly or AltStore; a free Apple ID's install lasts 7 days). It is built on GitHub and appears here a few minutes after the release.`,
 ].join('\n')
 
 /** The release notes: the commit subjects since the previous release (minus roadmap and release

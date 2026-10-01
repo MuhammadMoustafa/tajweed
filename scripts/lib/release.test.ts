@@ -48,6 +48,15 @@ describe('releaseNotes', () => {
     expect(notes).toMatch(/Uninstall it first/)
   })
 
+  it('tells iPhone users to add the web app from Safari and says the .ipa is unsigned and comes later', () => {
+    const notes = releaseNotes(['T29: iOS build'])
+    expect(notes).toMatch(/\*\*Android:\*\* download \*\*tajweed\.apk\*\*/)
+    expect(notes).toMatch(/\*\*iPhone:\*\* open the web app https:\/\/muhammadmoustafa\.github\.io\/tajweed\/ in Safari, then Share, then Add to Home Screen/)
+    expect(notes).toMatch(/\*\*tajweed\.ipa\*\* is unsigned, for testers who sideload it with their own Apple ID/)
+    expect(notes).toMatch(/7 days/)
+    expect(notes).toMatch(/appears here a few minutes after the release/)
+  })
+
   it('still says something when only roadmap commits happened', () => {
     expect(releaseNotes(['Roadmap: T28'])).toMatch(/- Maintenance release/)
   })
