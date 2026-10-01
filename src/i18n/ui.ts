@@ -38,6 +38,17 @@ export const ui = {
     ar: 'هذا الدرس لم يُراجَع بعد من معلّم مُجاز.',
     en: 'This lesson has not yet been reviewed by a qualified teacher.',
   },
+  /** RouteErrorBoundary: a page failed to load or render (e.g. its chunk is missing offline). */
+  pageLoadFailed: {
+    ar: 'تعذّر تحميل هذه الصفحة. تحقّق من اتصالك بالإنترنت ثم أعد المحاولة.',
+    en: "Couldn't load this page. Check your connection and try again.",
+  },
+  retry: { ar: 'إعادة المحاولة', en: 'Try again' },
+  /** AyahExample: the ayah's audio could not start or stopped with an error. */
+  audioFailed: {
+    ar: 'تعذّر تشغيل هذه الآية. تحقّق من اتصالك بالإنترنت ثم أعد المحاولة.',
+    en: "Couldn't play this ayah. Check your connection and try again.",
+  },
   lessonNotFound: { ar: 'الدرس غير موجود.', en: 'Lesson not found.' },
   quizTitle: { ar: 'اختبر نفسك', en: 'Practice quiz' },
   checkAnswers: { ar: 'تحقق من الإجابات', en: 'Check answers' },

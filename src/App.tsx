@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
+import { RouteErrorBoundary } from './components/RouteErrorBoundary'
 import { Footer } from './components/Footer'
 import { LessonList } from './components/LessonList'
 import { ProgressPage } from './components/ProgressPage'
@@ -79,6 +80,7 @@ export function App() {
       </header>
       <main>
         <UpdateBanner />
+        <RouteErrorBoundary key={JSON.stringify(route)}>
         <Suspense fallback={null}>
         {route.page === 'home' && <LessonList />}
         {route.page === 'progress' && <ProgressPage />}
@@ -89,6 +91,7 @@ export function App() {
         {route.page === 'quiz' &&
           (lesson && hasQuiz(lesson) ? <QuizPage key={lesson.id} lesson={lesson} /> : <p>{t(ui.lessonNotFound)}</p>)}
         </Suspense>
+        </RouteErrorBoundary>
       </main>
       <Footer />
     </>
