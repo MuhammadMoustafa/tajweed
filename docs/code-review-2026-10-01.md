@@ -27,6 +27,25 @@ or maintenance issue. Test evidence and code-inspection evidence are
 distinguished below. No external API regeneration, release, push, or issue
 creation was performed. Quran and matn data were not edited.
 
+## Resolution (2026-10-01)
+
+Every finding below was confirmed against the code and fixed on main the
+same day; the eight `it.fails` reproductions now pass as ordinary tests.
+
+| Findings | Card | Fix |
+| :--- | :--- | :--- |
+| R1–R3 | T30 (#62) | Stored attempts and learned ids are validated (known rule ids, valid dates, score equal to results); a reset whose removal is refused keeps the stored baseline, so old data is not read back this session; `storage` events notify subscribers while any are mounted |
+| R4, R5 | T31 (#63) | `isAndroidApp()` (`getPlatform() === 'android'`) gates the APK update UI; issue reports name the iOS app (`appBuild()`); prerelease identifiers compare by semver precedence |
+| R6, R7 | T32 (#64) | Every API response is validated through `fetchJson(url, parse)`; `refreshQuranData` downloads and checks all three datasets before `writeJsonFiles` replaces them as a set (temporary files, backups, rollback); fetch-mutoon and build-quiz-pool use the same staged write |
+| R8, R9 | T33 (#65) | `RouteErrorBoundary` (bilingual alert, Try again, link home; keyed by route) around routed pages; ayah playback failures (rejected `play()`, `error` event) show a bilingual alert, and Listen after a failed load reloads the audio |
+
+After the merges: `npm run check` passed with 87 files and 2,284 tests, none
+expected to fail; the full Chromium suite passed 424 of 424 on a rerun (the
+first run failed the 375px About overflow check twice, by 1 and 3 px, and
+did not reproduce in 30 repeats of that spec or in diagnostics with the
+About chunk delayed or the web fonts blocked: flaky, cause unknown);
+`npm run apk` built. The findings below are kept as the review's record.
+
 ## Findings
 
 | ID | Priority | Finding | Evidence |
