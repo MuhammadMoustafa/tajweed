@@ -4,10 +4,10 @@ import { formatTemplate, ui } from '../i18n/ui'
 import { APP_VERSION } from './appVersion'
 import { browserStorage, checkForUpdate, type CheckResult } from './check'
 import { DownloadLink } from './DownloadLink'
-import { isNativeApp } from './platform'
+import { isAndroidApp } from './platform'
 
 /**
- * The app's version ("Version 0.2.0", everywhere) and, in the APK only, a "Check for updates"
+ * The app's version ("Version 0.2.0", everywhere) and, in the Android APK only, a "Check for updates"
  * button that ignores the daily limit and says: up to date, a new version with Download, or that
  * it could not check. Self-contained (no props), so any page can hold it.
  */
@@ -26,7 +26,7 @@ export function UpdateStatus() {
   return (
     <div className="update-status">
       <p className="app-version">{formatTemplate(locale, ui.appVersion, { version: APP_VERSION })}</p>
-      {isNativeApp() && (
+      {isAndroidApp() && (
         <>
           <button type="button" className="check-updates" onClick={() => void check()} disabled={checking}>
             {t(checking ? ui.checkingForUpdates : ui.checkForUpdates)}

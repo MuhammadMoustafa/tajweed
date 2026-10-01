@@ -4,8 +4,8 @@ import { LocaleProvider } from '../i18n/LocaleProvider'
 import { APP_VERSION } from './appVersion'
 import { UpdateStatus } from './UpdateStatus'
 
-const native = vi.hoisted(() => ({ value: true }))
-vi.mock('./platform', () => ({ isNativeApp: () => native.value }))
+const platform = vi.hoisted(() => ({ value: 'android' }))
+vi.mock('@capacitor/core', () => ({ Capacitor: { getPlatform: () => platform.value } }))
 
 const APK_URL = 'https://github.com/MuhammadMoustafa/tajweed/releases/download/v99.0.0/tajweed.apk'
 const release = (tag: string) => ({
@@ -36,7 +36,7 @@ async function clickCheck(screen: ReturnType<typeof renderStatus>['screen']) {
 
 beforeEach(() => {
   localStorage.clear()
-  native.value = true
+  platform.value = 'android'
   fetchMock.mockReset()
   vi.stubGlobal('fetch', fetchMock)
 })
@@ -58,8 +58,8 @@ describe('UpdateStatus', () => {
     expect(document.documentElement).toHaveAttribute('dir', 'rtl')
   })
 
-  it('outside the APK shows only the version: no button, no API call', () => {
-    native.value = false
+  it.each(['web', 'ios'])('R4: on %s shows only the version: no button, no API call', (name) => {
+    platform.value = name
     const { container, screen } = renderStatus()
     expect(container.querySelector('.app-version')).toHaveTextContent(`Version ${APP_VERSION}`)
     expect(screen.queryByRole('button')).toBeNull()

@@ -15,7 +15,7 @@ export interface Version {
   prerelease: string
 }
 
-const VERSION_PATTERN = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$/
+const VERSION_PATTERN = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/
 
 /** Parses `1.2.3`, `v1.2.3` or `1.2.3-preview`; undefined for anything else. */
 export function parseVersion(text: string): Version | undefined {
@@ -39,7 +39,26 @@ export function compareVersions(a: string, b: string): number {
   if (va.prerelease === vb.prerelease) return 0
   if (!va.prerelease) return 1
   if (!vb.prerelease) return -1
-  return va.prerelease < vb.prerelease ? -1 : 1
+  return comparePrerelease(va.prerelease, vb.prerelease)
+}
+
+/** Semver precedence: dot-separated identifiers left to right; numeric ones compare as numbers and
+ *  rank below alphanumeric ones (compared as text); when all shared identifiers are equal the
+ *  shorter list is older. */
+function comparePrerelease(a: string, b: string): number {
+  const ia = a.split('.')
+  const ib = b.split('.')
+  for (let i = 0; i < Math.min(ia.length, ib.length); i++) {
+    const x = ia[i]
+    const y = ib[i]
+    if (x === y) continue
+    const xNumeric = /^\d+$/.test(x)
+    const yNumeric = /^\d+$/.test(y)
+    if (xNumeric && yNumeric) return Number(x) < Number(y) ? -1 : 1
+    if (xNumeric !== yNumeric) return xNumeric ? -1 : 1
+    return x < y ? -1 : 1
+  }
+  return ia.length - ib.length
 }
 
 /** True when `candidate` is a valid version newer than `current`; false for anything unparsable. */

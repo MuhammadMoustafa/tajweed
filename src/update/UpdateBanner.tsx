@@ -4,19 +4,19 @@ import { formatTemplate, ui } from '../i18n/ui'
 import { APP_VERSION } from './appVersion'
 import { browserStorage, dismissVersion, startupUpdateCheck, type Release } from './check'
 import { DownloadLink } from './DownloadLink'
-import { isNativeApp } from './platform'
+import { isAndroidApp } from './platform'
 
 /**
- * "A new version is available" with Download and Later, shown at startup in the APK only when
+ * "A new version is available" with Download and Later, shown at startup in the Android APK only when
  * the daily check (src/update/check.ts) finds a newer release that was not put off with Later.
- * Renders nothing in a browser or the PWA, and nothing while offline or on any error.
+ * Renders nothing in a browser, the PWA or the iOS app, and nothing while offline or on any error.
  */
 export function UpdateBanner() {
   const { locale, t } = useLocale()
   const [release, setRelease] = useState<Release>()
 
   useEffect(() => {
-    if (!isNativeApp()) return
+    if (!isAndroidApp()) return
     let live = true
     void startupUpdateCheck(APP_VERSION, { storage: browserStorage() }).then((found) => {
       if (live) setRelease(found)

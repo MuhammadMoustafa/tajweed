@@ -4,8 +4,8 @@ import { LocaleProvider } from '../i18n/LocaleProvider'
 import { LATEST_RELEASE_API } from './releases'
 import { UpdateBanner } from './UpdateBanner'
 
-const native = vi.hoisted(() => ({ value: true }))
-vi.mock('./platform', () => ({ isNativeApp: () => native.value }))
+const platform = vi.hoisted(() => ({ value: 'android' }))
+vi.mock('@capacitor/core', () => ({ Capacitor: { getPlatform: () => platform.value } }))
 
 const APK_URL = 'https://github.com/MuhammadMoustafa/tajweed/releases/download/v99.0.0/tajweed.apk'
 const fetchMock = vi.fn(async () => ({
@@ -30,7 +30,7 @@ async function renderBanner(locale: 'ar' | 'en') {
 
 beforeEach(() => {
   localStorage.clear()
-  native.value = true
+  platform.value = 'android'
   fetchMock.mockClear()
   vi.stubGlobal('fetch', fetchMock)
 })
@@ -82,8 +82,8 @@ describe('UpdateBanner', () => {
     expect(container.querySelector('.update-banner')).toBeNull()
   })
 
-  it('never calls the API outside the APK', async () => {
-    native.value = false
+  it.each(['web', 'ios'])('R4: never calls the API or offers the APK on %s', async (name) => {
+    platform.value = name
     const { container } = await renderBanner('en')
     expect(fetchMock).not.toHaveBeenCalled()
     expect(container.querySelector('.update-banner')).toBeNull()

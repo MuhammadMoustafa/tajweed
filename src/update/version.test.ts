@@ -28,6 +28,24 @@ describe('compareVersions', () => {
   })
 })
 
+describe('R5: prerelease precedence', () => {
+  it('compares numeric identifiers numerically and ranks them below alphanumeric ones', () => {
+    expect(compareVersions('1.0.0-beta.2', '1.0.0-beta.10')).toBeLessThan(0)
+    expect(compareVersions('1.0.0-alpha', '1.0.0-beta')).toBeLessThan(0)
+    expect(compareVersions('1.0.0-1', '1.0.0-alpha')).toBeLessThan(0)
+  })
+  it('puts a shorter prefix-equal list first, and a prerelease before its release', () => {
+    expect(compareVersions('1.0.0-alpha', '1.0.0-alpha.1')).toBeLessThan(0)
+    expect(compareVersions('1.0.0-alpha.1', '1.0.0-alpha')).toBeGreaterThan(0)
+    expect(compareVersions('0.2.0-preview', '0.2.0')).toBeLessThan(0)
+  })
+  it('rejects empty identifiers', () => {
+    expect(parseVersion('1.0.0-beta..2')).toBeUndefined()
+    expect(parseVersion('1.0.0-beta.')).toBeUndefined()
+    expect(parseVersion('1.0.0-.beta')).toBeUndefined()
+  })
+})
+
 describe('isNewerVersion', () => {
   it('is true only for a strictly newer valid version', () => {
     expect(isNewerVersion('v0.3.0', '0.2.0')).toBe(true)
