@@ -1,8 +1,8 @@
-import { APP_VERSION } from '../about/version'
 import { QURAN_SOURCE, QURAN_WORDS_SOURCE, SURAHS_SOURCE, WORD_RECITATION } from '../data/quran'
 import { getMatnMeta, MUTOON_SOURCE } from '../data/mutoon'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
+import { UpdateStatus } from '../update/UpdateStatus'
 import { ContactLinks } from './ContactLinks'
 
 const EXTERNAL = { target: '_blank', rel: 'noopener noreferrer' } as const
@@ -89,11 +89,7 @@ export function AboutPage() {
 
       <section data-slot="version">
         <h3>{t(ui.aboutVersionTitle)}</h3>
-        <p>
-          {t(ui.aboutVersion)}: <span dir="ltr">{APP_VERSION}</span>
-        </p>
-        {/* T27's update component (the APK's update check) goes here. */}
-        <div data-slot="update" />
+        <UpdateStatus />
       </section>
 
       <section>

@@ -202,11 +202,11 @@ export const ui = {
     en: 'The lessons are being checked by a qualified tajweed teacher. Until then, each lesson shows a "not yet reviewed" notice.',
   },
   aboutVersionTitle: { ar: 'الإصدار والتحديثات', en: 'Version and updates' },
-  aboutVersion: { ar: 'إصدار التطبيق', en: 'App version' },
   aboutContactTitle: { ar: 'تواصل وإبلاغ', en: 'Contact and reporting' },
   aboutContactHint: {
     ar: 'يحمل الإبلاغ رقم الإصدار والصفحة واللغة والمنصة فقط، ولا شيء شخصي.',
     en: 'A report carries only the app version, page, language and platform: nothing personal.',
+  },
   // App version and updates (src/update/): the banner (APK only) and UpdateStatus.
   /** Template filled by formatTemplate with `{version}`, e.g. "0.2.0" (kept in Latin digits). */
   appVersion: { ar: 'الإصدار {version}', en: 'Version {version}' },

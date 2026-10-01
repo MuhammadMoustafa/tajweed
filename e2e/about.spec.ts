@@ -21,3 +21,9 @@ for (const lang of ['ar', 'en'] as const) {
     })
   }
 }
+
+test('the About page shows the app version, and in a browser no "Check for updates" button', async ({ page }) => {
+  await page.goto('/#/about')
+  await expect(page.locator('.app-version')).toHaveText(/\d+\.\d+\.\d+/)
+  await expect(page.locator('.check-updates')).toHaveCount(0)
+})

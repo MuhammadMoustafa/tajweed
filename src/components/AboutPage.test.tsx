@@ -1,8 +1,9 @@
 import { act, render, within } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { App } from '../App'
 import { LocaleProvider } from '../i18n/LocaleProvider'
-import { ui } from '../i18n/ui'
+import { formatTemplate, ui } from '../i18n/ui'
+import { APP_VERSION } from '../update/appVersion'
 import { AboutPage } from './AboutPage'
 import { Footer } from './Footer'
 
@@ -16,6 +17,17 @@ const renderIn = (locale: 'ar' | 'en', node: React.ReactNode) => {
   const { container } = render(<LocaleProvider>{node}</LocaleProvider>)
   return within(container)
 }
+
+describe('About page: version and updates', () => {
+  it('shows the app version, and in a browser no update check', () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+    const screen = renderIn('en', <AboutPage />)
+    expect(screen.getByText(/^Version \d+\.\d+\.\d+$/)).toHaveClass('app-version')
+    expect(screen.queryByRole('button', { name: ui.checkForUpdates.en })).toBeNull()
+    expect(fetchSpy).not.toHaveBeenCalled()
+    fetchSpy.mockRestore()
+  })
+})
 
 describe('Footer', () => {
   for (const locale of ['ar', 'en'] as const) {
@@ -67,7 +79,7 @@ describe('AboutPage', () => {
         ]),
       )
       expect(hrefs.filter((h) => h?.includes('/@fontsource/'))).toHaveLength(3)
-      expect(screen.getByText('dev')).toBeInTheDocument()
+      expect(screen.getByText(formatTemplate(locale, ui.appVersion, { version: APP_VERSION }))).toHaveClass('app-version')
     })
   }
 

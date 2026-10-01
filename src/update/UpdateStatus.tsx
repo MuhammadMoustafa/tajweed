@@ -24,7 +24,7 @@ export function UpdateStatus() {
   }
 
   return (
-    <section className="update-status">
+    <div className="update-status">
       <p className="app-version">{formatTemplate(locale, ui.appVersion, { version: APP_VERSION })}</p>
       {isNativeApp() && (
         <>
@@ -45,6 +45,6 @@ export function UpdateStatus() {
           )}
         </>
       )}
-    </section>
+    </div>
   )
 }

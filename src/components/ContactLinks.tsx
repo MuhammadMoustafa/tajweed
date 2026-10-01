@@ -1,7 +1,7 @@
 import { Capacitor } from '@capacitor/core'
 import { CONTACT_EMAIL, GITHUB_PROFILE_URL, SOURCE_CODE_URL } from '../about/links'
 import { buildReport } from '../about/report'
-import { APP_VERSION } from '../about/version'
+import { APP_VERSION } from '../update/appVersion'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import { useHash } from '../useHashRoute'

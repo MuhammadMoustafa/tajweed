@@ -21,12 +21,6 @@ test.describe('progress page', () => {
     await expect(page.locator('.reset-progress')).toHaveCount(0)
   })
 
-  test('shows the app version, and in a browser no "Check for updates" button', async ({ page }) => {
-    await page.goto('/#/progress')
-    await expect(page.locator('.app-version')).toHaveText(/\d+\.\d+\.\d+/)
-    await expect(page.locator('.check-updates')).toHaveCount(0)
-  })
-
   test('taking a quiz shows the attempt on the progress page and starts the home card (learned if passed)', async ({
     page,
   }) => {
