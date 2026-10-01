@@ -1,7 +1,7 @@
-import { Capacitor } from '@capacitor/core'
 import { CONTACT_EMAIL, GITHUB_PROFILE_URL, SOURCE_CODE_URL } from '../about/links'
 import { buildReport } from '../about/report'
 import { APP_VERSION } from '../update/appVersion'
+import { appBuild } from '../update/platform'
 import { useLocale } from '../i18n/LocaleProvider'
 import { ui } from '../i18n/ui'
 import { useHash } from '../useHashRoute'
@@ -20,7 +20,7 @@ export function ContactLinks() {
     version: APP_VERSION,
     hash,
     locale,
-    platform: Capacitor.isNativePlatform() ? 'APK' : 'web',
+    platform: appBuild(),
   })
   return (
     <ul className="contact-links">

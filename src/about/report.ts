@@ -1,14 +1,13 @@
 import type { Locale } from '../i18n/bilingual'
+import type { AppBuild } from '../update/platform'
 import { CONTACT_EMAIL, NEW_ISSUE_URL } from './links'
-
-export type Platform = 'APK' | 'web'
 
 export interface ReportContext {
   version: string
   /** The hash route, e.g. `#/lesson/qalqalah` (empty for home). */
   hash: string
   locale: Locale
-  platform: Platform
+  platform: AppBuild
 }
 
 export interface Report {
