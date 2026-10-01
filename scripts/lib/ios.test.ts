@@ -72,10 +72,16 @@ describe('.github/workflows/ios.yml', () => {
     expect(workflow).toMatch(/shell: bash --noprofile --norc -euo pipefail \{0\}/)
   })
 
-  it('touches releases only on a tag push, with write access only in that job', () => {
+  it('touches a release only on a tag push or a manual run given release_tag, with write access only in that job', () => {
     expect(workflow).toMatch(/^permissions:\n {2}contents: read$/m)
-    expect(workflow).toMatch(/if: github\.event_name == 'push' && startsWith\(github\.ref, 'refs\/tags\/v'\)/)
+    expect(workflow).toMatch(/workflow_dispatch:\n {4}inputs:\n {6}release_tag:\n/)
+    expect(workflow).toMatch(/RELEASE_TAG: \$\{\{ github\.event_name == 'push' && github\.ref_name \|\| inputs\.release_tag \}\}/)
+    expect(workflow).toMatch(/if: needs\.build\.outputs\.release-tag != ''/)
     expect(workflow.match(/contents: write/g)).toHaveLength(1)
     expect(workflow).toMatch(/gh release upload "\$TAG" "upload\/\$IPA_NAME" --clobber/)
+  })
+
+  it('never attaches an .ipa whose package.json version differs from the release tag', () => {
+    expect(workflow).toMatch(/elif \[ "\$RELEASE_TAG" != "v\$app_version" \]; then\n\s+echo "::error::[^\n]+"\n\s+exit 1/)
   })
 })

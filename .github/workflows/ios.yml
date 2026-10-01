@@ -2,7 +2,10 @@
 # an unsigned device build packaged as an .ipa, a simulator build, and a smoke test that launches
 # the simulator build and screenshots it. The .ipa, the zipped simulator app and the screenshot
 # are run artifacts. On a release tag (pushed by `npm run release`) the .ipa is also attached to
-# that tag's GitHub release, beside the APK; a manual run (workflow_dispatch) never touches releases.
+# that tag's GitHub release, beside the APK. A manual run (workflow_dispatch) touches no release,
+# unless given release_tag: then it builds the commit it was dispatched on and attaches the .ipa to
+# that existing release (to add or rebuild a release's .ipa). Either way package.json's version
+# must equal the tag without its `v`, checked before the macOS build starts.
 name: iOS build
 
 on:
@@ -10,6 +13,12 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Attach the .ipa to this existing release (e.g. v0.2.0); its version must equal package.json''s. Empty: no release is touched.'
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -29,10 +38,14 @@ jobs:
     timeout-minutes: 60
     outputs:
       ipa-name: ${{ steps.version.outputs.IPA_NAME }}
+      release-tag: ${{ steps.version.outputs.RELEASE_TAG }}
     env:
       PROJECT: ios/App/App.xcodeproj
       SCHEME: App
       DERIVED_DATA: build/ios/DerivedData
+      # The release this run attaches the .ipa to: the pushed tag, or the manual run's release_tag
+      # input; empty for a manual run without one.
+      RELEASE_TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.release_tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -46,14 +59,35 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Version from package.json
+      - name: Version from package.json, checked against the release tag
         id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           echo "Deriving the iOS version and the .ipa name from package.json (scripts/ios-ci.ts env):"
           lines=$(npx tsx scripts/ios-ci.ts env)
           echo "$lines"
           echo "$lines" >> "$GITHUB_ENV"
           echo "$lines" >> "$GITHUB_OUTPUT"
+          app_version=$(echo "$lines" | sed -n 's/^APP_VERSION=//p')
+          if [ -z "$RELEASE_TAG" ]; then
+            echo "No release tag: this run attaches the .ipa to no release"
+          elif [ "$RELEASE_TAG" != "v$app_version" ]; then
+            echo "::error::package.json here is version $app_version, but the release is $RELEASE_TAG: an .ipa of another version must not be attached. Dispatch the run on a commit whose package.json version is ${RELEASE_TAG#v}."
+            exit 1
+          else
+            echo "package.json version $app_version matches release $RELEASE_TAG"
+          fi
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ -n "$RELEASE_TAG" ]; then
+            # Fail before the macOS build when a manual run names a release that does not exist.
+            if ! gh release view "$RELEASE_TAG" --json tagName --jq .tagName >/dev/null; then
+              echo "::error::There is no GitHub release $RELEASE_TAG. A manual run only adds the .ipa to an existing release: check release_tag (e.g. v0.2.0)."
+              exit 1
+            fi
+            echo "Release $RELEASE_TAG exists"
+          fi
+          echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Show the toolchain
         run: |
@@ -217,8 +251,8 @@ jobs:
   release-asset:
     name: Attach the .ipa to the release
     needs: build
-    # Tag pushes only: a manual run, even on a tag, never touches releases.
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    # A v* tag push, or a manual run given release_tag (the build job checked its version).
+    if: needs.build.outputs.release-tag != ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -226,8 +260,11 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      TAG: ${{ github.ref_name }}
+      TAG: ${{ needs.build.outputs.release-tag }}
       IPA_NAME: ${{ needs.build.outputs.ipa-name }}
+      # A pushed tag's release may not exist yet: wait up to 10 minutes (40 checks, 15s apart).
+      # A manual run names an existing release: check once.
+      RELEASE_CHECKS: ${{ github.event_name == 'push' && '40' || '1' }}
     steps:
       - name: Download the .ipa
         uses: actions/download-artifact@v8
@@ -237,18 +274,24 @@ jobs:
 
       - name: Wait for the release
         run: |
-          # npm run release pushes the tag before it creates the release, so the release may not
-          # exist yet: check every 15s for up to 10 minutes.
-          echo "Waiting for the GitHub release of $TAG in $GH_REPO"
-          for attempt in $(seq 1 40); do
+          # npm run release pushes the tag before it creates the release, so on a tag push the
+          # release may not exist yet.
+          echo "Looking for the GitHub release $TAG in $GH_REPO (up to $RELEASE_CHECKS checks)"
+          for attempt in $(seq 1 "$RELEASE_CHECKS"); do
             if gh release view "$TAG" --json tagName --jq .tagName >/dev/null 2>&1; then
               echo "Release $TAG found"
               exit 0
             fi
-            echo "  no release for $TAG yet (check $attempt of 40); next check in 15s"
-            sleep 15
+            if [ "$attempt" -lt "$RELEASE_CHECKS" ]; then
+              echo "  no release $TAG yet (check $attempt of $RELEASE_CHECKS); next check in 15s"
+              sleep 15
+            fi
           done
-          echo "::error::No GitHub release for $TAG after 10 minutes. Create it (npm run release does), then re-run this job; the .ipa is also this run's tajweed-ipa artifact."
+          if [ "$RELEASE_CHECKS" -gt 1 ]; then
+            echo "::error::No GitHub release $TAG after 10 minutes. Create it (npm run release does), then re-run this job; the .ipa is also this run's tajweed-ipa artifact."
+          else
+            echo "::error::There is no GitHub release $TAG. A manual run only adds the .ipa to an existing release: check release_tag (e.g. v0.2.0)."
+          fi
           exit 1
 
       - name: Upload the .ipa to the release
