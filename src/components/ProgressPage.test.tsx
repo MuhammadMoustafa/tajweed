@@ -1,5 +1,5 @@
 import { fireEvent, render, within } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { LocaleProvider } from '../i18n/LocaleProvider'
 import { attemptsForLesson, isLessonLearned, recordQuizAttempt, setLessonLearned } from '../progress'
 import { ProgressPage } from './ProgressPage'
@@ -26,6 +26,15 @@ describe('ProgressPage', () => {
     const { screen } = renderPage()
     expect(screen.getByText(/haven't started learning yet/)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Reset progress' })).toBeNull()
+  })
+
+  it('shows the app version, and in a browser no update check', () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+    const { container, screen } = renderPage()
+    expect(container.querySelector('.update-status .app-version')).toHaveTextContent(/^Version \d+\.\d+\.\d+$/)
+    expect(screen.queryByRole('button', { name: 'Check for updates' })).toBeNull()
+    expect(fetchSpy).not.toHaveBeenCalled()
+    fetchSpy.mockRestore()
   })
 
   it('shows a lesson\'s attempt count and best/last score once it has attempts', () => {

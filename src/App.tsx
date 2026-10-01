@@ -8,6 +8,7 @@ import { findLesson } from './lessons'
 import { hasQuiz } from './lessons/quiz'
 import { letterNameOf, letterOfId } from './letters/ids'
 import { reloadOnFailedImport } from './reloadOnFailedImport'
+import { UpdateBanner } from './update/UpdateBanner'
 import { useHashRoute } from './useHashRoute'
 
 // The lesson and quiz pages carry the animations, the verse data and the matn: loaded on demand as
@@ -77,6 +78,7 @@ export function App() {
         </div>
       </header>
       <main>
+        <UpdateBanner />
         <Suspense fallback={null}>
         {route.page === 'home' && <LessonList />}
         {route.page === 'progress' && <ProgressPage />}

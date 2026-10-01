@@ -4,6 +4,18 @@ import { UNITS } from '../src/lessons/units'
 
 // Iterates LESSONS so a newly added lesson is covered automatically.
 test.describe('home page', () => {
+  test('in a browser, never asks GitHub for updates or shows the update banner', async ({ page }) => {
+    const apiCalls: string[] = []
+    page.on('request', (request) => {
+      if (request.url().includes('api.github.com')) apiCalls.push(request.url())
+    })
+    await page.goto('/')
+    await expect(page.locator('.lesson-unit').first()).toBeVisible()
+    await page.waitForLoadState('networkidle')
+    expect(apiCalls).toEqual([])
+    await expect(page.locator('.update-banner')).toHaveCount(0)
+  })
+
   for (const lesson of LESSONS) {
     test(`links to and opens "${lesson.id}"`, async ({ page }) => {
       await page.goto('/')

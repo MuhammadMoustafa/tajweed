@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { configDefaults } from 'vitest/config'
@@ -6,6 +7,12 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   // Relative asset paths: works on any static host subfolder and inside the Capacitor WebView.
   base: './',
+  // package.json is the only source of the version (src/update/appVersion.ts reads this one).
+  define: {
+    __APP_VERSION__: JSON.stringify(
+      (JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string }).version,
+    ),
+  },
   build: {
     rolldownOptions: {
       output: {
@@ -39,6 +46,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,woff2,png,svg,ico}'],
+        // Only these origins are cached at run time. The APK's update check (api.github.com,
+        // src/update/check.ts) must always reach the network: never add a rule matching it.
         runtimeCaching: [
           {
             // Recitation audio: cache once played so lessons work offline afterwards.

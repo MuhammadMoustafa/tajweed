@@ -6,6 +6,7 @@ import { LESSONS } from '../lessons'
 import { bestAttempt, lastAttempt, useProgress, type LessonCardState, type QuizAttempt } from '../progress'
 import { DIFFICULTY_LABEL } from '../quiz/difficultyLabel'
 import { ALL_RULES } from '../tajweed/rules'
+import { UpdateStatus } from '../update/UpdateStatus'
 
 /** Bilingual label for a lesson's card state, reusing the same strings as the home cards
  *  (src/components/LessonCard.tsx): "learned" reuses ui.markedAsLearned. */
@@ -116,6 +117,8 @@ export function ProgressPage() {
             {t(ui.resetProgress)}
           </button>
         ))}
+
+      <UpdateStatus />
     </article>
   )
 }

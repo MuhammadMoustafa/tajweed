@@ -207,6 +207,19 @@ export const ui = {
   aboutContactHint: {
     ar: 'يحمل الإبلاغ رقم الإصدار والصفحة واللغة والمنصة فقط، ولا شيء شخصي.',
     en: 'A report carries only the app version, page, language and platform: nothing personal.',
+  // App version and updates (src/update/): the banner (APK only) and UpdateStatus.
+  /** Template filled by formatTemplate with `{version}`, e.g. "0.2.0" (kept in Latin digits). */
+  appVersion: { ar: 'الإصدار {version}', en: 'Version {version}' },
+  /** Template filled by formatTemplate with `{version}`. */
+  updateAvailable: { ar: 'يتوفّر إصدار جديد: {version}', en: 'A new version is available: {version}' },
+  updateDownload: { ar: 'تنزيل', en: 'Download' },
+  updateLater: { ar: 'لاحقًا', en: 'Later' },
+  checkForUpdates: { ar: 'البحث عن تحديث', en: 'Check for updates' },
+  checkingForUpdates: { ar: 'جارٍ البحث…', en: 'Checking…' },
+  upToDate: { ar: 'لديك أحدث إصدار.', en: 'You have the latest version.' },
+  updateCheckFailed: {
+    ar: 'تعذّر البحث عن تحديث. تأكّد من اتصالك بالإنترنت ثم حاول مرة أخرى.',
+    en: 'Could not check for updates. Check your internet connection and try again.',
   },
 } satisfies Record<string, Bilingual>
 
