@@ -182,8 +182,8 @@ export const ui = {
   footerLabel: { ar: 'روابط التطبيق', en: 'App links' },
   aboutWhatTitle: { ar: 'ما هذا التطبيق', en: 'What this app is' },
   aboutWhat: {
-    ar: 'دورة مجانية في التجويد للمبتدئين، برواية حفص عن عاصم، بالعربية والإنجليزية، صُنعت للأهل والأصدقاء.',
-    en: 'A free beginner tajweed course in the riwayah of Hafs ʿan ʿAsim, in Arabic and English, made for family and friends.',
+    ar: 'دورة مجانية في التجويد للمبتدئين، برواية حفص عن عاصم، بالعربية والإنجليزية.',
+    en: 'A free beginner tajweed course in the riwayah of Hafs ʿan ʿAsim, in Arabic and English.',
   },
   aboutSourcesTitle: { ar: 'المصادر والشكر', en: 'Sources and credits' },
   /** Template filled with `{reciter}` (WORD_RECITATION). */
